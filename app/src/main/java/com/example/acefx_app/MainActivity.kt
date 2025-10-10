@@ -19,14 +19,14 @@ class MainActivity : AppCompatActivity() {
         nextBtn.setOnClickListener(){
             Toast.makeText(this,"Navigating to sign page now", Toast.LENGTH_SHORT).show()
             setContentView(R.layout.home_activity)
+
+            backToHome = findViewById<Button>(R.id.backToHomeBtn)
+            backToHome.setOnClickListener() {
+                Toast.makeText(this,"Navigating to home page now", Toast.LENGTH_SHORT).show()
+                setContentView(R.layout.activity_main)
+            }
         }
-//        this wont work because can find id from diff xml file
-//        back  to home
-//        backToHome = findViewById<Button>(R.id.backToHomeBtn)
-//        backToHome.setOnClickListener() {
-//            Toast.makeText(this,"Navigating to home page now", Toast.LENGTH_SHORT).show()
-//            setContentView(R.layout.activity_main)
-//        }
+
 
     }
 
