@@ -26,19 +26,34 @@
         app:layout_constraintHorizontal_bias="0.09"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+<!--    email text label-->
+
+    <TextView
+        android:id="@+id/emailTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:text="Your Email:"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.121"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appName" />
 
     <EditText
         android:id="@+id/emailInput"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="10dp"
         android:inputType="textEmailAddress"
         android:hint="Enter your Email ID"
         android:backgroundTint="#BDBDBD"
         android:textColorHint="#BDBDBD"
         android:textColor="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/appName"
+        app:layout_constraintTop_toBottomOf="@id/emailTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -89,18 +104,33 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- OTP Input -->
+
+    <TextView
+        android:id="@+id/optView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Enter OTP: "
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.121"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/submitBtn" />
+
     <EditText
         android:id="@+id/otpInput"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="10dp"
         android:inputType="numberDecimal"
         android:hint="Enter OTP"
         android:backgroundTint="#BDBDBD"
         android:textColorHint="#BDBDBD"
         android:textColor="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/submitBtn"
+        app:layout_constraintTop_toBottomOf="@id/optView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
