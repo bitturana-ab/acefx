@@ -14,18 +14,23 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var backToHome: Button
 
+    private lateinit var textEmail: EditText
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         println("onCreate()")
         setContentView(R.layout.activity_main)
 
+
+        // access email for pass signup activity
+        textEmail = findViewById<EditText>(R.id.emailInput)
+
 //        submit btn handle
         submitBtn = findViewById<Button>(R.id.submitBtn)
         submitBtn.setOnClickListener {
-            // access email for db call later
-            var textEmail = findViewById<EditText>(R.id.emailInput).text.toString()
 
-            Toast.makeText(this,"OTP sent to your $textEmail email!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"OTP sent to your ${textEmail.text.toString()} email!", Toast.LENGTH_SHORT).show()
 
         }
 
@@ -34,7 +39,10 @@ class MainActivity : AppCompatActivity() {
         nextBtn.setOnClickListener{
             Toast.makeText(this,"Navigating to sign page now", Toast.LENGTH_SHORT).show()
             val intent = Intent(this@MainActivity, SignUpActivity::class.java)
+//          send email or any data from this to sign up screen
+            intent.putExtra(Constants.INTENT_EMAIL_KEY,textEmail.text.toString())
             startActivity(intent)
+
         }
 
 
