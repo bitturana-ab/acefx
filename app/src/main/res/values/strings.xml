@@ -18,4 +18,9 @@
     <!-- Error messages -->
     <string name="error_fragment_message">An error occurred</string>
     <string name="dismiss_error">Dismiss</string>
+    <string name="welcome">Welcome Back</string>
+    <string name="name">Your Name</string>
+    <string name="start_button">start now</string>
+    <string name="flag_quiz_app">Flag Quiz App</string>
+    <string name="please_enter_your_name">Please Enter Your Name</string>
 </resources>

@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 class SignUpActivity : AppCompatActivity() {
     private lateinit var emailSetText : TextView
     private lateinit var backToMain: Button
+    private lateinit var submitBtn: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,6 +42,13 @@ class SignUpActivity : AppCompatActivity() {
             Intent(this@SignUpActivity, MainActivity::class.java).also {
                 startActivity(it)
             }
+        }
+//        next page for user
+        submitBtn = findViewById<Button>(R.id.submitBtn)
+        submitBtn.setOnClickListener {
+            Toast.makeText(this,"Login successfully", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@SignUpActivity, LoggedIn::class.java)
+            startActivity(intent)
         }
 
     }
