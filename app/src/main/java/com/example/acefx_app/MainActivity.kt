@@ -1,5 +1,6 @@
 package com.example.acefx_app
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -28,17 +29,12 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-//        navigate next signup page
+//        navigate next signup page also will back to main
         nextBtn = findViewById<Button>(R.id.nextBtn)
-        nextBtn.setOnClickListener(){
+        nextBtn.setOnClickListener{
             Toast.makeText(this,"Navigating to sign page now", Toast.LENGTH_SHORT).show()
-            setContentView(R.layout.home_activity)
-
-            backToHome = findViewById<Button>(R.id.backToHomeBtn)
-            backToHome.setOnClickListener() {
-                Toast.makeText(this,"Navigating to home page now", Toast.LENGTH_SHORT).show()
-                setContentView(R.layout.activity_main)
-            }
+            val intent = Intent(this@MainActivity, SignUpActivity::class.java)
+            startActivity(intent)
         }
 
 
