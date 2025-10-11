@@ -32,4 +32,6 @@
     <string name="next_button">Next →</string>
     <string name="email_text">Your Email:</string>
     <string name="go_to_home">⬅ Go to home</string>
+    <string name="client_check_text">Client</string>
+    <string name="employee_check_text">Employee</string>
 </resources>

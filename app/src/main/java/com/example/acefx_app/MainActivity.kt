@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity() {
@@ -20,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var optTextView: TextView
     private lateinit var emailTextView: TextView
     private lateinit var optText: EditText
-
+    private lateinit var switchRole: LinearLayout
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +53,9 @@ class MainActivity : AppCompatActivity() {
                 submitBtn.visibility = View.INVISIBLE
                 nextBtn = findViewById<Button>(R.id.nextBtn)
                 nextBtn.visibility = View.VISIBLE
-//                back to home button make visible
+//                back to home button make visible and switch role invisible
+                switchRole = findViewById<LinearLayout>(R.id.roleCard)
+                switchRole.visibility = View.INVISIBLE
                 backToHomeBtn = findViewById<Button>(R.id.backToHomeBtn)
                 backToHomeBtn.visibility = View.VISIBLE
 
@@ -67,6 +71,26 @@ class MainActivity : AppCompatActivity() {
                 startActivity(it)
             }
         }
+//    role employee or client
+        val roleSwitch = findViewById<SwitchCompat>(R.id.roleSwitch)
+
+        roleSwitch.setOnCheckedChangeListener { _, isChecked ->
+            val role = if (isChecked) "Client" else "Employee"
+            Toast.makeText(this, "Selected: $role", Toast.LENGTH_SHORT).show()
+        }
+//        like samsung style
+        val roleLabel = findViewById<TextView>(R.id.roleLabel)
+
+        roleSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                Toast.makeText(this,"Client mode!", Toast.LENGTH_SHORT).show()
+//                roleLabel.text = "Client"
+            } else {
+                Toast.makeText(this,"Employee mode!", Toast.LENGTH_SHORT).show()
+//                roleLabel.text = "Employee"
+            }
+        }
+
 
 
 //        navigate next signup page also will back to main
