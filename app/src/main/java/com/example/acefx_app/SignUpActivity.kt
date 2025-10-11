@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var emailSetText : TextView
-    private lateinit var backToMain: Button
+    private lateinit var backToHomeBtn: Button
     private lateinit var submitBtn: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +36,8 @@ class SignUpActivity : AppCompatActivity() {
 
 
 //        again back to main screen
-        backToMain = findViewById<Button>(R.id.backToHomeBtn)
-        backToMain.setOnClickListener {
+        backToHomeBtn = findViewById<Button>(R.id.backToHomeBtn)
+        backToHomeBtn.setOnClickListener {
             Toast.makeText(this,"Home screen", Toast.LENGTH_SHORT).show()
             Intent(this@SignUpActivity, MainActivity::class.java).also {
                 startActivity(it)

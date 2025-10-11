@@ -23,4 +23,13 @@
     <string name="start_button">start now</string>
     <string name="flag_quiz_app">Flag Quiz App</string>
     <string name="please_enter_your_name">Please Enter Your Name</string>
+    <string name="enter_your_email_id">Enter your Email ID</string>
+    <string name="employee_check">Employee</string>
+    <string name="client_check">Client</string>
+    <string name="submit_button">Send OTP</string>
+    <string name="enter_otp_view">Enter OTP:</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="next_button">Next →</string>
+    <string name="email_text">Your Email:</string>
+    <string name="go_to_home">⬅ Go to home</string>
 </resources>

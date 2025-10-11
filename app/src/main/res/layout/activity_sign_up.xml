@@ -109,7 +109,7 @@
         android:id="@+id/backToHomeBtn"
         android:layout_width="220dp"
         android:layout_height="48dp"
-        android:text="⬅ Go to home"
+        android:text="@string/go_to_home"
         android:backgroundTint="#BDBDBD"
         android:textColor="#4B4B4B"
         android:layout_marginTop="16dp"
