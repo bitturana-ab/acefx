@@ -126,6 +126,9 @@ class MainActivity : AppCompatActivity() {
                         .edit {
                             putString("authToken", token.toString())
                         }
+                    try {
+                        startActivity(Intent(this@MainActivity, DashboardActivity::class.java))
+                    }catch (exce: Exception){}
 
                     goToHomeBtn.visibility = View.VISIBLE
                 } else {
