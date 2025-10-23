@@ -5,8 +5,8 @@
     android:id="@+id/rootScroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
     android:background="@color/dark_gray"
+    android:fillViewport="true"
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
@@ -16,20 +16,20 @@
         android:layout_height="wrap_content"
         android:padding="24dp">
 
-        <!-- Logo or App Title -->
+        <!-- App Title -->
         <TextView
             android:id="@+id/appTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textSize="36sp"
-            android:padding="4dp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
             android:fontFamily="sans-serif-medium"
-            app:layout_constraintTop_toTopOf="parent"
+            android:padding="4dp"
+            android:text="@string/app_name"
+            android:textColor="#FFFFFF"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Tagline -->
         <TextView
@@ -40,9 +40,9 @@
             android:text="@string/text_app_description_view"
             android:textColor="#B0B0B0"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/appTitle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appTitle" />
 
         <!-- Card for Email & Role -->
         <androidx.cardview.widget.CardView
@@ -53,9 +53,9 @@
             app:cardBackgroundColor="#1E1E1E"
             app:cardCornerRadius="20dp"
             app:cardElevation="6dp"
-            app:layout_constraintTop_toBottomOf="@id/tagLine"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tagLine">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -63,63 +63,53 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
-                <!-- Email Label -->
-                <TextView
-                    android:id="@+id/text_email_view"
+                <!-- Email Input -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:padding="4dp"
-                    android:text="@string/text_email_view"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp" />
+                    android:layout_marginBottom="8dp"
+                    android:hint="@string/text_email_input"
+                    app:endIconMode="clear_text">
 
-                <!-- Email Input -->
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/emailInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="#BBBBBB"
-                    android:hint="@string/text_email_input"
                     android:inputType="textEmailAddress"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#B0B0B0" />
+                    android:textSize="18sp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Role Switch -->
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:padding="4dp">
+                    <!-- Role Selection -->
                     <TextView
-                        android:id="@+id/roleLabelLeft"
+                        android:id="@+id/roleLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="14dp"
-                        android:text="@string/text_employee_view"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/text_select_your_role_view"
                         android:textColor="#B0B0B0"
                         android:textSize="16sp" />
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/roleSwitch"
-                        android:layout_width="wrap_content"
+                    <Spinner
+                        android:id="@+id/roleSpinner"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
-                        android:thumbTint="@color/samsung_switch_thumb"
-                        android:trackTint="@color/samsung_switch_track" />
-
-                    <TextView
-                        android:id="@+id/roleLabelRight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_client"
-                        android:textColor="#B0B0B0"
-                        android:textSize="16sp" />
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="#BBBBBB"
+                        android:popupBackground="@color/dark_gray"
+                        android:textAlignment="center" />
                 </LinearLayout>
-
-                <!-- Send OTP -->
+                <!-- Send OTP Button -->
                 <Button
                     android:id="@+id/sendOtpBtn"
                     android:layout_width="match_parent"
@@ -131,7 +121,7 @@
                     android:textColor="#FFFFFF"
                     android:textSize="18sp" />
 
-                <!-- OTP Section -->
+                <!-- OTP Input -->
                 <EditText
                     android:id="@+id/otpInput"
                     android:layout_width="match_parent"
@@ -144,6 +134,7 @@
                     android:textColorHint="#B0B0B0"
                     android:visibility="gone" />
 
+                <!-- Verify OTP Button -->
                 <Button
                     android:id="@+id/verifyOtpBtn"
                     android:layout_width="match_parent"
@@ -155,6 +146,7 @@
                     android:textSize="18sp"
                     android:visibility="gone" />
 
+                <!-- Go to Dashboard -->
                 <Button
                     android:id="@+id/goToHomeBtn"
                     android:layout_width="match_parent"
@@ -165,6 +157,7 @@
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:visibility="gone" />
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

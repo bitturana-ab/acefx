@@ -43,4 +43,5 @@
     <string name="text_verify_otp_view">Verify OTP</string>
     <string name="text_go_to_dashboard_view">Go to Dashboard</string>
     <string name="text_employee_view">Employee</string>
+    <string name="text_select_your_role_view">Select Your Role</string>
 </resources>
