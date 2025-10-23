@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#1E1E1E"
+    android:layout_marginBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:elevation="3dp"
+    android:layout_marginHorizontal="4dp"
+    android:backgroundTint="#333333">
+
+    <TextView
+        android:id="@+id/projectName"
+        android:text="Project Name"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/projectStatus"
+        android:text="Status: In Progress"
+        android:textColor="#B0B0B0"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"/>
+</LinearLayout>

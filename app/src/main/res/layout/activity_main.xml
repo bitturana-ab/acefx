@@ -1,203 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainLayout"
+    android:id="@+id/rootScroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#282828"
-    android:padding="24dp"
+    android:fillViewport="true"
+    android:background="@color/dark_gray"
+    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <!-- App name -->
-
-    <!-- Email Input -->
-
-    <TextView
-        android:id="@+id/signupAppName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="@string/app_logo_name"
-        android:textColor="#FFFFFF"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.09"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-<!--    email text label-->
-
-    <TextView
-        android:id="@+id/emailTextView"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="24dp"
-        android:layout_marginTop="72dp"
-        android:text="@string/email_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.121"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signupAppName" />
+        android:padding="24dp">
 
-    <EditText
-        android:id="@+id/emailInput"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="10dp"
-        android:autofillHints="emailAddress"
-        android:inputType="textEmailAddress"
-        android:hint="@string/enter_your_email_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#B0B0B0"
-        android:background="@drawable/edittext_outline"
-        android:padding="14dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintTop_toBottomOf="@id/emailTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Switch for Employee / Client -->
-    <LinearLayout
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/emailInput"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/roleCard"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="10dp"
-        android:layout_marginHorizontal="30dp"
-        android:background="@drawable/samsung_card_bg"
-        android:layout_marginBottom="28dp">
-
+        <!-- Logo or App Title -->
         <TextView
-            android:id="@+id/roleLabel"
-            android:layout_marginEnd="20dp"
+            android:id="@+id/appTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/employee_check"
+            android:text="@string/app_name"
+            android:textSize="36sp"
+            android:padding="4dp"
+            android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/roleSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:thumbTint="@color/samsung_switch_thumb"
-            android:trackTint="@color/samsung_switch_track" />
+        <!-- Tagline -->
         <TextView
-            android:id="@+id/role"
-            android:layout_marginStart="20dp"
+            android:id="@+id/tagLine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/client_check"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:layout_marginTop="8dp"
+            android:text="@string/text_app_description_view"
+            android:textColor="#B0B0B0"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/appTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Toggle Switch -->
-    </LinearLayout>
+        <!-- Card for Email & Role -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/formCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            app:cardBackgroundColor="#1E1E1E"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="6dp"
+            app:layout_constraintTop_toBottomOf="@id/tagLine"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
 
-    <!-- Submit Button -->
-    <Button
-        android:id="@+id/submitBtn"
-        android:layout_width="match_parent"
-        android:text="@string/submit_button"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:background="@drawable/samsung_btn_bg"
-        android:fontFamily="sans-serif-medium"
-        android:backgroundTint="#BDBDBD"
-        android:layout_marginTop="20dp"
-        android:padding="10dp"
-        android:layout_marginHorizontal="30dp"
-        app:layout_constraintTop_toBottomOf="@id/roleCard"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+                <!-- Email Label -->
+                <TextView
+                    android:id="@+id/text_email_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:padding="4dp"
+                    android:text="@string/text_email_view"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
 
-    <!-- OTP Input -->
+                <!-- Email Input -->
+                <EditText
+                    android:id="@+id/emailInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#BBBBBB"
+                    android:hint="@string/text_email_input"
+                    android:inputType="textEmailAddress"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#B0B0B0" />
 
-    <TextView
-        android:id="@+id/optView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:text="@string/enter_otp_view"
-        android:visibility="invisible"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.121"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signupAppName" />
+                <!-- Role Switch -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/otpInput"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="10dp"
-        android:autofillHints="emailAddress"
-        android:hint="@string/enter_otp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#B0B0B0"
-        android:background="@drawable/edittext_outline"
-        android:padding="14dp"
-        android:layout_marginBottom="20dp"
-        android:inputType="numberDecimal"
-        android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@id/emailTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+                    <TextView
+                        android:id="@+id/roleLabelLeft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:text="@string/text_employee_view"
+                        android:textColor="#B0B0B0"
+                        android:textSize="16sp" />
 
-    <!-- Next Button -->
-    <Button
-        android:id="@+id/nextBtn"
-        android:text="@string/next_button"
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/roleSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:thumbTint="@color/samsung_switch_thumb"
+                        android:trackTint="@color/samsung_switch_track" />
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:background="@drawable/samsung_btn_bg"
-        android:fontFamily="sans-serif-medium"
-        android:backgroundTint="#BDBDBD"
-        android:layout_marginTop="20dp"
-        android:padding="10dp"
-        android:layout_marginHorizontal="30dp"
-        android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@id/roleCard"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-    <Button
-        android:id="@+id/backToHomeBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:text="@string/go_to_home"
-        android:textSize="18sp"
-        android:background="@drawable/samsung_btn_bg"
-        android:fontFamily="sans-serif-medium"
-        android:backgroundTint="#BDBDBD"
-        android:layout_marginTop="20dp"
-        android:padding="10dp"
-        android:visibility="invisible"
-        android:layout_marginHorizontal="30dp"
-        app:layout_constraintTop_toBottomOf="@id/submitBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+                    <TextView
+                        android:id="@+id/roleLabelRight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_client"
+                        android:textColor="#B0B0B0"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
+                <!-- Send OTP -->
+                <Button
+                    android:id="@+id/sendOtpBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:backgroundTint="#2979FF"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/text_sent_otp_view"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <!-- OTP Section -->
+                <EditText
+                    android:id="@+id/otpInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="#BBBBBB"
+                    android:hint="@string/hint_enter_otp_view"
+                    android:inputType="number"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#B0B0B0"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/verifyOtpBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="#4CAF50"
+                    android:text="@string/text_verify_otp_view"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/goToHomeBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="#9C27B0"
+                    android:text="@string/text_go_to_dashboard_view"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

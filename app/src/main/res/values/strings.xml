@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Join Acefx for media work</string>
+    <string name="app_name">AceFx</string>
     <string name="app_logo_name">acefx</string>
     <string name="title_activity_sign_up">Signup to be a member of acefx</string>
     <string name="browse_title">Videos by Your Company</string>
@@ -34,4 +34,13 @@
     <string name="go_to_home">⬅ Go to home</string>
     <string name="client_check_text">Client</string>
     <string name="employee_check_text">Employee</string>
+    <string name="text_client">Client</string>
+    <string name="text_email_input">Enter your email</string>
+    <string name="text_email_view">Email Address</string>
+    <string name="text_app_description_view">Empowering Creative Workflows</string>
+    <string name="text_sent_otp_view">Send OTP</string>
+    <string name="hint_enter_otp_view">Enter OTP</string>
+    <string name="text_verify_otp_view">Verify OTP</string>
+    <string name="text_go_to_dashboard_view">Go to Dashboard</string>
+    <string name="text_employee_view">Employee</string>
 </resources>
