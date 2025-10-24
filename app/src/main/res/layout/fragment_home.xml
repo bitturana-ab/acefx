@@ -3,12 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:padding="16dp"
     android:layout_height="match_parent">
     <!-- Content Layout -->
     <ScrollView
         android:id="@+id/homeScrollView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -19,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="10dp">
 
             <!-- Greeting -->
             <TextView
@@ -27,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:text="Welcome 👋"
+                android:text="@string/text_home_welcome"
                 android:textColor="@color/white"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -37,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Let's make today productive!"
+                android:text="@string/text_home_description"
                 android:textColor="#B0B0B0"
                 android:textSize="16sp" />
 
