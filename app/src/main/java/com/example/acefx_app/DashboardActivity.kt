@@ -20,7 +20,7 @@ class DashboardActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Dynamic status bar color
-        window.statusBarColor = MaterialColors.getColor(this, com.google.android.material.R.attr.colorPrimary, 0)
+//        window.statusBarColor = MaterialColors.getColor(this, com.google.android.material.R.attr.colorPrimary, 0)
 
         // Load default fragment
         loadFragment(HomeFragment())

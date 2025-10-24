@@ -1,5 +1,6 @@
 package com.example.acefx_app
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -21,11 +22,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var verifyOtpBtn: Button
     private lateinit var goToHomeBtn: Button
     private lateinit var roleSpinner: Spinner
+    private lateinit var resendTimer: TextView
 
     private var selectedRole = "Employee"
     private val apiService = ApiClient.getClient().create(ApiService::class.java)
-
     private val prefs by lazy { getSharedPreferences("AceFXPrefs", MODE_PRIVATE) }
+    private var resendCountDownTimer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,21 +41,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_main)
+        initializeViews()
+        setupRoleSpinner()
+        setupButtons()
+    }
 
-        // Initialize views
+    private fun initializeViews() {
         emailInput = findViewById(R.id.emailInput)
         otpInput = findViewById(R.id.otpInput)
         sendOtpBtn = findViewById(R.id.sendOtpBtn)
         verifyOtpBtn = findViewById(R.id.verifyOtpBtn)
         goToHomeBtn = findViewById(R.id.goToHomeBtn)
         roleSpinner = findViewById(R.id.roleSpinner)
-
-        setupRoleSpinner()
-        setupButtons()
+        resendTimer = findViewById(R.id.resendTimer)
     }
 
     private fun setupRoleSpinner() {
-        val roles = arrayOf("Select Role","Employee", "Client")
+        val roles = arrayOf("Select Role", "Employee", "Client")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, roles)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         roleSpinner.adapter = adapter
@@ -65,15 +69,11 @@ class MainActivity : AppCompatActivity() {
                 selectedRole = if (position == 0) "" else roles[position]
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-//                selectedRole = "Employee" // default fallback
-            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
 
     private fun setupButtons() {
-
-        // Send OTP button
         sendOtpBtn.setOnClickListener {
             val email = emailInput.text.toString().trim()
             if (email.isEmpty()) {
@@ -87,7 +87,6 @@ class MainActivity : AppCompatActivity() {
             sendOtp(email, selectedRole)
         }
 
-        // Verify OTP button
         verifyOtpBtn.setOnClickListener {
             val email = emailInput.text.toString().trim()
             val otp = otpInput.text.toString().trim()
@@ -98,7 +97,6 @@ class MainActivity : AppCompatActivity() {
             verifyOtp(email, otp)
         }
 
-        // Go to Dashboard
         goToHomeBtn.setOnClickListener {
             startActivity(Intent(this, DashboardActivity::class.java))
         }
@@ -115,14 +113,12 @@ class MainActivity : AppCompatActivity() {
                 response: Response<Map<String, Any>>
             ) {
                 if (response.isSuccessful) {
-                    Toast.makeText(this@MainActivity, "OTP sent to $email", Toast.LENGTH_LONG)
-                        .show()
-
+                    Toast.makeText(this@MainActivity, "OTP sent to $email", Toast.LENGTH_LONG).show()
                     emailInput.isEnabled = false
                     otpInput.visibility = View.VISIBLE
                     verifyOtpBtn.visibility = View.VISIBLE
 
-                    // Start resend timer
+                    sendOtpBtn.text = "Resend OTP"
                     startResendTimer()
                 } else {
                     sendOtpBtn.isEnabled = true
@@ -134,24 +130,9 @@ class MainActivity : AppCompatActivity() {
             override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
                 sendOtpBtn.isEnabled = true
                 sendOtpBtn.text = "Send OTP"
-                Toast.makeText(this@MainActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this@MainActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
-    }
-
-    private fun startResendTimer() {
-        sendOtpBtn.isEnabled = false
-        object : CountDownTimer(30000, 1000) { // 30 seconds timer
-            override fun onTick(millisUntilFinished: Long) {
-                sendOtpBtn.text = "Resend OTP (${millisUntilFinished / 1000}s)"
-            }
-
-            override fun onFinish() {
-                sendOtpBtn.isEnabled = true
-                sendOtpBtn.text = "Resend OTP"
-            }
-        }.start()
     }
 
     private fun verifyOtp(email: String, otp: String) {
@@ -171,6 +152,7 @@ class MainActivity : AppCompatActivity() {
                     val data = response.body()
                     val token = data?.get("token") ?: ""
                     prefs.edit { putString("authToken", token.toString()) }
+                    saveUserSession()
 
                     Toast.makeText(this@MainActivity, "Login Successful!", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this@MainActivity, DashboardActivity::class.java))
@@ -183,9 +165,34 @@ class MainActivity : AppCompatActivity() {
             override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
                 verifyOtpBtn.isEnabled = true
                 verifyOtpBtn.text = "Verify OTP"
-                Toast.makeText(this@MainActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this@MainActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun saveUserSession() {
+        val sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+        sharedPref.edit().apply {
+            putBoolean("isLoggedIn", true)
+            putString("role", selectedRole)
+            apply()
+        }
+    }
+
+    private fun startResendTimer() {
+        sendOtpBtn.isEnabled = false
+        resendTimer.visibility = View.VISIBLE
+
+        resendCountDownTimer?.cancel()
+        resendCountDownTimer = object : CountDownTimer(60000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                resendTimer.text = "Resend in ${millisUntilFinished / 1000}s"
+            }
+
+            override fun onFinish() {
+                resendTimer.visibility = View.GONE
+                sendOtpBtn.isEnabled = true
+            }
+        }.start()
     }
 }

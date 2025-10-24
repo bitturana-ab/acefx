@@ -21,6 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Acefxapp">
         <activity
+            android:name=".StaffProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ClientProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoggedIn"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
@@ -42,7 +48,8 @@
 
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
-        </activity> <!-- check user islogged in splash screen -->
+        </activity>
+        <!-- check user islogged in splash screen -->
         <activity
             android:name=".SplashActivity"
             android:exported="true">

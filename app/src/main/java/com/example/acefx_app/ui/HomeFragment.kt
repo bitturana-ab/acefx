@@ -1,61 +1,44 @@
 package com.example.acefx_app.ui
 
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.acefx_app.ClientProfileActivity
 import com.example.acefx_app.R
+import com.example.acefx_app.StaffProfileActivity
 import com.google.android.material.card.MaterialCardView
 
 class HomeFragment : Fragment() {
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-
-        val welcomeText = view.findViewById<TextView>(R.id.welcomeText)
-        val projectList = view.findViewById<LinearLayout>(R.id.projectList)
-
-        // Load user name from SharedPreferences
-        val prefs = requireContext().getSharedPreferences("AceFXPrefs", Context.MODE_PRIVATE)
-        val userName = prefs.getString("userName", "User")
-
-        welcomeText.text = "Welcome, $userName 👋"
-
-        // Dummy recent projects
-        val projects = listOf("AI Assistant", "Finance Tracker", "Chat Sync", "AceFX Android")
-
-        // Dynamically create project cards
-        for (proj in projects) {
-            val card = MaterialCardView(requireContext()).apply {
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    setMargins(0, 12, 0, 0)
-                }
-                radius = 20f
-                cardElevation = 6f
-                setCardBackgroundColor(resources.getColor(R.color.dark_gray, null))
-
-                val text = TextView(requireContext()).apply {
-                    text = "• $proj"
-                    textSize = 18f
-                    setTextColor(resources.getColor(R.color.white, null))
-                    setPadding(20, 20, 20, 20)
-                }
-                addView(text)
+        sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            val role = sharedPreferences.getString("userRole", "")
+            if (role.equals("Client", ignoreCase = true)) {
+                val intent = Intent(requireContext(), ClientProfileActivity::class.java)
+                startActivity(intent)
+            } else if (role.equals("Employee", ignoreCase = true)) {
+                val intent = Intent(requireContext(), StaffProfileActivity::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireContext(), "No valid role found", Toast.LENGTH_SHORT).show()
             }
-            projectList.addView(card)
-        }
+
 
         return view
     }
 }
+

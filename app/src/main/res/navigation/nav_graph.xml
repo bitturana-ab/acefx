@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainActivity">
+
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.acefx_app.MainActivity"
+        tools:layout="@layout/activity_main">
+        <action
+            android:id="@+id/action_main_to_dashboard"
+            app:destination="@id/dashboardActivity" />
+    </activity>
+
+    <activity
+        android:id="@+id/dashboardActivity"
+        android:name="com.example.acefx_app.DashboardActivity"
+        tools:layout="@layout/activity_dashboard">
+        <action
+            android:id="@+id/action_dashboard_to_home"
+            app:destination="@id/homeFragment" />
+    </activity>
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.acefx_app.ui.HomeFragment"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/projectsFragment"
+        android:name="com.example.acefx_app.ui.ProjectsFragment"
+        tools:layout="@layout/fragment_projects" />
+
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.acefx_app.ui.AccountFragment"
+        tools:layout="@layout/fragment_account" />
+
+    <activity
+        android:id="@+id/clientProfileActivity"
+        android:name="com.example.acefx_app.ClientProfileActivity"
+        tools:layout="@layout/activity_client_profile" />
+
+    <activity
+        android:id="@+id/staffProfileActivity"
+        android:name="com.example.acefx_app.StaffProfileActivity"
+        tools:layout="@layout/activity_staff_profile" />
+</navigation>
