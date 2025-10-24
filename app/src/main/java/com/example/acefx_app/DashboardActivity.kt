@@ -2,13 +2,9 @@ package com.example.acefx_app
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.example.acefx_app.databinding.ActivityDashboardBinding
-import com.example.acefx_app.ui.AccountFragment
-import com.example.acefx_app.ui.HomeFragment
-import com.example.acefx_app.ui.ProjectsFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.color.MaterialColors
 
 class DashboardActivity : AppCompatActivity() {
 
@@ -19,30 +15,12 @@ class DashboardActivity : AppCompatActivity() {
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Dynamic status bar color
-//        window.statusBarColor = MaterialColors.getColor(this, com.google.android.material.R.attr.colorPrimary, 0)
+        // Get the NavController from NavHostFragment
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
 
-        // Load default fragment
-        loadFragment(HomeFragment())
-
-        // Set item selection listener
-        binding.bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> loadFragment(HomeFragment())
-                R.id.nav_projects -> loadFragment(ProjectsFragment())
-                R.id.nav_account -> loadFragment(AccountFragment())
-            }
-            true
-        }
-    }
-
-    private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .setCustomAnimations(
-                android.R.anim.fade_in,
-                android.R.anim.fade_out
-            )
-            .replace(R.id.fragmentContainer, fragment)
-            .commit()
+        // Link the bottom nav to the NavController
+        binding.bottomNavigation.setupWithNavController(navController)
     }
 }

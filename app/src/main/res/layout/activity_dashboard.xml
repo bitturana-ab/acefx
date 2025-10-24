@@ -2,30 +2,28 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/dashboardLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DashboardActivity">
 
-    <!-- Fragment container -->
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
+    <!-- NavHostFragment holds all your fragments -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="55dp" />
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph" />
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
+        android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/gray"
-        app:menu="@menu/bottom_nav_menu"
-        app:itemIconTint="@color/white"
+        android:background="@color/black"
+        app:itemIconTint="@color/nav_selector"
         app:itemTextColor="@color/nav_selector"
-        app:itemRippleColor="@color/nav_selector"
-        android:elevation="12dp"
-        app:labelVisibilityMode="labeled" />
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

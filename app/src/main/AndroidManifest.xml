@@ -21,12 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Acefxapp">
         <activity
-            android:name=".StaffProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ClientProfileActivity"
-            android:exported="false" />
-        <activity
             android:name=".LoggedIn"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
@@ -50,15 +44,15 @@
             </intent-filter>
         </activity>
         <!-- check user islogged in splash screen -->
-        <activity
-            android:name=".SplashActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--        <activity-->
+<!--            android:name=".SplashActivity"-->
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
         <activity
             android:name=".MainActivity"
             android:exported="true"

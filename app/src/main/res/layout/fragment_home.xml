@@ -1,140 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/homeScrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground"
-    android:fillViewport="true"
-    android:padding="20dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- Greeting -->
-        <TextView
-            android:id="@+id/welcomeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="Welcome 👋"
-            android:textColor="@color/white"
-            android:textSize="28sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/subGreeting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Let's make today productive!"
-            android:textColor="#B0B0B0"
-            android:textSize="16sp" />
-
-        <!-- Recent Projects Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Recent Projects"
-            android:textColor="@color/blue_400"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <!-- Project Cards Container -->
-        <LinearLayout
-            android:id="@+id/projectList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical" />
-
-        <!-- Quick Actions -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Quick Actions"
-            android:textColor="@color/blue_400"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+    android:layout_height="match_parent">
+    <!-- Content Layout -->
+    <ScrollView
+        android:id="@+id/homeScrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:orientation="vertical"
+            android:padding="20dp">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/newProjectCard"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="6dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="#1E1E1E"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="6dp">
+            <!-- Greeting -->
+            <TextView
+                android:id="@+id/welcomeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="Welcome 👋"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
+            <TextView
+                android:id="@+id/subGreeting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Let's make today productive!"
+                android:textColor="#B0B0B0"
+                android:textSize="16sp" />
 
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_add_circle_rounded"
-                        app:tint="@color/blue_400" />
+            <!-- Recent Projects Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Recent Projects"
+                android:textColor="@color/blue_400"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="@string/text_new_project"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            <!-- Project Cards Container -->
+            <LinearLayout
+                android:id="@+id/projectList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/refreshCard"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="6dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="#1E1E1E"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="6dp">
+            <!-- Quick Actions -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Quick Actions"
+                android:textColor="@color/blue_400"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_refresh_rounded"
-                        app:tint="@color/green_400" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/newProjectCard"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_margin="6dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="#1E1E1E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="6dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="@string/text_refresh_data"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_add_circle_rounded"
+                            app:tint="@color/blue_400" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/text_new_project"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/refreshCard"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_margin="6dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="#1E1E1E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="6dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_refresh_rounded"
+                            app:tint="@color/green_400" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/text_refresh_data"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@color/dark_gray"
-    tools:context=".StaffProfileActivity">
+    tools:context=".ui.ClientProfileFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,10 +15,10 @@
         android:gravity="center_horizontal">
 
         <TextView
-            android:id="@+id/staffProfileTitle"
+            android:id="@+id/clientProfileTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile - Staff"
+            android:text="Profile - Client"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:layout_marginBottom="16dp" />
@@ -27,10 +27,10 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Full Name">
+            android:hint="Company/Individual Name">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/fullNameInput"
+                android:id="@+id/companyNameInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white" />
@@ -44,7 +44,7 @@
             android:hint="Phone No.">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/staffPhoneInput"
+                android:id="@+id/phoneInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="phone"
@@ -56,31 +56,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Aadhaar/PAN">
+            android:hint="Pin Code">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/idInput"
+                android:id="@+id/pinCodeInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:inputType="number"
                 android:textColor="@android:color/white" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/createProfileBtn"
+            android:id="@+id/nextBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:backgroundTint="@color/purple_500"
-            android:text="Create Profile"
-            android:textColor="@android:color/white" />
-
-        <CheckBox
-            android:id="@+id/nearbyCheck"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Nearby Mumbai"
+            android:text="Next →"
             android:textColor="@android:color/white" />
     </LinearLayout>
 </ScrollView>
