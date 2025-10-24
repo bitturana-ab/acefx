@@ -143,6 +143,12 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/goToHomeBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_goto_my_home"
+                android:textSize="20sp"/>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,7 +28,16 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+        binding.goToHomeBtn.setOnClickListener {
+            gotoMyHome()
+        }
+
+    }
+
+    private fun gotoMyHome() {
+
+        sharedPreferences =
+            requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         val role = sharedPreferences.getString("role", "")
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -39,12 +48,15 @@ class HomeFragment : Fragment() {
                     val action = HomeFragmentDirections.actionHomeFragmentToClientProfileFragment()
                     findNavController().navigate(action)
                 }
+
                 "employee" -> {
                     val action = HomeFragmentDirections.actionHomeFragmentToStaffProfileFragment()
                     findNavController().navigate(action)
                 }
+
                 else -> {
-                    Toast.makeText(requireContext(), "No valid role found", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "No valid role found", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }

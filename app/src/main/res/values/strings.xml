@@ -51,4 +51,5 @@
     <string name="text_menu_account">Account</string>
     <string name="text_new_project">New Project</string>
     <string name="text_refresh_data">Refresh Data</string>
+    <string name="text_goto_my_home">My Home</string>
 </resources>
