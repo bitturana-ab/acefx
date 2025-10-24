@@ -24,15 +24,14 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-        sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            val role = sharedPreferences.getString("userRole", "")
+        var view = inflater.inflate(R.layout.fragment_home, container, false)
+        sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+            val role = sharedPreferences.getString("role", "")
             if (role.equals("Client", ignoreCase = true)) {
-                val intent = Intent(requireContext(), ClientProfileActivity::class.java)
-                startActivity(intent)
+//                open with same same tab
+                view = inflater.inflate(R.layout.activity_client_profile,container,false)
             } else if (role.equals("Employee", ignoreCase = true)) {
-                val intent = Intent(requireContext(), StaffProfileActivity::class.java)
-                startActivity(intent)
+                view = inflater.inflate(R.layout.activity_staff_profile,container,false)
             } else {
                 Toast.makeText(requireContext(), "No valid role found", Toast.LENGTH_SHORT).show()
             }
