@@ -8,6 +8,7 @@
     <activity
         android:id="@+id/mainActivity"
         android:name="com.example.acefx_app.MainActivity"
+        android:label="activity_main"
         tools:layout="@layout/activity_main">
         <action
             android:id="@+id/action_main_to_dashboard"
@@ -17,6 +18,7 @@
     <activity
         android:id="@+id/dashboardActivity"
         android:name="com.example.acefx_app.DashboardActivity"
+        android:label="activity_dashboard"
         tools:layout="@layout/activity_dashboard">
         <action
             android:id="@+id/action_dashboard_to_home"
@@ -32,6 +34,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.acefx_app.ui.HomeFragment"
+        android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_staffProfileActivity"
@@ -44,6 +47,7 @@
     <fragment
         android:id="@+id/projectsFragment"
         android:name="com.example.acefx_app.ui.ProjectsFragment"
+        android:label="fragment_projects"
         tools:layout="@layout/fragment_projects" />
 
     <fragment
@@ -54,10 +58,12 @@
     <activity
         android:id="@+id/clientProfileActivity"
         android:name="com.example.acefx_app.ClientProfileActivity"
+        android:label="activity_client_profile"
         tools:layout="@layout/activity_client_profile" />
 
     <activity
         android:id="@+id/staffProfileActivity"
         android:name="com.example.acefx_app.StaffProfileActivity"
+        android:label="activity_staff_profile"
         tools:layout="@layout/activity_staff_profile" />
 </navigation>

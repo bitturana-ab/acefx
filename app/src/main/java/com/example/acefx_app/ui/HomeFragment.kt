@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.acefx_app.ClientProfileActivity
 import com.example.acefx_app.R
 import com.example.acefx_app.StaffProfileActivity
@@ -29,9 +30,13 @@ class HomeFragment : Fragment() {
             val role = sharedPreferences.getString("role", "")
             if (role.equals("Client", ignoreCase = true)) {
 //                open with same same tab
-                view = inflater.inflate(R.layout.activity_client_profile,container,false)
+                val action = HomeFragmentDirections
+                    .actionHomeFragmentToClientProfileActivity()
+                findNavController().navigate(action)
             } else if (role.equals("Employee", ignoreCase = true)) {
-                view = inflater.inflate(R.layout.activity_staff_profile,container,false)
+                val action = HomeFragmentDirections
+                    .actionHomeFragmentToStaffProfileActivity()
+                findNavController().navigate(action)
             } else {
                 Toast.makeText(requireContext(), "No valid role found", Toast.LENGTH_SHORT).show()
             }
