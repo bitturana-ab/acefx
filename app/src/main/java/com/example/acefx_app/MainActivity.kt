@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var goToHomeBtn: Button
     private lateinit var resendTimer: TextView
 
-    private val apiService = ApiClient.getClient().create(ApiService::class.java)
+    private val apiService = ApiClient.getClient(this).create(ApiService::class.java)
     private val prefs by lazy { getSharedPreferences("AceFXPrefs", MODE_PRIVATE) }
     private var resendCountDownTimer: CountDownTimer? = null
 
@@ -135,9 +135,19 @@ class MainActivity : AppCompatActivity() {
 
                 if (response.isSuccessful) {
                     val data = response.body()
-                    val token = data?.get("token") ?: ""
-                    prefs.edit { putString("authToken", token.toString()) }
-                    saveUserSession()
+                    val token = data?.get("token").toString()
+
+                    // Extract userId if backend sends it
+                    val userMap = data?.get("user") as? Map<*, *>
+                    val userId = userMap?.get("_id")?.toString() ?: ""
+
+                    // Save token and userId
+                    prefs.edit {
+                        putString("authToken", token)
+                        putString("userId", userId)
+                        apply()
+                    }
+                    saveUserSession(userId)
 
                     Toast.makeText(this@MainActivity, "Login Successful!", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this@MainActivity, DashboardActivity::class.java))
@@ -156,11 +166,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** Save user session to SharedPreferences **/
-    private fun saveUserSession() {
+    private fun saveUserSession(userId: String) {
         val sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         sharedPref.edit().apply {
             putBoolean("isLoggedIn", true)
-            putString("userId", prefs.getString("userId", ""))
+            putString("userId", userId)
             apply()
         }
     }

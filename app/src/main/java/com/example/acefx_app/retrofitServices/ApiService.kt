@@ -19,6 +19,6 @@ interface ApiService {
     fun getDashboard(@Header("Authorization") token: String): Call<Map<String, Any>>
 
 //    for update client fields
-    @POST("api/auth/update-user") // replace with your actual endpoint
+    @POST("api/auth/update-user") // update extras info user endpoint
     fun updateUser(@Body body: Map<String, String>): Call<Map<String, Any>>
 }
