@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
+
     <!-- Content Layout -->
     <ScrollView
         android:id="@+id/homeScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,7 +62,7 @@
                 android:layout_marginTop="10dp"
                 android:orientation="vertical" />
 
-            <!-- Quick Actions -->
+            <!-- Quick Actions Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -71,20 +73,22 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
+            <!-- Quick Actions Cards -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="center"
                 android:orientation="horizontal"
+                android:gravity="center"
                 android:weightSum="2">
 
+                <!-- New Project Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/newProjectCard"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
-                    android:layout_margin="6dp"
                     android:layout_weight="1"
+                    android:layout_margin="6dp"
                     app:cardBackgroundColor="#1E1E1E"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="6dp">
@@ -92,8 +96,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:gravity="center">
 
                         <ImageView
                             android:layout_width="48dp"
@@ -111,12 +115,13 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- Refresh Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/refreshCard"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
-                    android:layout_margin="6dp"
                     android:layout_weight="1"
+                    android:layout_margin="6dp"
                     app:cardBackgroundColor="#1E1E1E"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="6dp">
@@ -124,8 +129,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:gravity="center">
 
                         <ImageView
                             android:layout_width="48dp"
@@ -144,26 +149,28 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
+            <!-- Go To Home Button -->
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/goToHomeBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:text="@string/text_goto_my_home"
                 android:textSize="20sp" />
         </LinearLayout>
     </ScrollView>
-    <!-- Progress Bar overlay -->
-    <!-- Loading overlay -->
+
+    <!-- Progress Bar Overlay -->
     <FrameLayout
         android:id="@+id/loadingOverlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#88000000"
         android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -173,4 +180,5 @@
             android:layout_gravity="center"
             android:indeterminate="true" />
     </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

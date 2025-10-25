@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.acefx_app.R
@@ -31,14 +32,27 @@ class ProjectsAdapter(private var projects: List<ProjectItem>) :
         val project = projects[position]
         holder.projectName.text = project.title
         holder.projectStatus.text = "Status: ${project.status}"
+
+        // Fade-in animation for each item
+        setFadeAnimation(holder.itemView, position)
     }
 
     override fun getItemCount(): Int = projects.size
 
-    // Updates the adapter's data and refreshes the RecyclerView
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(newProjects: List<ProjectItem>) {
         projects = newProjects
         notifyDataSetChanged()
+    }
+
+    /** Fade-in animation for RecyclerView items */
+    private var lastPosition = -1
+    private fun setFadeAnimation(view: View, position: Int) {
+        if (position > lastPosition) {
+            val anim = AlphaAnimation(0.0f, 1.0f)
+            anim.duration = 300
+            view.startAnimation(anim)
+            lastPosition = position
+        }
     }
 }

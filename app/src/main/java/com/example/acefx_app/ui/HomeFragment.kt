@@ -44,91 +44,105 @@ class HomeFragment : Fragment() {
         sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
 
         binding.goToHomeBtn.setOnClickListener {
-            goToProfileOrProjects()
+            handleHomeNavigation()
         }
     }
 
-    private fun goToProfileOrProjects() {
+    // Determine whether to go to profile setup or projects
+    private fun handleHomeNavigation() {
+        loadLocalUserData()
+
+        when {
+            // Profile is complete
+            isProfileComplete() -> {
+                Toast.makeText(requireContext(), "Welcome back, $companyName!", Toast.LENGTH_SHORT).show()
+                navigateToProjects()
+            }
+
+            // Token exists but profile incomplete — fetch updated profile
+            !token.isNullOrEmpty() -> {
+                fetchUpdatedProfile()
+            }
+
+            // No token or no profile — go to profile setup
+            else -> {
+                Toast.makeText(requireContext(), "Please complete your profile.", Toast.LENGTH_SHORT).show()
+                navigateToProfile()
+            }
+        }
+    }
+
+    private fun loadLocalUserData() {
         companyName = sharedPref.getString("companyName", null)
         phoneNumber = sharedPref.getString("phoneNumber", null)
         pinCode = sharedPref.getString("pinCode", null)
         token = sharedPref.getString("authToken", null)
-
-        when {
-            // All profile info exists — go to projects
-            !companyName.isNullOrEmpty() && !phoneNumber.isNullOrEmpty() && !pinCode.isNullOrEmpty() -> {
-                Toast.makeText(requireContext(), "Welcome back, $companyName!", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.clientProjectsFragment)
-            }
-
-            // Token exists — fetch from backend
-            !token.isNullOrEmpty() -> {
-                getUserUpdatedProfile()
-            }
-
-            // No token or incomplete profile — go to profile setup
-            else -> {
-                Toast.makeText(requireContext(), "Please complete your profile.", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.clientProfileFragment)
-            }
-        }
     }
 
-    // Fetch user's updated profile from backend and store locally
-    private fun getUserUpdatedProfile() {
-        // Show loading spinner before fetching
-        binding.loadingOverlay.visibility = View.VISIBLE
-        binding.progressBar.visibility = View.VISIBLE
-        binding.goToHomeBtn.isEnabled = false
+    private fun isProfileComplete(): Boolean {
+        return !companyName.isNullOrEmpty() && !phoneNumber.isNullOrEmpty() && !pinCode.isNullOrEmpty()
+    }
+
+    private fun fetchUpdatedProfile() {
+        showLoading(true)
 
         api.getUserProfile("Bearer $token").enqueue(object : Callback<UserDetailsResponse> {
-            override fun onResponse(
-                call: Call<UserDetailsResponse>,
-                response: Response<UserDetailsResponse>
-            ) {
-                // Hide spinner
-                binding.progressBar.visibility = View.GONE
-                binding.loadingOverlay.visibility = View.GONE
-                binding.goToHomeBtn.isEnabled = true
+            override fun onResponse(call: Call<UserDetailsResponse>, response: Response<UserDetailsResponse>) {
+                showLoading(false)
+
+                if (!isAdded) return
 
                 if (response.isSuccessful) {
                     val data = response.body()
                     if (data != null) {
-                        companyName = data.companyName
-                        phoneNumber = data.phoneNumber
-                        pinCode = data.pinCode
-
-                        // Save fetched data to SharedPreferences
-                        with(sharedPref.edit()) {
-                            putString("companyName", companyName)
-                            putString("phoneNumber", phoneNumber)
-                            putString("pinCode", pinCode)
-                            apply()
-                        }
-
-                        if (!companyName.isNullOrEmpty() && !phoneNumber.isNullOrEmpty() && !pinCode.isNullOrEmpty()) {
+                        saveUserDataLocally(data)
+                        if (isProfileComplete()) {
                             Toast.makeText(requireContext(), "Welcome back, $companyName!", Toast.LENGTH_SHORT).show()
-                            findNavController().navigate(R.id.clientProjectsFragment)
+                            navigateToProjects()
                         } else {
                             Toast.makeText(requireContext(), "Profile incomplete. Please update your details.", Toast.LENGTH_SHORT).show()
-                            findNavController().navigate(R.id.clientProfileFragment)
+                            navigateToProfile()
                         }
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Failed to load user data", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.clientProfileFragment)
+                    Toast.makeText(requireContext(), "Failed to load user data.", Toast.LENGTH_SHORT).show()
+                    navigateToProfile()
                 }
             }
 
             override fun onFailure(call: Call<UserDetailsResponse>, t: Throwable) {
-                // Hide spinner
-                binding.progressBar.visibility = View.GONE
-                binding.goToHomeBtn.isEnabled = true
-
+                showLoading(false)
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.clientProfileFragment)
+                navigateToProfile()
             }
         })
+    }
+
+    private fun saveUserDataLocally(data: UserDetailsResponse) {
+        companyName = data.companyName
+        phoneNumber = data.phoneNumber
+        pinCode = data.pinCode
+
+        sharedPref.edit().apply {
+            putString("companyName", companyName)
+            putString("phoneNumber", phoneNumber)
+            putString("pinCode", pinCode)
+            apply()
+        }
+    }
+
+    private fun navigateToProjects() {
+        findNavController().navigate(R.id.clientProjectsFragment)
+    }
+
+    private fun navigateToProfile() {
+        findNavController().navigate(R.id.clientProfileFragment)
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.loadingOverlay.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.goToHomeBtn.isEnabled = !isLoading
     }
 
     override fun onDestroyView() {
