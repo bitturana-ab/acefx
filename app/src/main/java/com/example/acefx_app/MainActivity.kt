@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.View
+import android.view.animation.AlphaAnimation
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
@@ -23,8 +23,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var verifyOtpBtn: Button
     private lateinit var goToHomeBtn: Button
     private lateinit var resendTimer: TextView
+    private lateinit var progressOverlay: FrameLayout
+    private lateinit var progressBar: ProgressBar
 
-    private val apiService = ApiClient.getClient(this).create(ApiService::class.java)
+    private val apiService: ApiService by lazy { ApiClient.getClient(this).create(ApiService::class.java) }
     private val prefs by lazy { getSharedPreferences("UserSession", MODE_PRIVATE) }
     private var resendCountDownTimer: CountDownTimer? = null
 
@@ -44,7 +46,6 @@ class MainActivity : AppCompatActivity() {
         setupButtons()
     }
 
-    /** Initialize all view components **/
     private fun initializeViews() {
         emailInput = findViewById(R.id.emailInput)
         otpInput = findViewById(R.id.otpInput)
@@ -52,9 +53,10 @@ class MainActivity : AppCompatActivity() {
         verifyOtpBtn = findViewById(R.id.verifyOtpBtn)
         goToHomeBtn = findViewById(R.id.goToHomeBtn)
         resendTimer = findViewById(R.id.resendTimer)
+        progressOverlay = findViewById(R.id.progressOverlay)
+        progressBar = findViewById(R.id.progressBar)
     }
 
-    /** Setup button click listeners **/
     private fun setupButtons() {
 
         sendOtpBtn.setOnClickListener {
@@ -63,6 +65,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter your email", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            animateFadeIn(progressOverlay)
             sendOtp(email)
         }
 
@@ -73,34 +76,29 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter OTP", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            animateFadeIn(progressOverlay)
             verifyOtp(email, otp)
         }
 
         goToHomeBtn.setOnClickListener {
             startActivity(Intent(this, DashboardActivity::class.java))
+            finish()
         }
     }
 
-    /** Send OTP to backend **/
     private fun sendOtp(email: String) {
         sendOtpBtn.isEnabled = false
         sendOtpBtn.text = "Sending..."
 
         val request = mapOf("email" to email)
         apiService.sendOtp(request).enqueue(object : Callback<Map<String, Any>> {
-            override fun onResponse(
-                call: Call<Map<String, Any>>,
-                response: Response<Map<String, Any>>
-            ) {
-//                Log.d("OTP_DEBUG", "Response code: ${response.code()}")
-//                Log.d("OTP_DEBUG", "Response body: ${response.body()}")
-//                Log.d("OTP_DEBUG", "Error body: ${response.errorBody()?.string()}")
-
+            override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
+                animateFadeOut(progressOverlay)
                 if (response.isSuccessful) {
                     Toast.makeText(this@MainActivity, "OTP sent to email", Toast.LENGTH_LONG).show()
                     emailInput.isEnabled = false
-                    otpInput.visibility = View.VISIBLE
-                    verifyOtpBtn.visibility = View.VISIBLE
+                    fadeInView(otpInput)
+                    fadeInView(verifyOtpBtn)
 
                     sendOtpBtn.text = "Resend OTP"
                     startResendTimer()
@@ -112,6 +110,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+                animateFadeOut(progressOverlay)
                 sendOtpBtn.isEnabled = true
                 sendOtpBtn.text = "Send OTP"
                 Toast.makeText(this@MainActivity, "Network error: Check Internet connection", Toast.LENGTH_SHORT).show()
@@ -119,17 +118,14 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    /** Verify OTP with backend **/
     private fun verifyOtp(email: String, otp: String) {
         verifyOtpBtn.isEnabled = false
         verifyOtpBtn.text = "Verifying..."
 
         val request = mapOf("email" to email, "otp" to otp)
         apiService.verifyOtp(request).enqueue(object : Callback<Map<String, Any>> {
-            override fun onResponse(
-                call: Call<Map<String, Any>>,
-                response: Response<Map<String, Any>>
-            ) {
+            override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
+                animateFadeOut(progressOverlay)
                 verifyOtpBtn.isEnabled = true
                 verifyOtpBtn.text = "Verify OTP"
 
@@ -137,11 +133,9 @@ class MainActivity : AppCompatActivity() {
                     val data = response.body()
                     val token = data?.get("token").toString()
 
-                    // Extract userId if backend sends it
                     val userMap = data?.get("user") as? Map<*, *>
                     val userId = userMap?.get("_id")?.toString() ?: ""
 
-                    // Save token and userId
                     prefs.edit {
                         putString("authToken", token)
                         putString("userId", userId)
@@ -158,6 +152,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+                animateFadeOut(progressOverlay)
                 verifyOtpBtn.isEnabled = true
                 verifyOtpBtn.text = "Verify OTP"
                 Toast.makeText(this@MainActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
@@ -165,17 +160,14 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    /** Save user session to SharedPreferences **/
     private fun saveUserSession(userId: String) {
-        val sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE)
-        sharedPref.edit().apply {
+        prefs.edit {
             putBoolean("isLoggedIn", true)
             putString("userId", userId)
             apply()
         }
     }
 
-    /** Start countdown timer for OTP resend **/
     private fun startResendTimer() {
         sendOtpBtn.isEnabled = false
         resendTimer.visibility = View.VISIBLE
@@ -183,13 +175,44 @@ class MainActivity : AppCompatActivity() {
         resendCountDownTimer?.cancel()
         resendCountDownTimer = object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                resendTimer.text = "Resend in ${millisUntilFinished / 1000}s"
+                val seconds = millisUntilFinished / 1000
+                resendTimer.text = "Resend in ${seconds}s"
+
+                // Fade in/out animation for the timer text
+                val fade = AlphaAnimation(0.3f, 1f)
+                fade.duration = 500
+                fade.repeatMode = AlphaAnimation.REVERSE
+                fade.repeatCount = 1
+                resendTimer.startAnimation(fade)
             }
 
             override fun onFinish() {
                 resendTimer.visibility = View.GONE
                 sendOtpBtn.isEnabled = true
             }
+        }.start()
+    }
+
+
+    /** View fade-in animation **/
+    private fun fadeInView(view: View, duration: Long = 300) {
+        view.visibility = View.VISIBLE
+        val anim = AlphaAnimation(0f, 1f)
+        anim.duration = duration
+        view.startAnimation(anim)
+    }
+
+    /** Fade-in overlay **/
+    private fun animateFadeIn(view: View, duration: Long = 300) {
+        view.visibility = View.VISIBLE
+        view.alpha = 0f
+        view.animate().alpha(1f).setDuration(duration).start()
+    }
+
+    /** Fade-out overlay **/
+    private fun animateFadeOut(view: View, duration: Long = 300) {
+        view.animate().alpha(0f).setDuration(duration).withEndAction {
+            view.visibility = View.GONE
         }.start()
     }
 
