@@ -77,6 +77,7 @@ class HomeFragment : Fragment() {
     // Fetch user's updated profile from backend and store locally
     private fun getUserUpdatedProfile() {
         // Show loading spinner before fetching
+        binding.loadingOverlay.visibility = View.VISIBLE
         binding.progressBar.visibility = View.VISIBLE
         binding.goToHomeBtn.isEnabled = false
 
@@ -87,6 +88,7 @@ class HomeFragment : Fragment() {
             ) {
                 // Hide spinner
                 binding.progressBar.visibility = View.GONE
+                binding.loadingOverlay.visibility = View.GONE
                 binding.goToHomeBtn.isEnabled = true
 
                 if (response.isSuccessful) {
