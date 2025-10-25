@@ -1,11 +1,13 @@
 package com.example.acefx_app.retrofitServices
 
+import com.example.acefx_app.data.ProjectRequest
+import com.example.acefx_app.data.ProjectResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
-import retrofit2.http.Query
+
 
 interface ApiService {
 
@@ -31,5 +33,12 @@ interface ApiService {
     fun getClientProjects(
         @Header("Authorization") token: String
     ): Call<List<Map<String, Any>>>
+
+    //    add project by client
+    @POST("api/projects")
+    fun createProject(
+        @Header("Authorization") token: String,
+        @Body projectData: ProjectRequest
+    ): Call<ProjectResponse>
 
 }

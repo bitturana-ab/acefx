@@ -1,14 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@color/gray"
     tools:context=".ui.ClientAddProjectFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <!-- Header -->
+        <TextView
+            android:id="@+id/tvHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_addProduct_view"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingBottom="10dp" />
+
+        <!-- Fields -->
+        <EditText
+            android:id="@+id/etTitle"
+            android:hint="@string/text_project_title_hint"
+            android:layout_width="match_parent"
+            android:inputType="textCapWords"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/etDescription"
+            android:hint="@string/text_description_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine" />
+
+        <EditText
+            android:id="@+id/etDataLink"
+            android:hint="@string/text_datalink_hint"
+            android:layout_width="match_parent"
+            android:inputType="textUri"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/etAttachLink"
+            android:inputType="textUri"
+            android:hint="@string/text_attachlink_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/etDeadline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Select deadline"
+            android:focusable="false"
+            android:clickable="true"/>
+
+        <EditText
+            android:id="@+id/etExpectedAmount"
+            android:hint="@string/text_expected_amount_view"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/btnSubmitProject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_submit_approval_view"
+            android:backgroundTint="@color/teal_700"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
+</ScrollView>

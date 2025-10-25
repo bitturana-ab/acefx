@@ -60,4 +60,13 @@
     <string name="text_on_hold">On Hold</string>
     <string name="text_project_name_view">Project Title</string>
     <string name="text_project_status_view">Status</string>
+    <string name="text_submit_approval_view">Submit for Approval</string>
+    <string name="text_expected_amount_view">Expected Amount</string>
+    <string name="text_deadline_view">Deadline (yyyy-mm-dd)</string>
+    <string name="text_attachlink_view">Attachment Link</string>
+    <string name="text_datalink_hint">Data Link</string>
+    <string name="text_description_hint">Description</string>
+    <string name="text_project_title_hint">Project Title</string>
+    <string name="text_addProduct_view">My Projects</string>
+    <string name="text_deadline_dd_mm_yyyy">Deadline (dd/MM/yyyy)</string>
 </resources>
