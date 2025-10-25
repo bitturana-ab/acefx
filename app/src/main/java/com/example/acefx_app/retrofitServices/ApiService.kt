@@ -2,6 +2,7 @@ package com.example.acefx_app.retrofitServices
 
 import com.example.acefx_app.data.ProjectRequest
 import com.example.acefx_app.data.ProjectResponse
+import com.example.acefx_app.data.UserDetailsResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -16,6 +17,12 @@ interface ApiService {
 
     @POST("api/auth/verify-otp")
     fun verifyOtp(@Body body: Map<String, String>): Call<Map<String, Any>>
+
+    // get user update or details
+    @GET("api/auth")
+    fun getUserProfile(
+        @Header("Authorization") token: String
+    ):Call<UserDetailsResponse>
 
     //    not available
     @GET("dashboard")
