@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resendTimer: TextView
 
     private val apiService = ApiClient.getClient(this).create(ApiService::class.java)
-    private val prefs by lazy { getSharedPreferences("AceFXPrefs", MODE_PRIVATE) }
+    private val prefs by lazy { getSharedPreferences("UserSession", MODE_PRIVATE) }
     private var resendCountDownTimer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,9 +92,9 @@ class MainActivity : AppCompatActivity() {
                 call: Call<Map<String, Any>>,
                 response: Response<Map<String, Any>>
             ) {
-                Log.d("OTP_DEBUG", "Response code: ${response.code()}")
-                Log.d("OTP_DEBUG", "Response body: ${response.body()}")
-                Log.d("OTP_DEBUG", "Error body: ${response.errorBody()?.string()}")
+//                Log.d("OTP_DEBUG", "Response code: ${response.code()}")
+//                Log.d("OTP_DEBUG", "Response body: ${response.body()}")
+//                Log.d("OTP_DEBUG", "Error body: ${response.errorBody()?.string()}")
 
                 if (response.isSuccessful) {
                     Toast.makeText(this@MainActivity, "OTP sent to email", Toast.LENGTH_LONG).show()

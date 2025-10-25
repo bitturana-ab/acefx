@@ -14,8 +14,8 @@
             android:id="@+id/action_homeFragment_to_clientProfileFragment"
             app:destination="@id/clientProfileFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_staffProfileFragment"
-            app:destination="@id/staffProfileFragment" />
+            android:id="@+id/action_homeFragment_to_clientHomeFragment"
+            app:destination="@id/clientHomeFragment" />
     </fragment>
 
     <fragment
@@ -34,11 +34,29 @@
         android:id="@+id/clientProfileFragment"
         android:name="com.example.acefx_app.ui.ClientProfileFragment"
         android:label="Client Profile"
-        tools:layout="@layout/fragment_client_profile" />
-
+        tools:layout="@layout/fragment_client_profile" >
+        <action
+            android:id="@+id/action_clientProfileFragment_to_clientHomeFragment"
+            app:destination="@id/clientHomeFragment" />
+    </fragment>
     <fragment
-        android:id="@+id/staffProfileFragment"
-        android:name="com.example.acefx_app.ui.StaffProfileFragment"
-        android:label="Staff Profile"
-        tools:layout="@layout/fragment_staff_profile" />
+        android:id="@+id/clientHomeFragment"
+        android:name="com.example.acefx_app.ui.ClientHomeFragment"
+        android:label="fragment_client_home"
+        tools:layout="@layout/fragment_client_home" />
+    <fragment
+        android:id="@+id/clientProjectsFragment"
+        android:name="com.example.acefx_app.ui.ClientProjectsFragment"
+        android:label="ClientProjectsFragment" />
+    <fragment
+        android:id="@+id/clientProjectDetailsFragment"
+        android:name="com.example.acefx_app.ui.ClientProjectDetailsFragment"
+        android:label="fragment_client_project_details"
+        tools:layout="@layout/fragment_client_project_details" />
+    <fragment
+        android:id="@+id/clientAddProjectFragment"
+        android:name="com.example.acefx_app.ui.ClientAddProjectFragment"
+        android:label="fragment_client_add_project"
+        tools:layout="@layout/fragment_client_add_project" />
+
 </navigation>

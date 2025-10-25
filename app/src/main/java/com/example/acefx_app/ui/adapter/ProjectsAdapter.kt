@@ -1,16 +1,23 @@
-package com.example.acefx_app
+package com.example.acefx_app.ui.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.acefx_app.R
 
-class ProjectAdapter(private val projects: List<Map<String, Any>>) :
-    RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() {
+data class ProjectItem(
+    val title: String,
+    val status: String
+)
+
+class ProjectsAdapter(private var projects: List<ProjectItem>) :
+    RecyclerView.Adapter<ProjectsAdapter.ProjectViewHolder>() {
 
     class ProjectViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val projectName: TextView = view.findViewById(R.id.projectName)
+        val projectName: TextView = view.findViewById(R.id.projectTitle)
         val projectStatus: TextView = view.findViewById(R.id.projectStatus)
     }
 
@@ -22,9 +29,16 @@ class ProjectAdapter(private val projects: List<Map<String, Any>>) :
 
     override fun onBindViewHolder(holder: ProjectViewHolder, position: Int) {
         val project = projects[position]
-        holder.projectName.text = project["title"]?.toString() ?: "Untitled"
-        holder.projectStatus.text = "Status: ${project["status"] ?: "Unknown"}"
+        holder.projectName.text = project.title
+        holder.projectStatus.text = "Status: ${project.status}"
     }
 
     override fun getItemCount(): Int = projects.size
+
+    // Updates the adapter's data and refreshes the RecyclerView
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newProjects: List<ProjectItem>) {
+        projects = newProjects
+        notifyDataSetChanged()
+    }
 }

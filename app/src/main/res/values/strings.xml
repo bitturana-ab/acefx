@@ -54,4 +54,10 @@
     <string name="text_goto_my_home">My Home</string>
     <string name="text_home_welcome">Welcome</string>
     <string name="text_home_description">Let\'s make today productive!</string>
+    <string name="text_client_name">Client Name</string>
+    <string name="text_add_project">Add Project</string>
+    <string name="text_approved">Approved</string>
+    <string name="text_on_hold">On Hold</string>
+    <string name="text_project_name_view">Project Title</string>
+    <string name="text_project_status_view">Status</string>
 </resources>
