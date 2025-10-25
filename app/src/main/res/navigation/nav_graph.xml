@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_homeFragment_to_clientProfileFragment"
             app:destination="@id/clientProfileFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_clientHomeFragment"
-            app:destination="@id/clientHomeFragment" />
     </fragment>
 
     <fragment
@@ -36,18 +33,20 @@
         android:label="Client Profile"
         tools:layout="@layout/fragment_client_profile" >
         <action
-            android:id="@+id/action_clientProfileFragment_to_clientHomeFragment"
-            app:destination="@id/clientHomeFragment" />
+            android:id="@+id/action_clientProfileFragment_to_clientProjectsFragment"
+            app:destination="@id/clientProjectsFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/clientHomeFragment"
-        android:name="com.example.acefx_app.ui.ClientHomeFragment"
-        android:label="fragment_client_home"
-        tools:layout="@layout/fragment_client_home" />
     <fragment
         android:id="@+id/clientProjectsFragment"
         android:name="com.example.acefx_app.ui.ClientProjectsFragment"
-        android:label="ClientProjectsFragment" />
+        android:label="ClientProjectsFragment" >
+        <action
+            android:id="@+id/action_clientProjectsFragment_to_clientProjectDetailsFragment"
+            app:destination="@id/clientProjectDetailsFragment" />
+        <action
+            android:id="@+id/action_clientProjectsFragment_to_clientAddProjectFragment"
+            app:destination="@id/clientAddProjectFragment" />
+    </fragment>
     <fragment
         android:id="@+id/clientProjectDetailsFragment"
         android:name="com.example.acefx_app.ui.ClientProjectDetailsFragment"

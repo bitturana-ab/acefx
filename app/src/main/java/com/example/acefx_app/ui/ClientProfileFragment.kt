@@ -86,10 +86,10 @@ class ClientProfileFragment : Fragment() {
                     viewLifecycleOwner.lifecycleScope.launch {
                         delay(100) // Ensure NavController is ready
                         val action = ClientProfileFragmentDirections
-                            .actionClientProfileFragmentToClientHomeFragment()
+                            .actionClientProfileFragmentToClientProjectsFragment()
                         findNavController().navigate(action)
                         // Remove ClientProfileFragment so user cannot come back by back button
-                        findNavController().popBackStack(R.id.clientProfileFragment, true)
+                        findNavController().popBackStack(R.id.homeFragment, true)
 
                     }
                 } else {

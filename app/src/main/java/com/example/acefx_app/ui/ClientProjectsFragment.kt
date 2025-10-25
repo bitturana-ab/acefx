@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.acefx_app.databinding.FragmentClientProjectsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
@@ -73,39 +74,46 @@ class ClientProjectsFragment : Fragment() {
         // Add Project button
         binding.addProjectBtn.setOnClickListener {
             Toast.makeText(requireContext(), "Open Add Project screen", Toast.LENGTH_SHORT).show()
-            // TODO: Navigate to AddProjectFragment
+                findNavController().navigate(ClientProjectsFragmentDirections.actionClientProjectsFragmentToClientAddProjectFragment())
         }
     }
 
     private fun loadProjects() {
-        apiService.getClientProjects("Bearer $token").enqueue(object : Callback<List<Map<String, Any>>> {
-            override fun onResponse(
-                call: Call<List<Map<String, Any>>>,
-                response: Response<List<Map<String, Any>>>
-            ) {
-                if (response.isSuccessful) {
-                    allProjects = response.body()?.map {
-                        ProjectItem(
-                            title = it["title"].toString(),
-                            status = it["status"].toString()
-                        )
-                    } ?: emptyList()
+        apiService.getClientProjects("Bearer $token")
+            .enqueue(object : Callback<List<Map<String, Any>>> {
+                override fun onResponse(
+                    call: Call<List<Map<String, Any>>>, response: Response<List<Map<String, Any>>>
+                ) {
+                    if (!isAdded) return
+                    if (response.isSuccessful) {
+                        allProjects = response.body()?.map {
+                            ProjectItem(
+                                title = it["title"].toString(), status = it["status"].toString()
+                            )
+                        } ?: emptyList()
+                        if (allProjects.isEmpty()) {
+                            Toast.makeText(
+                                requireContext(), "You don’t have any projects.", Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        // Show first tab by default
+                        val selectedTab =
+                            binding.projectTabLayout.getTabAt(binding.projectTabLayout.selectedTabPosition)
+                        val status = selectedTab?.text.toString()
+                        filterProjectsByStatus(status)
+                    } else {
+                        Toast.makeText(
+                            requireContext(), "Failed to load projects!", Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
 
-                    // Show first tab by default
-                    val selectedTab =
-                        binding.projectTabLayout.getTabAt(binding.projectTabLayout.selectedTabPosition)
-                    val status = selectedTab?.text.toString()
-                    filterProjectsByStatus(status)
-                } else {
-                    Toast.makeText(requireContext(), "Failed to load projects!", Toast.LENGTH_SHORT)
+                override fun onFailure(call: Call<List<Map<String, Any>>>, t: Throwable) {
+                    if (!isAdded) return
+                    Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT)
                         .show()
                 }
-            }
-
-            override fun onFailure(call: Call<List<Map<String, Any>>>, t: Throwable) {
-                Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
-            }
-        })
+            })
     }
 
     private fun filterProjectsByStatus(status: String) {
