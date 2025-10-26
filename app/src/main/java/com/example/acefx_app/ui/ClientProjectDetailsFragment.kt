@@ -9,13 +9,22 @@ import android.widget.TextView
 import com.example.acefx_app.R
 
 class ClientProjectDetailsFragment : Fragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_client_project_details, container, false)
-        val projectTitle = arguments?.getString("projectTitle")
-        view.findViewById<TextView>(R.id.projectName).text = projectTitle.toString()
-        return view
+
+    private var projectId: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        projectId = arguments?.getString("projectId")
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (projectId != null) {
+            fetchProjectDetails(projectId!!)
+        }
+    }
+
+    private fun fetchProjectDetails(id: String) {
+        // call your API: /projects/{id} and populate the UI
     }
 }
