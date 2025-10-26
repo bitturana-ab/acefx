@@ -41,13 +41,19 @@ data class ProjectData(
     val clientId: String?,
     val editorId: String?,
     val status: String,
-    val invoiceId: String?
+    val invoiceId: InvoiceData?,
+    val actualAmount: Double,
+    val deliverableUrl: String?
 )
 
 // get invoice
 data class InvoiceData(
     val _id: String,
     val projectId: String,
-    val userId: String,
-    val amount: Double
+    val clientId: String,
+    val amount: Double,
+    val currency: String = "INR",
+    val paid: Boolean = false,
+    val razorpayOrderId: String? = null,
+    val razorpayPaymentId: String? = null
 )

@@ -55,7 +55,7 @@ interface ApiService {
     @GET("api/projects/{id}")
     fun getProjectById(
         @Header("Authorization") authToken: String,
-        @Path("id") projectId: String
+        @Path("id") id: String
     ): Call<ProjectData>
 
 

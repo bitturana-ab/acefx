@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,6 +79,7 @@ class ClientProjectDetailsFragment : Fragment() {
                 override fun onFailure(call: retrofit2.Call<ProjectData>, t: Throwable) {
                     showLoading(false)
                     if (!isAdded) return
+                    Log.d("PROJECT_DETAILS",t.toString())
                     Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
                 }
             })

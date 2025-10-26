@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.acefx_app.R
-import com.example.acefx_app.data.ProjectData
 import com.example.acefx_app.data.ProjectItem
 import com.example.acefx_app.data.ProjectsResponse
 import com.example.acefx_app.databinding.FragmentClientProjectsBinding
@@ -73,7 +72,7 @@ class ClientProjectsFragment : Fragment() {
         // Tab listener
         binding.projectTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                TODO("update when app loaded then show")
+//                TODO("update when app loaded then show")
                 filterProjectsByStatus(tab?.text.toString())
             }
 
