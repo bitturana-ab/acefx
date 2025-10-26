@@ -5,8 +5,9 @@
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/dark_gray"
     android:padding="16dp"
-    android:background="@color/gray"
     tools:context=".ui.ClientProjectDetailsFragment">
 
     <LinearLayout
@@ -14,118 +15,172 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Project Card -->
-        <androidx.cardview.widget.CardView
+        <!-- Top Title Row -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:padding="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="6dp">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp">
 
+            <TextView
+                android:id="@+id/projectTitleText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/text_project_name"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/addProjectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_add_project"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp"
+                android:background="@drawable/rounded_button_bg" />
+        </LinearLayout>
+
+        <!-- Card Container -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_card_bg"
+            android:padding="16dp"
+            android:elevation="4dp">
+
+            <!-- Status + Budget -->
             <LinearLayout
-                android:padding="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/gray_400"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingBottom="8dp">
 
-                <!-- Project Title -->
-                <TextView
-                    android:id="@+id/projectTitleText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Project Title"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:paddingBottom="8dp" />
-
-                <!-- Project Status Badge -->
                 <TextView
                     android:id="@+id/projectStatusText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/status_background"
-                    android:text="Status: Pending"
-                    android:textSize="14sp"
-                    android:textColor="@color/white"
-                    android:paddingVertical="4dp"
-                    android:paddingHorizontal="10dp"
-                    android:layout_marginBottom="12dp" />
+                    android:text="@string/text_on_hold"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:background="@drawable/status_badge_bg"
+                    android:textSize="15sp" />
 
-                <!-- Project Description -->
                 <TextView
-                    android:id="@+id/projectDescriptionText"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Project Description goes here..."
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:paddingBottom="12dp" />
+                    android:text="@string/text_budget_view"
+                    android:textColor="@android:color/white"
+                    android:layout_marginHorizontal="6dp" />
 
-                <!-- Deadline & Amount -->
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/projectAmountText"
+                    android:layout_width="wrap_content"
+                    android:text="@string/text_budget"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:paddingBottom="12dp">
-
-                    <TextView
-                        android:id="@+id/projectDeadlineText"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Deadline: 2025-10-30"
-                        android:textSize="16sp"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/projectAmountText"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="₹1000"
-                        android:textSize="16sp"
-                        android:textColor="@color/black"
-                        android:gravity="end" />
-                </LinearLayout>
-
-                <!-- Action Buttons -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal"
-                    android:paddingTop="8dp">
-
-                    <Button
-                        android:id="@+id/projectDataLink"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Open Data Link"
-                        android:textColor="@color/purple_500"
-                        android:backgroundTint="@color/white"
-                        android:padding="12dp"
-                        android:layout_marginBottom="8dp" />
-
-                    <Button
-                        android:id="@+id/projectAttachLink"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Open Attachment"
-                        android:textColor="@color/purple_500"
-                        android:backgroundTint="@color/white"
-                        android:padding="12dp" />
-
-                </LinearLayout>
-
+                    android:textColor="@color/green_400"
+                    android:textStyle="bold"
+                    android:textSize="15sp" />
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+            <!-- Description -->
+            <TextView
+                android:id="@+id/projectDescriptionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_description_hint"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:lineSpacingExtra="3dp"
+                android:paddingBottom="8dp" />
+
+            <!-- Deadline -->
+            <TextView
+                android:id="@+id/projectDeadlineText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_deadline_view"
+                android:textColor="@android:color/darker_gray"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:paddingTop="6dp" />
+
+            <!-- Links -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                android:weightSum="2">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/projectDataLink"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:text="@string/text_open_data_link"
+                    app:iconPadding="8dp"
+                    app:cornerRadius="10dp"
+                    android:backgroundTint="@color/blue_500"
+                    android:textColor="@android:color/white" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/projectAttachLink"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:text="@string/text_open_attach_link"
+                    app:iconPadding="8dp"
+                    app:cornerRadius="10dp"
+                    android:backgroundTint="@color/purple_500"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Pay Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="24dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:id="@+id/payAmountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_inr_5_000_infront"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="@drawable/rounded_card_bg"
+                android:paddingHorizontal="40dp"
+                android:paddingVertical="10dp"
+                android:layout_marginBottom="12dp" />
+
+            <Button
+                android:id="@+id/payUpfrontButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_pay_upfront"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:background="@drawable/rounded_button_bg"
+                android:paddingHorizontal="40dp"
+                android:paddingVertical="10dp" />
+        </LinearLayout>
 
         <!-- Loading Overlay -->
         <FrameLayout
@@ -140,9 +195,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
-
         </FrameLayout>
-
     </LinearLayout>
-
 </ScrollView>

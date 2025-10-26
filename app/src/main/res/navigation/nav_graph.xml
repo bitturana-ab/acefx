@@ -64,11 +64,35 @@
         android:id="@+id/clientProjectDetailsFragment"
         android:name="com.example.acefx_app.ui.ClientProjectDetailsFragment"
         android:label="fragment_client_project_details"
-        tools:layout="@layout/fragment_client_project_details" />
+        tools:layout="@layout/fragment_client_project_details" >
+        <action
+            android:id="@+id/action_clientProjectDetailsFragment_to_clientAddProjectFragment"
+            app:destination="@id/clientAddProjectFragment" />
+        <action
+            android:id="@+id/action_clientProjectDetailsFragment_to_paymentFragment"
+            app:destination="@id/paymentFragment">
+            <argument
+                android:name="projectId"
+                app:argType="string" />
+
+            <argument
+                android:name="amount"
+                app:argType="float" />
+
+            <argument
+                android:name="projectName"
+                app:argType="string" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/clientAddProjectFragment"
         android:name="com.example.acefx_app.ui.ClientAddProjectFragment"
         android:label="fragment_client_add_project"
         tools:layout="@layout/fragment_client_add_project" />
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.example.acefx_app.ui.PaymentFragment"
+        android:label="fragment_payment"
+        tools:layout="@layout/fragment_payment" />
 
 </navigation>

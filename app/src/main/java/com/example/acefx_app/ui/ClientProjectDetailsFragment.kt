@@ -11,11 +11,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.acefx_app.R
 import com.example.acefx_app.data.ProjectData
 import com.example.acefx_app.databinding.FragmentClientProjectDetailsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ClientProjectDetailsFragment : Fragment() {
 
@@ -31,7 +35,8 @@ class ClientProjectDetailsFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentClientProjectDetailsBinding.inflate(inflater, container, false)
         return binding.root
@@ -39,79 +44,99 @@ class ClientProjectDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (projectId != null) fetchProjectDetails(projectId!!)
+
+        projectId?.let { fetchProjectDetails(it) }
+
+        // Navigate to Add Project screen
+        binding.addProjectButton.setOnClickListener {
+            val action = ClientProjectDetailsFragmentDirections
+                .actionClientProjectDetailsFragmentToClientAddProjectFragment()
+            findNavController().navigate(action)
+        }
+
+        // Pay Now button click → navigate to Payment screen
+        binding.payUpfrontButton.setOnClickListener {
+            val projectTitle = binding.projectTitleText.text.toString()
+            val amount = binding.projectAmountText.text.toString().replace("₹", "").trim()
+            val action = ClientProjectDetailsFragmentDirections
+                .actionClientProjectDetailsFragmentToPaymentFragment(
+                    projectId = projectId ?: "",
+                    amount = amount.toFloat(),
+                    projectName = projectTitle
+                )
+            findNavController().navigate(action)
+        }
     }
 
+    /** Fetch project details from API */
     private fun fetchProjectDetails(id: String) {
         showLoading(true)
 
         apiService = ApiClient.getClient(requireContext()).create(ApiService::class.java)
-
         val sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         val token = sharedPref.getString("authToken", "") ?: ""
+
         if (token.isEmpty()) {
             showLoading(false)
             Toast.makeText(requireContext(), "User not logged in!", Toast.LENGTH_SHORT).show()
             return
         }
 
-        apiService.getProjectById("Bearer $token", id)
-            .enqueue(object : retrofit2.Callback<ProjectData> {
-                override fun onResponse(
-                    call: retrofit2.Call<ProjectData>,
-                    response: retrofit2.Response<ProjectData>
-                ) {
-                    showLoading(false)
-                    if (!isAdded) return
+        apiService.getProjectById("Bearer $token", id).enqueue(object : Callback<ProjectData> {
+            override fun onResponse(call: Call<ProjectData>, response: Response<ProjectData>) {
+                showLoading(false)
+                if (!isAdded) return
 
-                    val project = response.body()
-                    if (response.isSuccessful && project != null) {
-                        displayProjectDetails(project)
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Project not found or failed to fetch!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                if (response.isSuccessful && response.body() != null) {
+                    displayProjectDetails(response.body()!!)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Project not found or failed to fetch!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+            }
 
-                override fun onFailure(call: retrofit2.Call<ProjectData>, t: Throwable) {
-                    showLoading(false)
-                    if (!isAdded) return
-                    Log.d("PROJECT_DETAILS",t.toString())
-                    Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
-                }
-            })
+            override fun onFailure(call: Call<ProjectData>, t: Throwable) {
+                showLoading(false)
+                if (!isAdded) return
+                Log.e("PROJECT_DETAILS", "Error fetching project: ${t.localizedMessage}")
+                Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
+    /** Display project data in UI */
     private fun displayProjectDetails(project: ProjectData) {
-        binding.projectTitleText.text = project.title
-        binding.projectDescriptionText.text = project.description
-        binding.projectDeadlineText.text = "Deadline: ${project.deadline}"
-        binding.projectAmountText.text = "₹${project.expectedAmount}"
+        with(binding) {
+            projectTitleText.text = project.title
+            projectDescriptionText.text = project.description
+            projectDeadlineText.text = "Deadline: ${project.deadline ?: "N/A"}"
+            projectAmountText.text = "₹${project.expectedAmount ?: 0}"
 
-        // Set status badge color dynamically
-        binding.projectStatusText.text = project.status
-        val statusBackground = binding.projectStatusText.background.mutate()
-        when (project.status) {
-            "Approved" -> statusBackground.setTint(ContextCompat.getColor(requireContext(), R.color.green_400))
-            "On Hold" -> statusBackground.setTint(ContextCompat.getColor(requireContext(), R.color.orange_200))
-            else -> statusBackground.setTint(ContextCompat.getColor(requireContext(), R.color.gray))
-        }
-        binding.projectStatusText.background = statusBackground
+            // Status color badge
+            projectStatusText.text = project.status
+            val statusBg = projectStatusText.background.mutate()
+            val color = when (project.status?.lowercase()) {
+                "approved" -> R.color.green_400
+                "on hold" -> R.color.orange_200
+                else -> R.color.gray
+            }
+            statusBg.setTint(ContextCompat.getColor(requireContext(), color))
+            projectStatusText.background = statusBg
 
-        // Open data link
-        binding.projectDataLink.setOnClickListener {
-            openUrl(project.dataLink)
-        }
+            // Links
+            projectDataLink.setOnClickListener { openUrl(project.dataLink) }
+            projectAttachLink.setOnClickListener { openUrl(project.attachLink) }
 
-        // Open attachment link
-        binding.projectAttachLink.setOnClickListener {
-            openUrl(project.attachLink)
+            // Pay button only if unpaid invoice
+            payUpfrontButton.visibility =
+                if (project.invoiceId?.paid == false) View.VISIBLE else View.GONE
         }
     }
 
+    /** Open URL safely */
     private fun openUrl(url: String?) {
         if (url.isNullOrEmpty()) {
             Toast.makeText(requireContext(), "Link not available", Toast.LENGTH_SHORT).show()
@@ -125,7 +150,7 @@ class ClientProjectDetailsFragment : Fragment() {
         }
     }
 
-    /** Smooth fade-in/fade-out loading overlay */
+    /** Fade-in/out loading overlay */
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
             binding.loadingOverlay.fadeIn()
@@ -136,18 +161,14 @@ class ClientProjectDetailsFragment : Fragment() {
         }
     }
 
-    /** Fade-in extension */
     private fun View.fadeIn(duration: Long = 300) {
-        this.apply {
-            alpha = 0f
-            visibility = View.VISIBLE
-            animate().alpha(1f).setDuration(duration).start()
-        }
+        alpha = 0f
+        visibility = View.VISIBLE
+        animate().alpha(1f).setDuration(duration).start()
     }
 
-    /** Fade-out extension */
     private fun View.fadeOut(duration: Long = 300, endVisibility: Int = View.GONE) {
-        this.animate().alpha(0f).setDuration(duration).withEndAction {
+        animate().alpha(0f).setDuration(duration).withEndAction {
             visibility = endVisibility
         }.start()
     }

@@ -67,6 +67,13 @@
     <string name="text_datalink_hint">Data Link</string>
     <string name="text_description_hint">Description</string>
     <string name="text_project_title_hint">Project Title</string>
-    <string name="text_addProduct_view">My Projects</string>
+    <string name="text_addProduct_view">List New Project</string>
     <string name="text_deadline_dd_mm_yyyy">Deadline (dd/MM/yyyy)</string>
+    <string name="text_budget">budget</string>
+    <string name="text_budget_view">| Budget</string>
+    <string name="text_project_name">Project Name</string>
+    <string name="text_open_data_link">Open Data Link</string>
+    <string name="text_open_attach_link">Open Attach Link</string>
+    <string name="text_inr_5_000_infront">INR 5,000</string>
+    <string name="text_pay_upfront">Pay Upfront</string>
 </resources>
