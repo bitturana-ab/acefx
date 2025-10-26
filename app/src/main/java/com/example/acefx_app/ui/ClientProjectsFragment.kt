@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.acefx_app.R
+import com.example.acefx_app.data.ProjectItem
 import com.example.acefx_app.databinding.FragmentClientProjectsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
-import com.example.acefx_app.ui.adapter.ProjectItem
 import com.example.acefx_app.ui.adapter.ProjectsAdapter
 import com.google.android.material.tabs.TabLayout
 import retrofit2.Call
@@ -100,20 +100,30 @@ class ClientProjectsFragment : Fragment() {
                     if (response.isSuccessful) {
                         allProjects = response.body()?.map {
                             ProjectItem(
+                                id = it["_id"].toString(),
                                 title = it["title"].toString(),
                                 status = it["status"].toString()
                             )
                         } ?: emptyList()
 
                         if (allProjects.isEmpty()) {
-                            Toast.makeText(requireContext(), "You don’t have any projects.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "You don’t have any projects.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
 
                         // Display projects for selected tab by default
-                        val selectedTab = binding.projectTabLayout.getTabAt(binding.projectTabLayout.selectedTabPosition)
+                        val selectedTab =
+                            binding.projectTabLayout.getTabAt(binding.projectTabLayout.selectedTabPosition)
                         filterProjectsByStatus(selectedTab?.text.toString())
                     } else {
-                        Toast.makeText(requireContext(), "Failed to load projects!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to load projects!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 

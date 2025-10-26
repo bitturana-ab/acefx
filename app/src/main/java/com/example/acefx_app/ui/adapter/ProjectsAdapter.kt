@@ -8,11 +8,7 @@ import android.view.animation.AlphaAnimation
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.acefx_app.R
-
-data class ProjectItem(
-    val title: String,
-    val status: String
-)
+import com.example.acefx_app.data.ProjectItem
 
 class ProjectsAdapter(
     private var projects: List<ProjectItem>,

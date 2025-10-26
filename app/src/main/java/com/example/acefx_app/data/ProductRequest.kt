@@ -5,6 +5,13 @@ data class ProjectResponse(
     val project: ProjectData,
     val invoice: InvoiceData
 )
+// fetch projects and save
+data class ProjectItem(
+    val id: String,       // add this
+    val title: String,
+    val status: String
+)
+
 data class ProjectRequest(
     val title: String,
     val description: String,
