@@ -2,6 +2,7 @@ package com.example.acefx_app.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.acefx_app.R
+import com.example.acefx_app.data.ProjectData
 import com.example.acefx_app.data.ProjectItem
+import com.example.acefx_app.data.ProjectsResponse
 import com.example.acefx_app.databinding.FragmentClientProjectsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
@@ -58,7 +61,7 @@ class ClientProjectsFragment : Fragment() {
         adapter = ProjectsAdapter(emptyList()) { project ->
             // Navigate to details fragment using Safe Args
             val action = ClientProjectsFragmentDirections
-                .actionClientProjectsFragmentToClientProjectDetailsFragment(projectTitle = project.id) // pass the id
+                .actionClientProjectsFragmentToClientProjectDetailsFragment(projectId = project._id) // pass the id
             findNavController().navigate(action)
         }
         binding.projectsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -89,51 +92,32 @@ class ClientProjectsFragment : Fragment() {
         showLoading(true)
 
         apiService.getClientProjects("Bearer $token")
-            .enqueue(object : Callback<List<Map<String, Any>>> {
+            .enqueue(object : Callback<ProjectsResponse> {
                 override fun onResponse(
-                    call: Call<List<Map<String, Any>>>,
-                    response: Response<List<Map<String, Any>>>
+                    call: Call<ProjectsResponse>,
+                    response: Response<ProjectsResponse>
                 ) {
+                    Log.d("FAILDE_TO_LOAD",  response.toString())
                     if (!isAdded) return
                     showLoading(false)
 
                     if (response.isSuccessful) {
-                        allProjects = response.body()?.map {
-                            ProjectItem(
-                                id = it["_id"].toString(),
-                                title = it["title"].toString(),
-                                status = it["status"].toString()
-                            )
-                        } ?: emptyList()
+                        allProjects = response.body()?.projects ?: emptyList()
 
-                        if (allProjects.isEmpty()) {
-                            Toast.makeText(
-                                requireContext(),
-                                "You don’t have any projects.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-
-                        // Display projects for selected tab by default
-                        val selectedTab =
-                            binding.projectTabLayout.getTabAt(binding.projectTabLayout.selectedTabPosition)
-                        filterProjectsByStatus(selectedTab?.text.toString())
                     } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Failed to load projects!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Log.d("FAILDE_TO_LOAD", response.errorBody()?.string() ?: response.toString())
+                        Toast.makeText(requireContext(), "Failed to load projects!", Toast.LENGTH_SHORT).show()
                     }
                 }
 
-                override fun onFailure(call: Call<List<Map<String, Any>>>, t: Throwable) {
+                override fun onFailure(call: Call<ProjectsResponse>, t: Throwable) {
                     if (!isAdded) return
                     showLoading(false)
                     Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
                 }
             })
     }
+
 
     /** Filter projects based on tab selection */
     private fun filterProjectsByStatus(status: String) {

@@ -1,17 +1,25 @@
 package com.example.acefx_app.data
 
+// post create project response after creating project by client
+// when creating project res will send these
 data class ProjectResponse(
     val message: String,
     val project: ProjectData,
     val invoice: InvoiceData
 )
-// fetch projects and save
+// get projects of array
+data class ProjectsResponse(
+    val message: String,
+    val projects: List<ProjectItem>
+)
+
+// get or fetch projects and save
 data class ProjectItem(
-    val id: String,       // add this
+    val _id: String,
     val title: String,
     val status: String
 )
-
+// this is before req the project or projects for creating project
 data class ProjectRequest(
     val title: String,
     val description: String,
@@ -21,6 +29,7 @@ data class ProjectRequest(
     val expectedAmount: Double
 )
 
+// get project res by user or id
 data class ProjectData(
     val _id: String,
     val title: String,
@@ -35,6 +44,7 @@ data class ProjectData(
     val invoiceId: String?
 )
 
+// get invoice
 data class InvoiceData(
     val _id: String,
     val projectId: String,

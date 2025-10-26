@@ -33,6 +33,7 @@
 
             <Button
                 android:id="@+id/addProjectBtn"
+                android:background="@drawable/btn_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_add_project" />

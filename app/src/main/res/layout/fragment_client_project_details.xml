@@ -1,15 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".ui.ClientProjectDetailsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/projectName"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <!-- Project Title -->
+        <TextView
+            android:id="@+id/projectTitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Project Title"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
+
+        <!-- Project Status -->
+        <TextView
+            android:id="@+id/projectStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status: Pending"
+            android:textSize="16sp"
+            android:paddingBottom="8dp" />
+
+        <!-- Project Description -->
+        <TextView
+            android:id="@+id/projectDescriptionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Project Description"
+            android:textSize="16sp"
+            android:paddingBottom="8dp" />
+
+        <!-- Deadline -->
+        <TextView
+            android:id="@+id/projectDeadlineText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Deadline: 2025-10-30"
+            android:textSize="16sp"
+            android:paddingBottom="8dp" />
+
+        <!-- Expected Amount -->
+        <TextView
+            android:id="@+id/projectAmountText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Expected Amount: ₹1000"
+            android:textSize="16sp"
+            android:paddingBottom="8dp" />
+
+        <!-- Data Link -->
+        <TextView
+            android:id="@+id/projectDataLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Open Data Link"
+            android:textColor="@color/purple_500"
+            android:textSize="16sp"
+            android:paddingBottom="8dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Attach Link -->
+        <TextView
+            android:id="@+id/projectAttachLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Open Attachment"
+            android:textColor="@color/purple_500"
+            android:textSize="16sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingBottom="16dp" />
+
+        <!-- Loading Overlay -->
+        <FrameLayout
+            android:id="@+id/loadingOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#88000000"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</ScrollView>

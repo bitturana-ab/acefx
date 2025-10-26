@@ -52,7 +52,7 @@
             app:destination="@id/clientProjectDetailsFragment"
             >
             <argument
-                android:name="projectTitle"
+                android:name="projectId"
                 app:argType="string"
                 />
             </action>

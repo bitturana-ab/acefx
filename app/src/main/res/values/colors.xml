@@ -20,4 +20,8 @@
     <color name="gray">#1F1E1E</color>
     <color name="gray_400">#BDBDBD</color>
     <color name="green_400">#BDBDBD</color>
+    <color name="status_active">#4CAF50</color> <!-- green -->
+    <color name="status_completed">#2196F3</color> <!-- blue -->
+    <color name="status_pending">#F44336</color> <!-- red -->
+
 </resources>
