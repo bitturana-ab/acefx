@@ -6,9 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.acefx_app.databinding.ActivityDashboardBinding
-import com.example.acefx_app.ui.ClientProfileFragment
 import com.example.acefx_app.ui.HomeFragment
-import com.example.acefx_app.ui.StaffProfileFragment
 
 class DashboardActivity : AppCompatActivity() {
 
