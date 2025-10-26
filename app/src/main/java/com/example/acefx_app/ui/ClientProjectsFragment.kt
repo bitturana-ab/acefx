@@ -103,6 +103,8 @@ class ClientProjectsFragment : Fragment() {
 
                     if (response.isSuccessful) {
                         allProjects = response.body()?.projects ?: emptyList()
+                        filterProjectsByStatus("approved")
+                        Toast.makeText(requireContext(), "All projects listed!", Toast.LENGTH_SHORT).show()
 
                     } else {
                         Log.d("FAILDE_TO_LOAD", response.errorBody()?.string() ?: response.toString())
@@ -113,6 +115,7 @@ class ClientProjectsFragment : Fragment() {
                 override fun onFailure(call: Call<ProjectsResponse>, t: Throwable) {
                     if (!isAdded) return
                     showLoading(false)
+                    allProjects = emptyList()
                     Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
                 }
             })

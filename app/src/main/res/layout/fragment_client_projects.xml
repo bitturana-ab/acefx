@@ -1,15 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/gray">
 
     <!-- Main Content -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -19,54 +18,66 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="8dp">
+            android:paddingBottom="12dp">
 
             <TextView
                 android:id="@+id/clientNameText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="4dp"
                 android:text="@string/text_client_name"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@android:color/black" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/addProjectBtn"
-                android:background="@drawable/btn_card"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_add_project" />
+                android:layout_height="40dp"
+                android:text="@string/text_add_project"
+                android:textSize="14sp"
+                android:textColor="@android:color/white"
+                android:paddingHorizontal="16dp"
+                app:cornerRadius="20dp"
+                app:backgroundTint="@color/purple_500"
+                android:stateListAnimator="@null" />
         </LinearLayout>
 
-        <!-- Tabs -->
+        <!-- Tabs (pill-shaped) -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/projectTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@color/gray"
-            app:tabIndicatorColor="@color/purple_500"
-            app:tabSelectedTextColor="@color/purple_500">
+            android:layout_marginBottom="16dp"
+            app:tabBackground="@drawable/tab_background_selector"
+            app:tabGravity="fill"
+            app:tabIndicatorHeight="0dp"
+            app:tabMode="fixed"
+            app:tabRippleColor="@android:color/transparent"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="@color/black">
 
             <com.google.android.material.tabs.TabItem
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_approved" />
 
             <com.google.android.material.tabs.TabItem
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_on_hold" />
         </com.google.android.material.tabs.TabLayout>
 
-        <!-- Container for projects -->
+        <!-- RecyclerView for projects -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/projectsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingBottom="8dp"
             tools:listitem="@layout/item_project" />
+
     </LinearLayout>
 
     <!-- Loading overlay -->

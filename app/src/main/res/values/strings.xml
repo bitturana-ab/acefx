@@ -76,4 +76,5 @@
     <string name="text_open_attach_link">Open Attach Link</string>
     <string name="text_inr_5_000_infront">INR 5,000</string>
     <string name="text_pay_upfront">Pay Upfront</string>
+    <string name="text_status_active">Active</string>
 </resources>
