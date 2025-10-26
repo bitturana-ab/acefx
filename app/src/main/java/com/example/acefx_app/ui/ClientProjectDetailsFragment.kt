@@ -1,12 +1,16 @@
 package com.example.acefx_app.ui
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.acefx_app.R
 import com.example.acefx_app.data.ProjectData
 import com.example.acefx_app.databinding.FragmentClientProjectDetailsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
@@ -34,9 +38,7 @@ class ClientProjectDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (projectId != null) {
-            fetchProjectDetails(projectId!!)
-        }
+        if (projectId != null) fetchProjectDetails(projectId!!)
     }
 
     private fun fetchProjectDetails(id: String) {
@@ -47,6 +49,7 @@ class ClientProjectDetailsFragment : Fragment() {
         val sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         val token = sharedPref.getString("authToken", "") ?: ""
         if (token.isEmpty()) {
+            showLoading(false)
             Toast.makeText(requireContext(), "User not logged in!", Toast.LENGTH_SHORT).show()
             return
         }
@@ -83,15 +86,40 @@ class ClientProjectDetailsFragment : Fragment() {
     private fun displayProjectDetails(project: ProjectData) {
         binding.projectTitleText.text = project.title
         binding.projectDescriptionText.text = project.description
-        binding.projectDeadlineText.text = project.deadline
-        binding.projectStatusText.text = project.status
+        binding.projectDeadlineText.text = "Deadline: ${project.deadline}"
         binding.projectAmountText.text = "₹${project.expectedAmount}"
 
-        binding.projectDataLink.setOnClickListener {
-            // open project.dataLink
+        // Set status badge color dynamically
+        binding.projectStatusText.text = project.status
+        val statusBackground = binding.projectStatusText.background.mutate()
+        when (project.status) {
+            "Approved" -> statusBackground.setTint(ContextCompat.getColor(requireContext(), R.color.green_400))
+            "On Hold" -> statusBackground.setTint(ContextCompat.getColor(requireContext(), R.color.orange_200))
+            else -> statusBackground.setTint(ContextCompat.getColor(requireContext(), R.color.gray))
         }
+        binding.projectStatusText.background = statusBackground
+
+        // Open data link
+        binding.projectDataLink.setOnClickListener {
+            openUrl(project.dataLink)
+        }
+
+        // Open attachment link
         binding.projectAttachLink.setOnClickListener {
-            // open project.attachLink
+            openUrl(project.attachLink)
+        }
+    }
+
+    private fun openUrl(url: String?) {
+        if (url.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Link not available", Toast.LENGTH_SHORT).show()
+            return
+        }
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Cannot open link", Toast.LENGTH_SHORT).show()
         }
     }
 

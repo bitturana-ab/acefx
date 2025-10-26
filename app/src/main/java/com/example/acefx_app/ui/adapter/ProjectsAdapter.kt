@@ -37,7 +37,7 @@ class ProjectsAdapter(
 
         val color = when (project.status.lowercase()) {
             "approved" -> ContextCompat.getColor(context, R.color.status_active)
-            "pending" -> ContextCompat.getColor(context, R.color.status_pending)
+            "on hold" -> ContextCompat.getColor(context, R.color.status_pending)
             else -> ContextCompat.getColor(context, android.R.color.darker_gray)
         }
         bgDrawable.setColor(color)

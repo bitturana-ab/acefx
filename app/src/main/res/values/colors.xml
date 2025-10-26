@@ -23,5 +23,6 @@
     <color name="status_active">#4CAF50</color> <!-- green -->
     <color name="status_completed">#2196F3</color> <!-- blue -->
     <color name="status_pending">#F44336</color> <!-- red -->
+    <color name="orange_200">#9D4E36</color> <!-- red -->
 
 </resources>

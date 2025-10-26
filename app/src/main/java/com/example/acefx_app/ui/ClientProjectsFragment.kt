@@ -73,6 +73,7 @@ class ClientProjectsFragment : Fragment() {
         // Tab listener
         binding.projectTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
+                TODO("update when app loaded then show")
                 filterProjectsByStatus(tab?.text.toString())
             }
 
