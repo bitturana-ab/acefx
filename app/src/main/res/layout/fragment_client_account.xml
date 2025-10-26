@@ -1,14 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ClientAccountFragment">
+    android:background="@color/gray"
+    android:padding="16dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
-</FrameLayout>
+        <!-- Header -->
+        <TextView
+            android:id="@+id/accountHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Account"
+            android:textColor="@color/blue_400"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Profile Info Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/black">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/nameText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name: "
+                    android:textColor="@color/white"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/emailText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email: "
+                    android:textColor="@color/white"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/companyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Company: "
+                    android:textColor="@color/white"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/phoneText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone: "
+                    android:textColor="@color/white"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/pinText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pincode: "
+                    android:textColor="@color/white"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Action Buttons -->
+        <Button
+            android:id="@+id/viewProjectsBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View My Projects"
+            android:textSize="18sp"
+            android:layout_marginTop="24dp"/>
+
+        <Button
+            android:id="@+id/updateProfileBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update Profile"
+            android:textSize="18sp"
+            android:layout_marginTop="12dp"/>
+    </LinearLayout>
+</ScrollView>
