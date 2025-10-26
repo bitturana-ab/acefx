@@ -55,7 +55,12 @@ class ClientProjectsFragment : Fragment() {
         }
 
         // Setup RecyclerView
-        adapter = ProjectsAdapter(emptyList())
+        adapter = ProjectsAdapter(emptyList()) { project ->
+            // Navigate to details fragment using Safe Args
+            val action = ClientProjectsFragmentDirections
+                .actionClientProjectsFragmentToClientProjectDetailsFragment(projectTitle = project.title)
+            findNavController().navigate(action)
+        }
         binding.projectsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.projectsRecyclerView.adapter = adapter
 

@@ -14,8 +14,10 @@ data class ProjectItem(
     val status: String
 )
 
-class ProjectsAdapter(private var projects: List<ProjectItem>) :
-    RecyclerView.Adapter<ProjectsAdapter.ProjectViewHolder>() {
+class ProjectsAdapter(
+    private var projects: List<ProjectItem>,
+    private val onItemClick: (ProjectItem) -> Unit   // Pass click lambda
+) : RecyclerView.Adapter<ProjectsAdapter.ProjectViewHolder>() {
 
     class ProjectViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val projectName: TextView = view.findViewById(R.id.projectTitle)
@@ -32,6 +34,11 @@ class ProjectsAdapter(private var projects: List<ProjectItem>) :
         val project = projects[position]
         holder.projectName.text = project.title
         holder.projectStatus.text = "Status: ${project.status}"
+
+        // Item click listener
+        holder.itemView.setOnClickListener {
+            onItemClick(project)
+        }
 
         // Fade-in animation for each item
         setFadeAnimation(holder.itemView, position)
