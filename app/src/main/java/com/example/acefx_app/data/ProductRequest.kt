@@ -50,7 +50,7 @@ data class InvoiceModel(
     val projectName: String,
     val clientName: String,
     val date: String,
-    val amount: String,
+    val amount: Double,
     val status: String
 )
 // get invoice

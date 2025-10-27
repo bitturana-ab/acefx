@@ -35,6 +35,9 @@
         <action
             android:id="@+id/action_accountFragment_to_clientInvoiceFragment2"
             app:destination="@id/clientInvoiceFragment2" />
+        <action
+            android:id="@+id/action_accountFragment_to_clientAccountFragment"
+            app:destination="@id/clientAccountFragment" />
     </fragment>
 
     <fragment
@@ -130,6 +133,10 @@
             android:name="invoiceStatus"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/clientAccountFragment"
+        android:name="com.example.acefx_app.ui.ClientAccountFragment"
+        android:label="ClientAccountFragment" />
 
 
 </navigation>

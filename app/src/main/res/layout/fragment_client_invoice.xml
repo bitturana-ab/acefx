@@ -12,8 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
         <!-- Header -->
         <LinearLayout
@@ -71,12 +70,7 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/text_pending" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_overdue" />
+                android:text="@string/text_unpaid" />
         </com.google.android.material.tabs.TabLayout>
 
         <!-- RecyclerView for invoice list -->
@@ -86,7 +80,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:clipToPadding="false"
-            android:paddingBottom="12dp"
+            android:paddingBottom="40dp"
             tools:listitem="@layout/item_invoice" />
 
     </LinearLayout>

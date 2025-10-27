@@ -84,4 +84,5 @@
     <string name="text_client_invoices">Client Invoices</string>
     <string name="text_amount">Amount</string>
     <string name="text_payment_history">Payment History</string>
+    <string name="text_unpaid">unpaid</string>
 </resources>
