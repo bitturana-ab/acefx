@@ -77,4 +77,10 @@
     <string name="text_inr_5_000_infront">INR 5,000</string>
     <string name="text_pay_upfront">Pay Upfront</string>
     <string name="text_status_active">Active</string>
+    <string name="text_all">All</string>
+    <string name="text_paid">Paid</string>
+    <string name="text_pending">Pending</string>
+    <string name="text_overdue">Overdue</string>
+    <string name="text_client_invoices">Client Invoices</string>
+    <string name="text_amount">Amount</string>
 </resources>

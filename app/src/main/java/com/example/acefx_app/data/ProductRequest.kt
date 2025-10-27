@@ -45,7 +45,14 @@ data class ProjectData(
     val actualAmount: Double,
     val deliverableUrl: String?
 )
-
+// for invoice adapter
+data class InvoiceModel(
+    val projectName: String,
+    val clientName: String,
+    val date: String,
+    val amount: String,
+    val status: String
+)
 // get invoice
 data class InvoiceData(
     val _id: String,

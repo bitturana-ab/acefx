@@ -89,6 +89,7 @@ class ClientProjectsFragment : Fragment() {
 
     /** Load projects from backend */
     private fun loadProjects() {
+//        TODO("load project from sharepref db")
         showLoading(true)
 
         apiService.getClientProjects("Bearer $token")
