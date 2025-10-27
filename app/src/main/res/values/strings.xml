@@ -86,4 +86,6 @@
     <string name="text_payment_history">Payment History</string>
     <string name="text_unpaid">unpaid</string>
     <string name="text_chat">Chat</string>
+    <string name="text_send_message">Send Message</string>
+    <string name="text_type_a_message">Type a message</string>
 </resources>

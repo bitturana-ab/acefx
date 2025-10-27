@@ -1,60 +1,60 @@
 package com.example.acefx_app.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.acefx_app.R
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.acefx_app.data.ChatMessage
+import com.example.acefx_app.databinding.FragmentChatBinding
+import com.example.acefx_app.ui.adapter.ChatAdapter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ChatFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ChatFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentChatBinding
+    private val messages = mutableListOf<ChatMessage>()
+    private lateinit var adapter: ChatAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chat, container, false)
+    ): View {
+        binding = FragmentChatBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ChatFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ChatFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        adapter = ChatAdapter(messages, currentUser = "client")
+        binding.chatRecyclerView.adapter = adapter
+        binding.chatRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // Example mock messages
+        messages.add(ChatMessage("client", "Hello Admin!", "10:15 AM"))
+        messages.add(ChatMessage("admin", "Hi Leo, how can I help?", "10:16 AM"))
+        messages.add(ChatMessage("client", "I wanted to ask about my project status.", "10:17 AM"))
+        adapter.notifyDataSetChanged()
+
+        // Send message button
+        binding.sendButton.setOnClickListener {
+            val text = binding.messageInput.text.toString().trim()
+            if (text.isNotEmpty()) {
+                val msg = ChatMessage("client", text, getCurrentTime())
+                messages.add(msg)
+                adapter.notifyItemInserted(messages.size - 1)
+                binding.chatRecyclerView.scrollToPosition(messages.size - 1)
+                binding.messageInput.text?.clear()
             }
+        }
+    }
+
+    private fun getCurrentTime(): String {
+        val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        return sdf.format(Date())
     }
 }
