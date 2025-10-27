@@ -54,15 +54,28 @@ class ProjectsFragment : Fragment() {
             return
         }
 
+        setupRecyclerView()
+        setupTabLayout()
+        setupSwipeRefresh()
+
+        loadProjects()
+
+        binding.chatNow.setOnClickListener {
+            findNavController().navigate(R.id.chatFragment)
+        }
+    }
+
+    /** Setup RecyclerView */
+    private fun setupRecyclerView() {
         adapter = ProjectsAdapter(emptyList()) { project ->
-            // You can still open project details using NavController if needed
             Toast.makeText(requireContext(), "Project: ${project.title}", Toast.LENGTH_SHORT).show()
         }
         binding.projectsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.projectsRecyclerView.adapter = adapter
+    }
 
-        loadProjects()
-
+    /** Setup TabLayout filter */
+    private fun setupTabLayout() {
         binding.projectTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 filterProjectsByStatus(tab?.text.toString())
@@ -71,47 +84,65 @@ class ProjectsFragment : Fragment() {
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
+    }
 
-        binding.chatNow.setOnClickListener {
-            findNavController().navigate(R.id.chatFragment)
+    /** Setup swipe-to-refresh */
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            loadProjects()
         }
-
     }
 
     /** Load projects from backend */
     private fun loadProjects() {
         showLoading(true)
-        apiService.getClientProjects("Bearer $token")
-            .enqueue(object : Callback<ProjectsResponse> {
-                override fun onResponse(
-                    call: Call<ProjectsResponse>,
-                    response: Response<ProjectsResponse>
-                ) {
-                    Log.d("LOAD_PROJECTS", response.toString())
-                    if (!isAdded) return
-                    showLoading(false)
+        apiService.getClientProjects("Bearer $token").enqueue(object : Callback<ProjectsResponse> {
+            override fun onResponse(
+                call: Call<ProjectsResponse>,
+                response: Response<ProjectsResponse>
+            ) {
+                if (!isAdded) return
+                showLoading(false)
+                binding.swipeRefresh.isRefreshing = false
 
-                    if (response.isSuccessful) {
-                        allProjects = response.body()?.data ?: emptyList()
-                        filterProjectsByStatus("approved")
+                if (response.isSuccessful) {
+                    allProjects = response.body()?.data ?: emptyList()
+
+                    if (allProjects.isEmpty()) {
+                        showEmptyState(true)
                     } else {
-                        Toast.makeText(requireContext(), "Failed to load projects!", Toast.LENGTH_SHORT).show()
+                        showEmptyState(false)
+                        val firstTab = binding.projectTabLayout.getTabAt(0)
+                        filterProjectsByStatus(firstTab?.text.toString())
                     }
+                } else {
+                    Toast.makeText(requireContext(), "Failed to load projects!", Toast.LENGTH_SHORT)
+                        .show()
                 }
+            }
 
-                override fun onFailure(call: Call<ProjectsResponse>, t: Throwable) {
-                    if (!isAdded) return
-                    showLoading(false)
-                    Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
-                }
-            })
+            override fun onFailure(call: Call<ProjectsResponse>, t: Throwable) {
+                if (!isAdded) return
+                showLoading(false)
+                binding.swipeRefresh.isRefreshing = false
+                Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
+    /** Filter projects by status (tab name) */
     private fun filterProjectsByStatus(status: String) {
         val filtered = allProjects.filter { it.status.equals(status, ignoreCase = true) }
         adapter.updateData(filtered)
+
+        if (filtered.isEmpty()) {
+            showEmptyState(true, "No $status projects found.")
+        } else {
+            showEmptyState(false)
+        }
     }
 
+    /** Show or hide loading overlay */
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
             binding.loadingOverlay.fadeIn()
@@ -122,6 +153,13 @@ class ProjectsFragment : Fragment() {
         }
     }
 
+    /** Show or hide empty message */
+    private fun showEmptyState(show: Boolean, message: String = "You don’t have any projects yet. Please add one.") {
+        binding.emptyText.visibility = if (show) View.VISIBLE else View.GONE
+        binding.emptyText.text = message
+    }
+
+    /** Smooth fade-in animation */
     private fun View.fadeIn(duration: Long = 300) {
         this.apply {
             alpha = 0f
@@ -130,6 +168,7 @@ class ProjectsFragment : Fragment() {
         }
     }
 
+    /** Smooth fade-out animation */
     private fun View.fadeOut(duration: Long = 300, endVisibility: Int = View.GONE) {
         this.animate().alpha(0f).setDuration(duration).withEndAction {
             visibility = endVisibility
