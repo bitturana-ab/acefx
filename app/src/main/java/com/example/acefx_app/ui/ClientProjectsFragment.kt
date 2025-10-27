@@ -1,11 +1,13 @@
 package com.example.acefx_app.ui
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -71,7 +73,13 @@ class ClientProjectsFragment : Fragment() {
         // Setup Tabs + Refresh
         setupTabs()
         binding.swipeRefresh.setOnRefreshListener { refreshData() }
-
+        // Add Project button
+        binding.addProjectBtn.setOnClickListener {
+            playButtonAnimation(it)
+            it.postDelayed({
+                findNavController().navigate(R.id.clientAddProjectFragment)
+            }, 200) // delay so animation completes first
+        }
         // Load projects
         loadProjects()
     }
@@ -94,6 +102,17 @@ class ClientProjectsFragment : Fragment() {
         loadProjects {
             binding.swipeRefresh.isRefreshing = false
         }
+    }
+
+    private fun playButtonAnimation(view: View) {
+        val scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.9f, 1f)
+        val scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.9f, 1f)
+        scaleX.duration = 200
+        scaleY.duration = 200
+        scaleX.interpolator = AccelerateDecelerateInterpolator()
+        scaleY.interpolator = AccelerateDecelerateInterpolator()
+        scaleX.start()
+        scaleY.start()
     }
 
     /** Load from backend */

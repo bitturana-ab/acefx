@@ -64,14 +64,14 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/addProjectBtn"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="50dp"
                     android:paddingHorizontal="16dp"
                     android:stateListAnimator="@null"
                     android:text="@string/text_add_project"
                     android:textColor="@android:color/white"
                     android:textSize="14sp"
                     app:backgroundTint="@color/purple_500"
-                    app:cornerRadius="20dp" />
+                    app:cornerRadius="14dp" />
             </LinearLayout>
 
             <!-- Tabs (pill-shaped) -->
