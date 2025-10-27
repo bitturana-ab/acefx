@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.acefx_app.R
 import com.example.acefx_app.data.ProjectItem
 import com.example.acefx_app.data.ProjectsResponse
-import com.example.acefx_app.databinding.FragmentClientProjectsBinding
 import com.example.acefx_app.databinding.FragmentProjectsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
@@ -43,10 +42,8 @@ class ProjectsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize API service
         apiService = ApiClient.getClient(requireContext()).create(ApiService::class.java)
 
-        // Load token and company name from SharedPreferences
         val sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         token = sharedPref.getString("authToken", "") ?: ""
         val companyName = sharedPref.getString("companyName", "Client")
@@ -57,23 +54,17 @@ class ProjectsFragment : Fragment() {
             return
         }
 
-        // Setup RecyclerView
         adapter = ProjectsAdapter(emptyList()) { project ->
-            // Navigate to details fragment using Safe Args
-            val action = ClientProjectsFragmentDirections
-                .actionClientProjectsFragmentToClientProjectDetailsFragment(projectId = project._id) // pass the id
-            findNavController().navigate(action)
+            // You can still open project details using NavController if needed
+            Toast.makeText(requireContext(), "Project: ${project.title}", Toast.LENGTH_SHORT).show()
         }
         binding.projectsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.projectsRecyclerView.adapter = adapter
 
-        // Load projects from backend
         loadProjects()
 
-        // Tab listener
         binding.projectTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-//                TODO("update when app loaded then show")
                 filterProjectsByStatus(tab?.text.toString())
             }
 
@@ -81,35 +72,29 @@ class ProjectsFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-        // Add Project button
-        binding.addProjectBtn.setOnClickListener {
-            Toast.makeText(requireContext(), "Open Add Project screen", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.clientAddProjectFragment)
+        binding.chatNow.setOnClickListener {
+            findNavController().navigate(R.id.chatFragment)
         }
+
     }
 
     /** Load projects from backend */
     private fun loadProjects() {
-//        TODO("load project from sharepref db")
         showLoading(true)
-
         apiService.getClientProjects("Bearer $token")
             .enqueue(object : Callback<ProjectsResponse> {
                 override fun onResponse(
                     call: Call<ProjectsResponse>,
                     response: Response<ProjectsResponse>
                 ) {
-                    Log.d("FAILDE_TO_LOAD",  response.toString())
+                    Log.d("LOAD_PROJECTS", response.toString())
                     if (!isAdded) return
                     showLoading(false)
 
                     if (response.isSuccessful) {
                         allProjects = response.body()?.projects ?: emptyList()
                         filterProjectsByStatus("approved")
-                        Toast.makeText(requireContext(), "All projects listed!", Toast.LENGTH_SHORT).show()
-
                     } else {
-                        Log.d("FAILDE_TO_LOAD", response.errorBody()?.string() ?: response.toString())
                         Toast.makeText(requireContext(), "Failed to load projects!", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -117,22 +102,16 @@ class ProjectsFragment : Fragment() {
                 override fun onFailure(call: Call<ProjectsResponse>, t: Throwable) {
                     if (!isAdded) return
                     showLoading(false)
-                    allProjects = emptyList()
                     Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
                 }
             })
     }
 
-
-    /** Filter projects based on tab selection */
     private fun filterProjectsByStatus(status: String) {
-        showLoading(true)
         val filtered = allProjects.filter { it.status.equals(status, ignoreCase = true) }
         adapter.updateData(filtered)
-        showLoading(false)
     }
 
-    /** Smooth fade-in/fade-out loading overlay */
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
             binding.loadingOverlay.fadeIn()
@@ -143,7 +122,6 @@ class ProjectsFragment : Fragment() {
         }
     }
 
-    /** Fade-in extension */
     private fun View.fadeIn(duration: Long = 300) {
         this.apply {
             alpha = 0f
@@ -152,7 +130,6 @@ class ProjectsFragment : Fragment() {
         }
     }
 
-    /** Fade-out extension */
     private fun View.fadeOut(duration: Long = 300, endVisibility: Int = View.GONE) {
         this.animate().alpha(0f).setDuration(duration).withEndAction {
             visibility = endVisibility

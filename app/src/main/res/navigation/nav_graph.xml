@@ -19,7 +19,11 @@
         android:id="@+id/projectsFragment"
         android:name="com.example.acefx_app.ui.ProjectsFragment"
         android:label="Projects"
-        tools:layout="@layout/fragment_projects" />
+        tools:layout="@layout/fragment_projects" >
+        <action
+            android:id="@+id/action_projectsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/accountFragment"
@@ -137,6 +141,11 @@
         android:id="@+id/clientAccountFragment"
         android:name="com.example.acefx_app.ui.ClientAccountFragment"
         android:label="ClientAccountFragment" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.acefx_app.ui.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
 
 
 </navigation>
