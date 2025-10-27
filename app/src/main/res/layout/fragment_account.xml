@@ -1,10 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/accountMainLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/gray"
+    tools:context=".ui.AccountFragment">
+
+    <!-- Top toggle buttons like tabs -->
+    <LinearLayout
+        android:id="@+id/topTabLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Account" android:textSize="24sp" />
+        android:orientation="horizontal"
+        android:background="@color/gray"
+        android:padding="8dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnAccount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/text_menu_account"
+            android:textStyle="bold"
+            android:backgroundTint="@color/purple_500"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnInvoice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/text_payment_history"
+            android:textStyle="bold"
+            android:backgroundTint="@color/gray"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <!-- Container to show child fragments -->
+    <FrameLayout
+        android:id="@+id/accountContentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp" />
+
 </LinearLayout>
