@@ -42,10 +42,13 @@ class ClientProjectsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize API service
+        // Back button
+        binding.backBtn.setOnClickListener { findNavController().navigateUp() }
+
+        // Setup API client
         apiService = ApiClient.getClient(requireContext()).create(ApiService::class.java)
 
-        // Load token and company name from SharedPreferences
+        // Load session
         val sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         token = sharedPref.getString("authToken", "") ?: ""
         val companyName = sharedPref.getString("companyName", "Client")
@@ -56,82 +59,106 @@ class ClientProjectsFragment : Fragment() {
             return
         }
 
-        // Setup RecyclerView
+        // RecyclerView setup
         adapter = ProjectsAdapter(emptyList()) { project ->
-            // Navigate to details fragment using Safe Args
             val action = ClientProjectsFragmentDirections
-                .actionClientProjectsFragmentToClientProjectDetailsFragment(projectId = project._id) // pass the id
+                .actionClientProjectsFragmentToClientProjectDetailsFragment(projectId = project._id)
             findNavController().navigate(action)
         }
         binding.projectsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.projectsRecyclerView.adapter = adapter
 
-        // Load projects from backend
-        loadProjects()
+        // Setup Tabs + Refresh
+        setupTabs()
+        binding.swipeRefresh.setOnRefreshListener { refreshData() }
 
-        // Tab listener
+        // Load projects
+        loadProjects()
+    }
+
+    /** Tabs setup (only backend statuses) */
+    private fun setupTabs() {
         binding.projectTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-//                TODO("update when app loaded then show")
-                filterProjectsByStatus(tab?.text.toString())
+                filterProjects()
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
+    }
 
-        // Add Project button
-        binding.addProjectBtn.setOnClickListener {
-            Toast.makeText(requireContext(), "Open Add Project screen", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.clientAddProjectFragment)
+    /** Pull to refresh */
+    private fun refreshData() {
+        binding.swipeRefresh.isRefreshing = true
+        loadProjects {
+            binding.swipeRefresh.isRefreshing = false
         }
     }
 
-    /** Load projects from backend */
-    private fun loadProjects() {
-//        TODO("load project from sharepref db")
+    /** Load from backend */
+    private fun loadProjects(onComplete: (() -> Unit)? = null) {
         showLoading(true)
-
         apiService.getClientProjects("Bearer $token")
             .enqueue(object : Callback<ProjectsResponse> {
                 override fun onResponse(
                     call: Call<ProjectsResponse>,
                     response: Response<ProjectsResponse>
                 ) {
-                    Log.d("FAILDE_TO_LOAD",  response.toString())
                     if (!isAdded) return
                     showLoading(false)
+                    onComplete?.invoke()
 
                     if (response.isSuccessful) {
                         allProjects = response.body()?.projects ?: emptyList()
-                        filterProjectsByStatus("approved")
-                        Toast.makeText(requireContext(), "All projects listed!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "All projects loaded.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        filterProjects()
 
                     } else {
-                        Log.d("FAILDE_TO_LOAD", response.errorBody()?.string() ?: response.toString())
-                        Toast.makeText(requireContext(), "Failed to load projects!", Toast.LENGTH_SHORT).show()
+                        Log.e(
+                            "PROJECT_LOAD_FAILED",
+                            response.errorBody()?.string() ?: "Unknown error"
+                        )
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to load projects!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<ProjectsResponse>, t: Throwable) {
                     if (!isAdded) return
                     showLoading(false)
-                    allProjects = emptyList()
-                    Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
+                    onComplete?.invoke()
+                    Toast.makeText(
+                        requireContext(),
+                        "Network error: ${t.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
     }
 
+    /** Filter projects based on selected tab */
+    private fun filterProjects() {
+        val selectedTab =
+            binding.projectTabLayout.getTabAt(binding.projectTabLayout.selectedTabPosition)
+        val statusFilter = selectedTab?.text.toString().lowercase()
 
-    /** Filter projects based on tab selection */
-    private fun filterProjectsByStatus(status: String) {
-        showLoading(true)
-        val filtered = allProjects.filter { it.status.equals(status, ignoreCase = true) }
+        val filtered = allProjects.filter { project ->
+            project.status.equals(statusFilter, true)
+        }
+
         adapter.updateData(filtered)
-        showLoading(false)
     }
 
-    /** Smooth fade-in/fade-out loading overlay */
+    /** Smooth overlay animation */
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
             binding.loadingOverlay.fadeIn()
@@ -142,7 +169,7 @@ class ClientProjectsFragment : Fragment() {
         }
     }
 
-    /** Fade-in extension */
+    /** Fade animations */
     private fun View.fadeIn(duration: Long = 300) {
         this.apply {
             alpha = 0f
@@ -151,11 +178,15 @@ class ClientProjectsFragment : Fragment() {
         }
     }
 
-    /** Fade-out extension */
     private fun View.fadeOut(duration: Long = 300, endVisibility: Int = View.GONE) {
         this.animate().alpha(0f).setDuration(duration).withEndAction {
             visibility = endVisibility
         }.start()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        filterProjects()
     }
 
     override fun onDestroyView() {
