@@ -92,7 +92,7 @@ class ProjectsFragment : Fragment() {
                     showLoading(false)
 
                     if (response.isSuccessful) {
-                        allProjects = response.body()?.projects ?: emptyList()
+                        allProjects = response.body()?.data ?: emptyList()
                         filterProjectsByStatus("approved")
                     } else {
                         Toast.makeText(requireContext(), "Failed to load projects!", Toast.LENGTH_SHORT).show()

@@ -10,9 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.acefx_app.R
@@ -23,9 +21,10 @@ import com.example.acefx_app.retrofitServices.ApiService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.Calendar
+import java.util.*
 
 class ClientAddProjectFragment : Fragment() {
+
     private lateinit var etTitle: EditText
     private lateinit var etDescription: EditText
     private lateinit var etAttachLink: EditText
@@ -33,15 +32,9 @@ class ClientAddProjectFragment : Fragment() {
     private lateinit var etDeadline: EditText
     private lateinit var etExpectedAmount: EditText
     private lateinit var btnSubmit: Button
-    private var token: String? = ""
-    private var title: String = ""
-    private var description: String = ""
-    private var attachLink: String = ""
-    private var dataLink: String = ""
-    private var expectedAmountStr: String = ""
-    private var deadline: String = ""
-    private var expectedAmount: Double = 0.0
+    private lateinit var loadingOverlay: FrameLayout
 
+    private var token: String? = null
     private lateinit var apiService: ApiService
     private lateinit var sharedPrefs: SharedPreferences
 
@@ -49,22 +42,31 @@ class ClientAddProjectFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = inflater.inflate(R.layout.fragment_client_add_project, container, false)
 
+        // Initialize components
         apiService = ApiClient.getClient(requireContext()).create(ApiService::class.java)
         sharedPrefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         token = sharedPrefs.getString("authToken", null)
 
-        etTitle = view.findViewById<EditText>(R.id.etTitle)
-        etDescription = view.findViewById<EditText>(R.id.etDescription)
-        etDataLink = view.findViewById<EditText>(R.id.etDataLink)
-        etAttachLink = view.findViewById<EditText>(R.id.etAttachLink)
-        etDeadline = view.findViewById<EditText>(R.id.etDeadline)
-        etExpectedAmount = view.findViewById<EditText>(R.id.etExpectedAmount)
-        btnSubmit = view.findViewById<Button>(R.id.btnSubmitProject)
+        etTitle = view.findViewById(R.id.etTitle)
+        etDescription = view.findViewById(R.id.etDescription)
+        etDataLink = view.findViewById(R.id.etDataLink)
+        etAttachLink = view.findViewById(R.id.etAttachLink)
+        etDeadline = view.findViewById(R.id.etDeadline)
+        etExpectedAmount = view.findViewById(R.id.etExpectedAmount)
+        btnSubmit = view.findViewById(R.id.btnSubmitProject)
+        loadingOverlay = view.findViewById(R.id.loadingOverlay)
 
-        // Date Picker
+        setupDatePicker()
+        setupSubmitButton()
+
+        return view
+    }
+
+    /** Date Picker Setup **/
+    private fun setupDatePicker() {
         etDeadline.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
@@ -77,49 +79,66 @@ class ClientAddProjectFragment : Fragment() {
                 etDeadline.setText(formattedDate)
             }, year, month, day).show()
         }
-
-title
-        btnSubmit.setOnClickListener {
-            title = etTitle.text.toString().trim()
-            description = etDescription.text.toString().trim()
-            dataLink = etDataLink.text.toString().trim()
-            attachLink = etAttachLink.text.toString().trim()
-            deadline = etDeadline.text.toString().trim()
-            expectedAmountStr = etExpectedAmount.text.toString().trim()
-
-            if (title.isEmpty() || description.isEmpty() || deadline.isEmpty() || expectedAmountStr.isEmpty()) {
-                Toast.makeText(
-                    requireContext(),
-                    "All required fields must be filled",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@setOnClickListener
-            }
-
-            expectedAmount = try {
-                expectedAmountStr.toDouble()
-            } catch (e: NumberFormatException) {
-                Toast.makeText(requireContext(), "Enter valid amount", Toast.LENGTH_SHORT)
-                    .show()
-                return@setOnClickListener
-            }
-
-            AlertDialog.Builder(requireContext())
-                .setTitle("Confirm Submission")
-                .setMessage("Are you sure you want to add this project?\n\nTitle: $title\nDeadline: $deadline\nAmount: ₹$expectedAmountStr")
-                .setPositiveButton("Yes") { _, _ ->
-                    addProject()
-                }
-                .setNegativeButton("No", null)
-                .show()
-        }
-
-
-
-        return view
     }
 
-    fun addProject() {
+    /** Submit Button Setup **/
+    private fun setupSubmitButton() {
+        btnSubmit.setOnClickListener {
+            val title = etTitle.text.toString().trim()
+            val description = etDescription.text.toString().trim()
+            val dataLink = etDataLink.text.toString().trim()
+            val attachLink = etAttachLink.text.toString().trim()
+            val deadline = etDeadline.text.toString().trim()
+            val expectedAmountStr = etExpectedAmount.text.toString().trim()
+
+            // Validation
+            if (title.isEmpty() || description.isEmpty() || deadline.isEmpty() || expectedAmountStr.isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill all required fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val expectedAmount = try {
+                expectedAmountStr.toDouble()
+            } catch (e: NumberFormatException) {
+                Toast.makeText(requireContext(), "Enter a valid amount", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (token.isNullOrEmpty()) {
+                Toast.makeText(requireContext(), "Session expired. Please log in again.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Confirm before submission
+            AlertDialog.Builder(requireContext())
+                .setTitle("Confirm Submission")
+                .setMessage(
+                    """
+                    Are you sure you want to add this project?
+                    
+                    • Title: $title
+                    • Deadline: $deadline
+                    • Amount: ₹$expectedAmountStr
+                    """.trimIndent()
+                )
+                .setPositiveButton("Yes") { _, _ ->
+                    addProject(title, description, dataLink, attachLink, deadline, expectedAmount)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+    }
+
+    /** API Call **/
+    private fun addProject(
+        title: String,
+        description: String,
+        dataLink: String,
+        attachLink: String,
+        deadline: String,
+        expectedAmount: Double
+    ) {
+        loadingOverlay.visibility = View.VISIBLE
 
         val projectRequest = ProjectRequest(
             title = title,
@@ -130,39 +149,33 @@ title
             expectedAmount = expectedAmount
         )
 
-        apiService.createProject("Bearer $token", projectRequest)
-            .enqueue(object : Callback<ProjectResponse> {
-                override fun onResponse(
-                    call: Call<ProjectResponse>,
-                    response: Response<ProjectResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Project submitted for approval",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        findNavController().popBackStack()
-                    } else {
-                        Log.d("ADD_PRODUCT", response.toString())
-                        Toast.makeText(
-                            requireContext(),
-                            "Submission failed: ${response.code()}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+        try {
+            apiService.createProject("Bearer $token", projectRequest)
+                .enqueue(object : Callback<ProjectResponse> {
+                    override fun onResponse(call: Call<ProjectResponse>, response: Response<ProjectResponse>) {
+                        loadingOverlay.visibility = View.GONE
+
+                        if (response.isSuccessful && response.body() != null) {
+                            Toast.makeText(requireContext(), "Project submitted successfully!", Toast.LENGTH_SHORT).show()
+                            findNavController().popBackStack() // back auto
+                        } else {
+                            val code = response.code()
+                            val msg = response.message()
+                            Log.e("ADD_PROJECT", "Error $code: $msg")
+                            Toast.makeText(requireContext(), "Failed: $code $msg", Toast.LENGTH_SHORT).show()
+                        }
                     }
-                }
 
-                override fun onFailure(call: Call<ProjectResponse>, t: Throwable) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Error: ${t.message}",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-            })
-
-
+                    override fun onFailure(call: Call<ProjectResponse>, t: Throwable) {
+                        loadingOverlay.visibility = View.GONE
+                        Log.e("ADD_PROJECT", "Failure: ${t.localizedMessage}")
+                        Toast.makeText(requireContext(), "Network error: ${t.localizedMessage}", Toast.LENGTH_LONG).show()
+                    }
+                })
+        } catch (e: Exception) {
+            loadingOverlay.visibility = View.GONE
+            Log.e("ADD_PROJECT_EXCEPTION", "Exception: ${e.message}", e)
+            Toast.makeText(requireContext(), "Unexpected error occurred", Toast.LENGTH_SHORT).show()
+        }
     }
 }

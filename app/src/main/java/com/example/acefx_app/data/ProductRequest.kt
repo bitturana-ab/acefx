@@ -5,12 +5,12 @@ package com.example.acefx_app.data
 data class ProjectResponse(
     val message: String,
     val project: ProjectData,
-    val invoice: InvoiceData
 )
 // get projects of array
 data class ProjectsResponse(
+    val success: Boolean,
     val message: String,
-    val projects: List<ProjectItem>
+    val data: List<ProjectItem>
 )
 
 // get or fetch projects and save

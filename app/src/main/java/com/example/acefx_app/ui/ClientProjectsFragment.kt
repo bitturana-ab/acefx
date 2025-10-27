@@ -1,13 +1,11 @@
 package com.example.acefx_app.ui
 
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -16,6 +14,7 @@ import com.example.acefx_app.R
 import com.example.acefx_app.data.ProjectItem
 import com.example.acefx_app.data.ProjectsResponse
 import com.example.acefx_app.databinding.FragmentClientProjectsBinding
+import com.example.acefx_app.databinding.FragmentProjectsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
 import com.example.acefx_app.ui.adapter.ProjectsAdapter
@@ -44,13 +43,7 @@ class ClientProjectsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Back button
-        binding.backBtn.setOnClickListener { findNavController().navigateUp() }
-
-        // Setup API client
         apiService = ApiClient.getClient(requireContext()).create(ApiService::class.java)
-
-        // Load session
         val sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         token = sharedPref.getString("authToken", "") ?: ""
         val companyName = sharedPref.getString("companyName", "Client")
@@ -61,151 +54,96 @@ class ClientProjectsFragment : Fragment() {
             return
         }
 
-        // RecyclerView setup
         adapter = ProjectsAdapter(emptyList()) { project ->
-            val action = ClientProjectsFragmentDirections
-                .actionClientProjectsFragmentToClientProjectDetailsFragment(projectId = project._id)
-            findNavController().navigate(action)
+            Toast.makeText(requireContext(), "Project: ${project.title}", Toast.LENGTH_SHORT).show()
         }
+
         binding.projectsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.projectsRecyclerView.adapter = adapter
 
-        // Setup Tabs + Refresh
-        setupTabs()
-        binding.swipeRefresh.setOnRefreshListener { refreshData() }
-        // Add Project button
-        binding.addProjectBtn.setOnClickListener {
-            playButtonAnimation(it)
-            it.postDelayed({
-                findNavController().navigate(R.id.clientAddProjectFragment)
-            }, 200) // delay so animation completes first
+        binding.swipeRefresh.setOnRefreshListener {
+            loadProjects()
         }
-        // Load projects
-        loadProjects()
-    }
 
-    /** Tabs setup (only backend statuses) */
-    private fun setupTabs() {
+        binding.addProjectBtn.setOnClickListener {
+            findNavController().navigate(R.id.clientAddProjectFragment)
+        }
+
         binding.projectTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                filterProjects()
+                filterProjectsByStatus(tab?.text.toString())
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
+
+        loadProjects()
     }
 
-    /** Pull to refresh */
-    private fun refreshData() {
-        binding.swipeRefresh.isRefreshing = true
-        loadProjects {
-            binding.swipeRefresh.isRefreshing = false
-        }
-    }
-
-    private fun playButtonAnimation(view: View) {
-        val scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.9f, 1f)
-        val scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.9f, 1f)
-        scaleX.duration = 200
-        scaleY.duration = 200
-        scaleX.interpolator = AccelerateDecelerateInterpolator()
-        scaleY.interpolator = AccelerateDecelerateInterpolator()
-        scaleX.start()
-        scaleY.start()
-    }
-
-    /** Load from backend */
-    private fun loadProjects(onComplete: (() -> Unit)? = null) {
+    /** Load projects from backend */
+    private fun loadProjects() {
         showLoading(true)
         apiService.getClientProjects("Bearer $token")
             .enqueue(object : Callback<ProjectsResponse> {
-                override fun onResponse(
-                    call: Call<ProjectsResponse>,
-                    response: Response<ProjectsResponse>
-                ) {
+                override fun onResponse(call: Call<ProjectsResponse>, response: Response<ProjectsResponse>) {
                     if (!isAdded) return
                     showLoading(false)
-                    onComplete?.invoke()
+                    binding.swipeRefresh.isRefreshing = false
 
                     if (response.isSuccessful) {
-                        allProjects = response.body()?.projects ?: emptyList()
-                        Toast.makeText(
-                            requireContext(),
-                            "All projects loaded.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        allProjects = response.body()?.data ?: emptyList()
+                        Log.d("LOAD_PROJECTS", "Loaded ${allProjects.size} projects")
 
-                        filterProjects()
-
+                        if (allProjects.isEmpty()) {
+                            showEmptyState(true)
+                        } else {
+                            showEmptyState(false)
+                            val selectedTab = binding.projectTabLayout.getTabAt(binding.projectTabLayout.selectedTabPosition)
+                            val tabText = selectedTab?.text?.toString() ?: "approved"
+                            filterProjectsByStatus(tabText)
+                        }
                     } else {
-                        Log.e(
-                            "PROJECT_LOAD_FAILED",
-                            response.errorBody()?.string() ?: "Unknown error"
-                        )
-                        Toast.makeText(
-                            requireContext(),
-                            "Failed to load projects!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(requireContext(), "Failed to load projects!", Toast.LENGTH_SHORT).show()
+                        showEmptyState(true)
                     }
                 }
 
                 override fun onFailure(call: Call<ProjectsResponse>, t: Throwable) {
                     if (!isAdded) return
                     showLoading(false)
-                    onComplete?.invoke()
-                    Toast.makeText(
-                        requireContext(),
-                        "Network error: ${t.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    binding.swipeRefresh.isRefreshing = false
+                    Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    showEmptyState(true)
                 }
             })
     }
 
-    /** Filter projects based on selected tab */
-    private fun filterProjects() {
-        val selectedTab =
-            binding.projectTabLayout.getTabAt(binding.projectTabLayout.selectedTabPosition)
-        val statusFilter = selectedTab?.text.toString().lowercase()
-
-        val filtered = allProjects.filter { project ->
-            project.status.equals(statusFilter, true)
+    /** Filter projects by selected status */
+    private fun filterProjectsByStatus(statusText: String) {
+        val status = when (statusText.lowercase()) {
+            "approved" -> "approved"
+            "on hold" -> "on hold"
+            else -> ""
         }
+
+        val filtered = if (status.isEmpty()) allProjects
+        else allProjects.filter { it.status.equals(status, ignoreCase = true) }
 
         adapter.updateData(filtered)
+        showEmptyState(filtered.isEmpty())
     }
 
-    /** Smooth overlay animation */
+    /** Show or hide loading animation */
     private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.loadingOverlay.fadeIn()
-            binding.progressBar.fadeIn()
-        } else {
-            binding.progressBar.fadeOut()
-            binding.loadingOverlay.fadeOut()
-        }
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.loadingOverlay.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
-    /** Fade animations */
-    private fun View.fadeIn(duration: Long = 300) {
-        this.apply {
-            alpha = 0f
-            visibility = View.VISIBLE
-            animate().alpha(1f).setDuration(duration).start()
-        }
-    }
-
-    private fun View.fadeOut(duration: Long = 300, endVisibility: Int = View.GONE) {
-        this.animate().alpha(0f).setDuration(duration).withEndAction {
-            visibility = endVisibility
-        }.start()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        filterProjects()
+    /** Show or hide "No projects" message */
+    private fun showEmptyState(show: Boolean) {
+        binding.emptyText.visibility = if (show) View.VISIBLE else View.GONE
+        binding.projectsRecyclerView.visibility = if (show) View.GONE else View.VISIBLE
     }
 
     override fun onDestroyView() {

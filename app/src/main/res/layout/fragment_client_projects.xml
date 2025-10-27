@@ -43,6 +43,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+
             <!-- Top client name and add button -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -99,6 +100,18 @@
                     android:layout_height="wrap_content"
                     android:text="@string/text_on_hold" />
             </com.google.android.material.tabs.TabLayout>
+            <TextView
+                android:id="@+id/emptyText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="You don’t have any projects yet.\nTap “Add Project” to create one."
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:paddingTop="40dp"
+                android:paddingBottom="16dp" />
+
 
             <!-- RecyclerView for projects -->
             <androidx.recyclerview.widget.RecyclerView
