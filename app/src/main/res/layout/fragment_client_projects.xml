@@ -52,6 +52,7 @@
             app:tabBackground="@drawable/tab_background_selector"
             app:tabGravity="fill"
             app:tabIndicatorHeight="0dp"
+            android:backgroundTint="@color/gray"
             app:tabMode="fixed"
             app:tabRippleColor="@android:color/transparent"
             app:tabSelectedTextColor="@android:color/white"

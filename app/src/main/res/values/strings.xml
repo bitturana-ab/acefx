@@ -85,4 +85,5 @@
     <string name="text_amount">Amount</string>
     <string name="text_payment_history">Payment History</string>
     <string name="text_unpaid">unpaid</string>
+    <string name="text_chat">Chat</string>
 </resources>
