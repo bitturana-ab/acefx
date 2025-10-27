@@ -51,13 +51,13 @@ class AccountFragment : Fragment() {
                 btnAccount.backgroundTintList = requireContext().getColorStateList(R.color.purple_500)
                 btnAccount.setTextColor(resources.getColor(R.color.white))
                 btnInvoice.backgroundTintList = requireContext().getColorStateList(R.color.gray)
-                btnInvoice.setTextColor(resources.getColor(R.color.black))
+                btnInvoice.setTextColor(resources.getColor(R.color.white))
             }
             "invoice" -> {
                 btnInvoice.backgroundTintList = requireContext().getColorStateList(R.color.purple_500)
                 btnInvoice.setTextColor(resources.getColor(R.color.white))
                 btnAccount.backgroundTintList = requireContext().getColorStateList(R.color.gray)
-                btnAccount.setTextColor(resources.getColor(R.color.black))
+                btnAccount.setTextColor(resources.getColor(R.color.white))
             }
         }
     }
