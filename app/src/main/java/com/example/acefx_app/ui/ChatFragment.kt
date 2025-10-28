@@ -1,5 +1,6 @@
 package com.example.acefx_app.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -105,6 +106,7 @@ class ChatFragment : Fragment() {
     }
 
     /** Load chat history */
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadChatHistory() {
         lifecycleScope.launch {
             try {

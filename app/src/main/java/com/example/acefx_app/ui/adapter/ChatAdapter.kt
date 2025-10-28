@@ -7,7 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.acefx_app.R
 import com.example.acefx_app.data.ChatMessage
-import com.example.acefx_app.data.ChatMessageRequest
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ChatAdapter(
     private val messages: List<ChatMessage>,
@@ -47,16 +48,35 @@ class ChatAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val msg = messages[position]
+        val formattedTime = formatDateTime(msg.time)
+
         if (holder is UserViewHolder) {
             holder.tvUserName.text = msg.sender
             holder.tvUserMessage.text = msg.message
-            holder.tvUserTime.text = msg.time
+            holder.tvUserTime.text = formattedTime
         } else if (holder is AdminViewHolder) {
             holder.tvAdminName.text = "Admin"
             holder.tvAdminMessage.text = msg.message
-            holder.tvAdminTime.text = msg.time
+            holder.tvAdminTime.text = formattedTime
         }
     }
 
     override fun getItemCount(): Int = messages.size
+
+    /** Format ISO date/time from server into readable string */
+    private fun formatDateTime(isoDate: String?): String {
+        if (isoDate.isNullOrEmpty()) return ""
+
+        return try {
+            val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            parser.timeZone = TimeZone.getTimeZone("UTC")
+            val date = parser.parse(isoDate)
+
+            val formatter = SimpleDateFormat("hh:mm a, dd MMM", Locale.getDefault())
+            formatter.format(date!!)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            isoDate
+        }
+    }
 }

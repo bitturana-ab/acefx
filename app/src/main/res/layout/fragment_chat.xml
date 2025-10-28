@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@color/dark_gray"
     tools:context=".ui.ChatFragment">
 
     <!-- Chat messages list -->
@@ -26,8 +26,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/gray_400"
-        android:padding="10dp"
+        android:background="@color/gray"
+        android:paddingTop="10dp"
+        android:paddingBottom="20dp"
+        android:paddingHorizontal="20dp"
         android:gravity="center_vertical">
 
         <EditText
@@ -38,7 +40,7 @@
             android:hint="@string/text_type_a_message"
             android:background="@drawable/et_bg"
             android:paddingHorizontal="14dp"
-            android:paddingVertical="10dp"
+            android:paddingVertical="16dp"
             android:textColor="@android:color/black"
             android:textSize="15sp"
             android:imeOptions="actionSend"
@@ -54,7 +56,7 @@
             android:src="@drawable/ic_send"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/text_send_message"
-            app:tint="@color/blue_500" />
+            app:tint="@color/status_active" />
     </LinearLayout>
 
 </LinearLayout>
