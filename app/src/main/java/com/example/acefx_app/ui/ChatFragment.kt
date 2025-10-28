@@ -16,8 +16,9 @@ import com.example.acefx_app.databinding.FragmentChatBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
 import com.example.acefx_app.ui.adapter.ChatAdapter
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
-
 
 class ChatFragment : Fragment() {
 
@@ -28,6 +29,9 @@ class ChatFragment : Fragment() {
     private lateinit var adapter: ChatAdapter
     private lateinit var chatApi: ApiService
     private var authToken: String? = null
+    private var companyName: String? = null
+
+    private val gson = Gson()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,9 +48,10 @@ class ChatFragment : Fragment() {
         // Initialize API service
         chatApi = ApiClient.getClient(requireContext()).create(ApiService::class.java)
 
-        // Get token from SharedPreferences
+        // Get token & companyName from SharedPreferences
         val sharedPrefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         authToken = sharedPrefs.getString("authToken", null)
+        companyName = sharedPrefs.getString("companyName", null)
 
         // Setup RecyclerView
         adapter = ChatAdapter(messages, currentUser = "client")
@@ -54,15 +59,23 @@ class ChatFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@ChatFragment.adapter
         }
+        binding.companyNameChat.text = companyName
 
-        // Load chat history from DB
+        binding.messageInput.setOnClickListener {
+            binding.recyclerViewChat.scrollToPosition(messages.size - 1)
+        }
+        // Load local chat first
+        loadLocalChat()
+
+        // Then fetch latest from backend
         loadChatHistory()
 
-        // Send message button click
+        // Send message
         binding.btnSend.setOnClickListener {
             val messageText = binding.messageInput.text.toString().trim()
             if (messageText.isEmpty()) {
-                Toast.makeText(requireContext(), "Message cannot be empty!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Message cannot be empty!", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
 
@@ -70,7 +83,6 @@ class ChatFragment : Fragment() {
                 sender = "client",
                 message = messageText
             )
-
             sendMessage(request)
         }
     }
@@ -80,7 +92,8 @@ class ChatFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 if (authToken.isNullOrEmpty()) {
-                    Toast.makeText(requireContext(), "Please login first!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Please login first!", Toast.LENGTH_SHORT)
+                        .show()
                     return@launch
                 }
 
@@ -93,27 +106,29 @@ class ChatFragment : Fragment() {
                         adapter.notifyItemInserted(messages.size - 1)
                         binding.recyclerViewChat.scrollToPosition(messages.size - 1)
                         binding.messageInput.text?.clear()
+
+                        // Save updated chat to SharedPreferences
+                        saveLocalChat(messages)
                     }
                     Toast.makeText(requireContext(), "Message sent ", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(requireContext(), "Failed to send message", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Failed to send message", Toast.LENGTH_SHORT)
+                        .show()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(requireContext(), "Error: sending message", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error sending message!", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
-    /** Load chat history */
+    /** Load chat history from backend */
     @SuppressLint("NotifyDataSetChanged")
     private fun loadChatHistory() {
         lifecycleScope.launch {
             try {
-                if (authToken.isNullOrEmpty()) {
-                    Toast.makeText(requireContext(), "Login required to view chat!", Toast.LENGTH_SHORT).show()
-                    return@launch
-                }
+                if (authToken.isNullOrEmpty()) return@launch
 
                 val response = chatApi.getChatHistory("Bearer $authToken")
                 if (response.isSuccessful && response.body()?.success == true) {
@@ -122,13 +137,37 @@ class ChatFragment : Fragment() {
                     messages.addAll(chatList)
                     adapter.notifyDataSetChanged()
                     binding.recyclerViewChat.scrollToPosition(messages.size - 1)
-                } else {
-                    Toast.makeText(requireContext(), "Failed to load chat!", Toast.LENGTH_SHORT).show()
+
+                    // Save to local storage
+                    saveLocalChat(messages)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(requireContext(), "Error: fetching message!", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    /** Save messages to SharedPreferences */
+    private fun saveLocalChat(chatList: List<ChatMessage>) {
+        val sharedPrefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+        val editor = sharedPrefs.edit()
+        val json = gson.toJson(chatList)
+        editor.putString("chatMessages", json)
+        editor.apply()
+    }
+
+    /** Load messages from SharedPreferences */
+    @SuppressLint("NotifyDataSetChanged")
+    private fun loadLocalChat() {
+        val sharedPrefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+        val json = sharedPrefs.getString("chatMessages", null)
+        if (!json.isNullOrEmpty()) {
+            val type = object : TypeToken<List<ChatMessage>>() {}.type
+            val savedMessages: List<ChatMessage> = gson.fromJson(json, type)
+            messages.clear()
+            messages.addAll(savedMessages)
+            adapter.notifyDataSetChanged()
+            binding.recyclerViewChat.scrollToPosition(messages.size - 1)
         }
     }
 
