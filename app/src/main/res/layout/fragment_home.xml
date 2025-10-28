@@ -68,13 +68,13 @@
                 app:cardCornerRadius="10dp">
 
                 <LinearLayout
+                    android:id="@+id/addProjectBtn"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/goToHomeBtn"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:src="@drawable/ic_add_circle_rounded"

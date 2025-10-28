@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_clientProfileFragment"
             app:destination="@id/clientProfileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_clientAddProjectFragment"
+            app:destination="@id/clientAddProjectFragment" />
     </fragment>
 
     <fragment

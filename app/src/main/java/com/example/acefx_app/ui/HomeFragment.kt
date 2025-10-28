@@ -43,8 +43,15 @@ class HomeFragment : Fragment() {
         api = ApiClient.getClient(requireContext()).create(ApiService::class.java)
         sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
 
-        binding.goToHomeBtn.setOnClickListener {
+        // chat now navigation handle if login
+        binding.btnChatNow.setOnClickListener {
             handleHomeNavigation()
+        }
+        // add product navigation
+        binding.addProjectBtn.setOnClickListener {
+            loadLocalUserData() // load local then check
+            if (isProfileComplete()) navigateToAddProject() else navigateToProfile()
+
         }
     }
 
@@ -55,8 +62,9 @@ class HomeFragment : Fragment() {
         when {
             // Profile is complete
             isProfileComplete() -> {
-                Toast.makeText(requireContext(), "Welcome back, $companyName!", Toast.LENGTH_SHORT).show()
-                navigateToProjects()
+                Toast.makeText(requireContext(), "Welcome back, $companyName!", Toast.LENGTH_SHORT)
+                    .show()
+                navigateToChat()
             }
 
             // Token exists but profile incomplete — fetch updated profile
@@ -66,7 +74,9 @@ class HomeFragment : Fragment() {
 
             // No token or no profile — go to profile setup
             else -> {
-                Toast.makeText(requireContext(), "Please complete your profile.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(), "Please complete your profile.", Toast.LENGTH_SHORT
+                ).show()
                 navigateToProfile()
             }
         }
@@ -87,7 +97,9 @@ class HomeFragment : Fragment() {
         showLoading(true)
 
         api.getUserProfile("Bearer $token").enqueue(object : Callback<UserDetailsResponse> {
-            override fun onResponse(call: Call<UserDetailsResponse>, response: Response<UserDetailsResponse>) {
+            override fun onResponse(
+                call: Call<UserDetailsResponse>, response: Response<UserDetailsResponse>
+            ) {
                 showLoading(false)
 
                 if (!isAdded) return
@@ -97,15 +109,23 @@ class HomeFragment : Fragment() {
                     if (data != null) {
                         saveUserDataLocally(data)
                         if (isProfileComplete()) {
-                            Toast.makeText(requireContext(), "Welcome back, $companyName!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(), "Welcome back, $companyName!", Toast.LENGTH_SHORT
+                            ).show()
                             navigateToProjects()
                         } else {
-                            Toast.makeText(requireContext(), "Profile incomplete. Please update your details.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Profile incomplete. Please update your details.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             navigateToProfile()
                         }
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Failed to load user data.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(), "Failed to load user data.", Toast.LENGTH_SHORT
+                    ).show()
                     navigateToProfile()
                 }
             }
@@ -135,6 +155,14 @@ class HomeFragment : Fragment() {
         findNavController().navigate(R.id.clientProjectsFragment)
     }
 
+    private fun navigateToChat() {
+        findNavController().navigate(R.id.chatFragment)
+    }
+
+    private fun navigateToAddProject() {
+        findNavController().navigate(R.id.clientAddProjectFragment)
+    }
+
     private fun navigateToProfile() {
         findNavController().navigate(R.id.clientProfileFragment)
     }
@@ -142,7 +170,7 @@ class HomeFragment : Fragment() {
     private fun showLoading(isLoading: Boolean) {
 //        binding.loadingOverlay.visibility = if (isLoading) View.VISIBLE else View.GONE
 //        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        binding.goToHomeBtn.isEnabled = !isLoading
+        binding.btnChatNow.isEnabled = !isLoading
     }
 
     override fun onDestroyView() {
