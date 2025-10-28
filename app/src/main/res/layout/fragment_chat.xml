@@ -1,4 +1,6 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,11 +11,14 @@
 
     <!-- Chat messages list -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatRecyclerView"
+        android:id="@+id/recyclerViewChat"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="8dp"
+        android:paddingHorizontal="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp"
+        android:clipToPadding="false"
         tools:listitem="@layout/item_chat_admin" />
 
     <!-- Message input bar -->
@@ -32,12 +37,17 @@
             android:layout_weight="1"
             android:hint="@string/text_type_a_message"
             android:background="@drawable/et_bg"
-            android:padding="10dp"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="10dp"
             android:textColor="@android:color/black"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:imeOptions="actionSend"
+            android:singleLine="true"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="4" />
 
         <ImageButton
-            android:id="@+id/sendButton"
+            android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"

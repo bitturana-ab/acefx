@@ -1,5 +1,8 @@
 package com.example.acefx_app.retrofitServices
 
+import com.example.acefx_app.data.ChatListResponse
+import com.example.acefx_app.data.ChatMessageRequest
+import com.example.acefx_app.data.ChatMessageResponse
 import com.example.acefx_app.data.ProjectData
 import com.example.acefx_app.data.ProjectItem
 import com.example.acefx_app.data.ProjectRequest
@@ -7,6 +10,7 @@ import com.example.acefx_app.data.ProjectResponse
 import com.example.acefx_app.data.ProjectsResponse
 import com.example.acefx_app.data.UserDetailsResponse
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -26,7 +30,7 @@ interface ApiService {
     @GET("api/auth")
     fun getUserProfile(
         @Header("Authorization") token: String
-    ):Call<UserDetailsResponse>
+    ): Call<UserDetailsResponse>
 
     //    not available
     @GET("dashboard")
@@ -58,5 +62,18 @@ interface ApiService {
         @Path("id") id: String
     ): Call<ProjectData>
 
+    // chat api
+    /** Send chat message */
+    @POST("api/chat/send")
+    suspend fun sendMessage(
+        @Header("Authorization") token: String,
+        @Body request: ChatMessageRequest
+    ): Response<ChatMessageResponse>
+
+    /** Get all chat messages for a specific client */
+    @GET("api/chat/client/{clientId}")
+    suspend fun getChatHistory(
+        @Header("Authorization") token: String
+    ): Response<ChatListResponse>
 
 }

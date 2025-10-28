@@ -77,6 +77,8 @@ class ClientProjectsFragment : Fragment() {
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
+        TODO("back button")
+        binding.backBtn.setOnClickListener { findNavController().popBackStack() }
 
         loadProjects()
     }

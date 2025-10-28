@@ -1,53 +1,62 @@
 package com.example.acefx_app.ui.adapter
 
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.acefx_app.R
 import com.example.acefx_app.data.ChatMessage
+import com.example.acefx_app.data.ChatMessageRequest
 
 class ChatAdapter(
     private val messages: List<ChatMessage>,
     private val currentUser: String
-) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    inner class ChatViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val messageText = view.findViewById<TextView>(R.id.messageText)
-        val messageTime = view.findViewById<TextView>(R.id.messageTime)
-        val messageContainer = view.findViewById<LinearLayout>(R.id.messageContainer)
+    private val VIEW_TYPE_CLIENT = 1
+    private val VIEW_TYPE_ADMIN = 2
+
+    inner class UserViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val tvUserName: TextView = view.findViewById(R.id.clientName)
+        val tvUserMessage: TextView = view.findViewById(R.id.clientMessage)
+        val tvUserTime: TextView = view.findViewById(R.id.clientTime)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_chat_message, parent, false)
-        return ChatViewHolder(view)
+    inner class AdminViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val tvAdminName: TextView = view.findViewById(R.id.adminName)
+        val tvAdminMessage: TextView = view.findViewById(R.id.adminMessage)
+        val tvAdminTime: TextView = view.findViewById(R.id.adminTime)
     }
 
-    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
-        val msg = messages[position]
-        holder.messageText.text = msg.text
-        holder.messageTime.text = msg.time
+    override fun getItemViewType(position: Int): Int {
+        return if (messages[position].sender == currentUser) VIEW_TYPE_CLIENT else VIEW_TYPE_ADMIN
+    }
 
-        val params = holder.messageContainer.layoutParams as ViewGroup.MarginLayoutParams
-
-        if (msg.sender == currentUser) {
-            holder.messageContainer.setBackgroundResource(R.drawable.message_bg_client)
-            params.marginStart = 80
-            params.marginEnd = 0
-            holder.messageContainer.layoutParams = params
-            holder.messageContainer.gravity = Gravity.END
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == VIEW_TYPE_CLIENT) {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_chat_user, parent, false)
+            UserViewHolder(view)
         } else {
-            holder.messageContainer.setBackgroundResource(R.drawable.message_bg_admin)
-            params.marginStart = 0
-            params.marginEnd = 80
-            holder.messageContainer.layoutParams = params
-            holder.messageContainer.gravity = Gravity.START
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_chat_admin, parent, false)
+            AdminViewHolder(view)
         }
     }
 
-    override fun getItemCount() = messages.size
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val msg = messages[position]
+        if (holder is UserViewHolder) {
+            holder.tvUserName.text = msg.sender
+            holder.tvUserMessage.text = msg.message
+            holder.tvUserTime.text = msg.time
+        } else if (holder is AdminViewHolder) {
+            holder.tvAdminName.text = "Admin"
+            holder.tvAdminMessage.text = msg.message
+            holder.tvAdminTime.text = msg.time
+        }
+    }
+
+    override fun getItemCount(): Int = messages.size
 }

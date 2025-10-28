@@ -1,33 +1,41 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="start"
     android:orientation="vertical"
-    android:padding="6dp">
+    android:gravity="start"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="6dp">
 
     <TextView
-        android:id="@+id/tvAdminName"
+        android:id="@+id/clientName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Admin"
-        android:textColor="@color/black"
+        android:textSize="12sp"
         android:textStyle="bold"
-        android:textSize="12sp" />
+        android:textColor="@color/black"
+        android:layout_marginStart="4dp" />
 
     <TextView
-        android:id="@+id/tvAdminMessage"
+        android:id="@+id/clientMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_admin_message"
-        android:padding="10dp"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp"
         android:text="Sure, please share more info."
-        android:textColor="@color/black" />
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/tvAdminTime"
+        android:id="@+id/clientTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="10:32 AM"
         android:textSize="10sp"
-        android:textColor="@color/gray" />
+        android:textColor="@color/gray"
+        android:layout_marginTop="2dp" />
+
 </LinearLayout>

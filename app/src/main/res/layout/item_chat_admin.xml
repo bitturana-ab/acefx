@@ -1,34 +1,42 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="end"
     android:orientation="vertical"
-    android:padding="6dp">
+    android:gravity="end"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="6dp">
 
     <TextView
-        android:id="@+id/tvUserName"
+        android:id="@+id/adminName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Company Name"
-        android:textColor="@color/black"
+        android:textSize="12sp"
         android:textStyle="bold"
-        android:textSize="12sp" />
+        android:textColor="@color/black"
+        android:layout_marginEnd="4dp" />
 
     <TextView
-        android:id="@+id/tvUserMessage"
+        android:id="@+id/adminMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_user_message"
-        android:padding="10dp"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp"
         android:text="Hello Admin!"
-        android:textColor="@color/white" />
+        android:textColor="@android:color/white"
+        android:textSize="14sp"/>
 
     <TextView
-        android:id="@+id/tvUserTime"
+        android:id="@+id/adminTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="10:30 AM"
         android:textSize="10sp"
         android:textColor="@color/gray"
-        android:layout_gravity="end" />
+        android:layout_gravity="end"
+        android:layout_marginTop="2dp" />
+
 </LinearLayout>
