@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:text="Company Name"
         android:textSize="12sp"
-        android:textStyle="bold"
+        android:layout_marginStart="10dp"
+        android:padding="2dp"
         android:textColor="@color/gray_400"
         android:layout_marginEnd="4dp" />
 
@@ -35,8 +36,9 @@
         android:layout_height="wrap_content"
         android:text="10:30 AM"
         android:textSize="10sp"
-        android:textColor="@color/gray"
-        android:layout_gravity="end"
+        android:layout_marginStart="20dp"
+        android:textColor="@color/gray_400"
+        android:layout_gravity="start"
         android:layout_marginTop="2dp" />
 
 </LinearLayout>
