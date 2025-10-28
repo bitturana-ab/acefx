@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    app:cardCornerRadius="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    android:padding="4dp"
-    android:background="@color/gray">
+    android:background="@color/app_color_gray">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="14dp"
-        android:background="@drawable/btn_card"
+        android:background="@color/app_card_light_gray"
         android:layout_gravity="center_horizontal">
 
     <TextView
@@ -24,6 +24,7 @@
         android:id="@+id/projectTitle"
         android:text="@string/text_project_name_view"
         android:textSize="16sp"
+        android:textColor="@color/app_button_dark"
         android:textStyle="bold"/>
 
         <TextView
@@ -36,8 +37,8 @@
             android:paddingHorizontal="12dp"
             android:textSize="13sp"
             android:textColor="@android:color/white"
-            android:background="@drawable/status_badge_bg"
+            android:background="@color/app_button_dark"
             android:layout_gravity="start" />
 
     </LinearLayout>
-</LinearLayout>
+</androidx.cardview.widget.CardView>

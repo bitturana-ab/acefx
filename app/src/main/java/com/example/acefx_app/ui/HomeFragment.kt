@@ -141,7 +141,7 @@ class HomeFragment : Fragment() {
 
     private fun showLoading(isLoading: Boolean) {
 //        binding.loadingOverlay.visibility = if (isLoading) View.VISIBLE else View.GONE
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+//        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         binding.goToHomeBtn.isEnabled = !isLoading
     }
 

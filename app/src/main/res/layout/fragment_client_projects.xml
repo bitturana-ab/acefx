@@ -9,7 +9,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray">
+        android:background="@color/app_color_gray">
 
         <!-- Back Button -->
         <LinearLayout
@@ -49,6 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:padding="5dp"
                 android:orientation="horizontal"
                 android:paddingBottom="12dp">
 
@@ -69,9 +70,9 @@
                     android:paddingHorizontal="16dp"
                     android:stateListAnimator="@null"
                     android:text="@string/text_add_project"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/app_button_dark"
                     android:textSize="14sp"
-                    app:backgroundTint="@color/purple_500"
+                    app:backgroundTint="@color/cardview_light_background"
                     app:cornerRadius="14dp" />
             </LinearLayout>
 
@@ -81,13 +82,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:backgroundTint="@color/gray"
-                app:tabBackground="@drawable/tab_background_selector"
+                android:backgroundTint="@color/app_color_gray"
+                app:tabBackground="@color/app_card_light_gray"
                 app:tabGravity="fill"
                 app:tabIndicatorHeight="0dp"
                 app:tabMode="fixed"
                 app:tabRippleColor="@android:color/transparent"
-                app:tabSelectedTextColor="@android:color/white"
+                app:tabSelectedTextColor="@color/app_button_dark"
                 app:tabTextColor="@color/black">
 
                 <com.google.android.material.tabs.TabItem
