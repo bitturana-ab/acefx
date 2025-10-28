@@ -24,7 +24,7 @@ import retrofit2.Response
 class ClientProjectDetailsFragment : Fragment() {
 
     private var _binding: FragmentClientProjectDetailsBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
 
     private var projectId: String? = null
     private lateinit var apiService: ApiService
@@ -39,7 +39,7 @@ class ClientProjectDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentClientProjectDetailsBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,16 +48,16 @@ class ClientProjectDetailsFragment : Fragment() {
         projectId?.let { fetchProjectDetails(it) }
 
         // Navigate to Add Project screen
-        binding.addProjectButton.setOnClickListener {
+        binding?.addProjectButton?.setOnClickListener {
             val action = ClientProjectDetailsFragmentDirections
                 .actionClientProjectDetailsFragmentToClientAddProjectFragment()
             findNavController().navigate(action)
         }
 
         // Pay Now button click → navigate to Payment screen
-        binding.payUpfrontButton.setOnClickListener {
-            val projectTitle = binding.projectTitleText.text.toString()
-            val amount = binding.projectAmountText.text.toString().replace("₹", "").trim()
+        binding?.payUpfrontButton?.setOnClickListener {
+            val projectTitle = binding?.projectTitleText?.text.toString()
+            val amount = binding?.projectAmountText?.text.toString().replace("₹", "").trim()
             val action = ClientProjectDetailsFragmentDirections
                 .actionClientProjectDetailsFragmentToPaymentFragment(
                     projectId = projectId ?: "",
@@ -110,28 +110,28 @@ class ClientProjectDetailsFragment : Fragment() {
     /** Display project data in UI */
     private fun displayProjectDetails(project: ProjectData) {
         with(binding) {
-            projectTitleText.text = project.title
-            projectDescriptionText.text = project.description
-            projectDeadlineText.text = "Deadline: ${project.deadline ?: "N/A"}"
-            projectAmountText.text = "₹${project.expectedAmount ?: 0}"
+            this?.projectTitleText?.text = project.title
+            this?.projectDescriptionText?.text = project.description
+            this?.projectDeadlineText?.text = "Deadline: ${project.deadline ?: "N/A"}"
+            this?.projectAmountText?.text = "₹${project.expectedAmount ?: 0}"
 
             // Status color badge
-            projectStatusText.text = project.status
-            val statusBg = projectStatusText.background.mutate()
+            this?.projectStatusText?.text = project.status
+            val statusBg = this?.projectStatusText?.background?.mutate()
             val color = when (project.status?.lowercase()) {
                 "approved" -> R.color.green_400
                 "on hold" -> R.color.orange_200
                 else -> R.color.gray
             }
-            statusBg.setTint(ContextCompat.getColor(requireContext(), color))
-            projectStatusText.background = statusBg
+            statusBg?.setTint(ContextCompat.getColor(requireContext(), color))
+            this?.projectStatusText?.background = statusBg
 
             // Links
-            projectDataLink.setOnClickListener { openUrl(project.dataLink) }
-            projectAttachLink.setOnClickListener { openUrl(project.attachLink) }
+            this?.projectDataLink?.setOnClickListener { openUrl(project.dataLink) }
+            this?.projectAttachLink?.setOnClickListener { openUrl(project.attachLink) }
 
             // Pay button only if unpaid invoice
-            payUpfrontButton.visibility =
+            this?.payUpfrontButton?.visibility =
                 if (project.invoiceId?.paid == false) View.VISIBLE else View.GONE
         }
     }
@@ -153,11 +153,11 @@ class ClientProjectDetailsFragment : Fragment() {
     /** Fade-in/out loading overlay */
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
-            binding.loadingOverlay.fadeIn()
-            binding.progressBar.fadeIn()
+            binding?.loadingOverlay?.fadeIn()
+            binding?.progressBar?.fadeIn()
         } else {
-            binding.progressBar.fadeOut()
-            binding.loadingOverlay.fadeOut()
+            binding?.progressBar?.fadeOut()
+            binding?.loadingOverlay?.fadeOut()
         }
     }
 

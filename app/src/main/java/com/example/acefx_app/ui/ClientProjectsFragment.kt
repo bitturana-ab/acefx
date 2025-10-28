@@ -58,6 +58,7 @@ class ClientProjectsFragment : Fragment() {
         }
 
         adapter = ProjectsAdapter(emptyList()) { project ->
+            findNavController().navigate(ClientProjectsFragmentDirections.actionClientProjectsFragmentToClientProjectDetailsFragment(project._id))
             Toast.makeText(requireContext(), "Project: ${project.title}", Toast.LENGTH_SHORT).show()
         }
 

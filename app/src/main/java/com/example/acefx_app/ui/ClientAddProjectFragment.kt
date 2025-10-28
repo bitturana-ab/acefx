@@ -32,6 +32,7 @@ class ClientAddProjectFragment : Fragment() {
     private lateinit var etDeadline: EditText
     private lateinit var etExpectedAmount: EditText
     private lateinit var btnSubmit: Button
+    private lateinit var backBtn: ImageView
     private lateinit var loadingOverlay: FrameLayout
 
     private var token: String? = null
@@ -58,9 +59,12 @@ class ClientAddProjectFragment : Fragment() {
         etExpectedAmount = view.findViewById(R.id.etExpectedAmount)
         btnSubmit = view.findViewById(R.id.btnSubmitProject)
         loadingOverlay = view.findViewById(R.id.loadingOverlay)
+        backBtn = view.findViewById(R.id.backBtn)
 
         setupDatePicker()
         setupSubmitButton()
+        backBtn.setOnClickListener { findNavController().popBackStack() }
+
 
         return view
     }
