@@ -40,24 +40,24 @@ class ChatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // ✅ Initialize API service
+        // Initialize API service
         chatApi = ApiClient.getClient(requireContext()).create(ApiService::class.java)
 
-        // ✅ Get token from SharedPreferences
+        // Get token from SharedPreferences
         val sharedPrefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         authToken = sharedPrefs.getString("authToken", null)
 
-        // ✅ Setup RecyclerView
+        // Setup RecyclerView
         adapter = ChatAdapter(messages, currentUser = "client")
         binding.recyclerViewChat.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@ChatFragment.adapter
         }
 
-        // ✅ Load chat history from DB
+        // Load chat history from DB
         loadChatHistory()
 
-        // ✅ Send message button click
+        // Send message button click
         binding.btnSend.setOnClickListener {
             val messageText = binding.messageInput.text.toString().trim()
             if (messageText.isEmpty()) {
@@ -74,7 +74,7 @@ class ChatFragment : Fragment() {
         }
     }
 
-    /** 🚀 Send message to backend */
+    /** Send message to backend */
     private fun sendMessage(request: ChatMessageRequest) {
         lifecycleScope.launch {
             try {
@@ -93,18 +93,18 @@ class ChatFragment : Fragment() {
                         binding.recyclerViewChat.scrollToPosition(messages.size - 1)
                         binding.messageInput.text?.clear()
                     }
-                    Toast.makeText(requireContext(), "Message sent ✅", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Message sent ", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(requireContext(), "Failed to send ❌", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Failed to send message", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error: sending message", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    /** 🧾 Load chat history */
+    /** Load chat history */
     private fun loadChatHistory() {
         lifecycleScope.launch {
             try {
@@ -121,11 +121,11 @@ class ChatFragment : Fragment() {
                     adapter.notifyDataSetChanged()
                     binding.recyclerViewChat.scrollToPosition(messages.size - 1)
                 } else {
-                    Toast.makeText(requireContext(), "Failed to load chat ❌ ${response.code()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Failed to load chat!", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error: fetching message!", Toast.LENGTH_SHORT).show()
             }
         }
     }
