@@ -59,6 +59,7 @@ class ClientProfileFragment : Fragment() {
                 }
             }
         }
+        binding.backBtn.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun saveClientProfile(companyName: String, phoneNumber: String, pinCode: String) {

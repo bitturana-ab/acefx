@@ -1,5 +1,6 @@
 package com.example.acefx_app.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +19,8 @@ import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
 import com.example.acefx_app.ui.adapter.ProjectsAdapter
 import com.google.android.material.tabs.TabLayout
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,6 +35,8 @@ class ProjectsFragment : Fragment() {
     private lateinit var token: String
     private var allProjects = listOf<ProjectItem>()
 
+    private val gson = Gson()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -39,15 +44,15 @@ class ProjectsFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         apiService = ApiClient.getClient(requireContext()).create(ApiService::class.java)
-
         val sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         token = sharedPref.getString("authToken", "") ?: ""
         val companyName = sharedPref.getString("companyName", "Client")
-        binding.clientNameText.text = companyName
+        binding.clientNameText.text = "$companyName's All Projects"
 
         if (token.isEmpty()) {
             Toast.makeText(requireContext(), "User not logged in!", Toast.LENGTH_SHORT).show()
@@ -58,6 +63,10 @@ class ProjectsFragment : Fragment() {
         setupTabLayout()
         setupSwipeRefresh()
 
+        // Load locally saved projects first (offline support)
+        loadLocalProjects()
+
+        // Then fetch latest from backend and override
         loadProjects()
 
         binding.chatNow.setOnClickListener {
@@ -89,18 +98,17 @@ class ProjectsFragment : Fragment() {
     /** Setup swipe-to-refresh */
     private fun setupSwipeRefresh() {
         binding.swipeRefresh.setOnRefreshListener {
+            // Reset to first tab on refresh
+            val firstTab = binding.projectTabLayout.getTabAt(0)
+            firstTab?.select()
             loadProjects()
         }
     }
 
     /** Load projects from backend */
     private fun loadProjects() {
-        showLoading(true)
         apiService.getClientProjects("Bearer $token").enqueue(object : Callback<ProjectsResponse> {
-            override fun onResponse(
-                call: Call<ProjectsResponse>,
-                response: Response<ProjectsResponse>
-            ) {
+            override fun onResponse(call: Call<ProjectsResponse>, response: Response<ProjectsResponse>) {
                 if (!isAdded) return
                 showLoading(false)
                 binding.swipeRefresh.isRefreshing = false
@@ -115,9 +123,11 @@ class ProjectsFragment : Fragment() {
                         val firstTab = binding.projectTabLayout.getTabAt(0)
                         filterProjectsByStatus(firstTab?.text.toString())
                     }
+
+                    // Save updated projects locally
+                    saveLocalProjects(allProjects)
                 } else {
-                    Toast.makeText(requireContext(), "Failed to load projects!", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(requireContext(), "Failed to load projects!", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -139,6 +149,31 @@ class ProjectsFragment : Fragment() {
             showEmptyState(true, "No $status projects found.")
         } else {
             showEmptyState(false)
+        }
+    }
+
+    /** Save list of projects locally */
+    private fun saveLocalProjects(projectList: List<ProjectItem>) {
+        val sharedPrefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+        val editor = sharedPrefs.edit()
+        val json = gson.toJson(projectList)
+        editor.putString("cachedProjects", json)
+        editor.apply()
+    }
+
+    /** Load locally saved projects */
+    @SuppressLint("NotifyDataSetChanged")
+    private fun loadLocalProjects() {
+        val sharedPrefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+        val json = sharedPrefs.getString("cachedProjects", null)
+        if (!json.isNullOrEmpty()) {
+            val type = object : TypeToken<List<ProjectItem>>() {}.type
+            val savedProjects: List<ProjectItem> = gson.fromJson(json, type)
+            allProjects = savedProjects
+            adapter.updateData(savedProjects)
+
+            val firstTab = binding.projectTabLayout.getTabAt(0)
+            filterProjectsByStatus(firstTab?.text.toString())
         }
     }
 

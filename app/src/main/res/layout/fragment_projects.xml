@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/text_client_name"
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -43,15 +43,15 @@
                     android:paddingHorizontal="16dp"
                     android:stateListAnimator="@null"
                     android:text="@string/text_chat"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/app_button_dark"
                     android:textSize="14sp"
-                    app:backgroundTint="@color/black"
+                    app:backgroundTint="@color/app_card_dark_gray"
                     app:cornerRadius="20dp"
                     app:icon="@drawable/ic_chat"
                     app:iconGravity="textStart"
                     app:iconPadding="8dp"
                     app:iconSize="20dp"
-                    app:iconTint="@android:color/white" />
+                    app:iconTint="@color/app_button_dark" />
 
             </LinearLayout>
 
@@ -109,7 +109,6 @@
             android:id="@+id/loadingOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#88000000"
             android:visibility="gone">
 
             <ProgressBar

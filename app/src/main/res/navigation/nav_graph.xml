@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_clientAddProjectFragment"
             app:destination="@id/clientAddProjectFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
 
     <fragment
@@ -143,7 +146,11 @@
     <fragment
         android:id="@+id/clientAccountFragment"
         android:name="com.example.acefx_app.ui.ClientAccountFragment"
-        android:label="ClientAccountFragment" />
+        android:label="ClientAccountFragment" >
+        <action
+            android:id="@+id/action_clientAccountFragment_to_clientProjectsFragment"
+            app:destination="@id/clientProjectsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.example.acefx_app.ui.ChatFragment"

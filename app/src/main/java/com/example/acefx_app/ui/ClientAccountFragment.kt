@@ -41,7 +41,11 @@ class ClientAccountFragment : Fragment() {
         token = sharedPref.getString("authToken", null)
 
         if (token.isNullOrEmpty()) {
-            Toast.makeText(requireContext(), "Session expired. Please log in again!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Session expired. Please log in again!",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
@@ -65,7 +69,7 @@ class ClientAccountFragment : Fragment() {
         }
     }
 
-    /** Load user details instantly from SharedPreferences */
+    //     Load user details instantly from SharedPreferences
     private fun loadUserFromSharedPref() {
         val name = sharedPref.getString("name", "N/A")
         val email = sharedPref.getString("email", "N/A")
@@ -82,7 +86,7 @@ class ClientAccountFragment : Fragment() {
         }
     }
 
-    /** Load user details from API and save to SharedPreferences */
+    //    Load user details from API and save to SharedPreferences
     private fun loadUserFromServer() {
         apiService.getUserProfile("Bearer $token").enqueue(object : Callback<UserDetailsResponse> {
             override fun onResponse(
@@ -96,13 +100,18 @@ class ClientAccountFragment : Fragment() {
                     updateUI(user)
                     saveUserToSharedPref(user)
                 } else {
-                    Toast.makeText(requireContext(), "Failed to refresh user details!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to refresh user details!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<UserDetailsResponse>, t: Throwable) {
                 if (!isAdded || _binding == null) return
-                Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
     }
