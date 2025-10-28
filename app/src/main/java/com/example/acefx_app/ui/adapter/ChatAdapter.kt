@@ -1,5 +1,6 @@
 package com.example.acefx_app.ui.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +32,7 @@ class ChatAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (messages[position].sender == currentUser) VIEW_TYPE_CLIENT else VIEW_TYPE_ADMIN
+        return if (messages[position].senderRole == currentUser) VIEW_TYPE_CLIENT else VIEW_TYPE_ADMIN
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -46,12 +47,13 @@ class ChatAdapter(
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val msg = messages[position]
         val formattedTime = formatDateTime(msg.time)
 
         if (holder is UserViewHolder) {
-            holder.tvUserName.text = msg.sender
+            holder.tvUserName.text = msg.senderRole
             holder.tvUserMessage.text = msg.message
             holder.tvUserTime.text = formattedTime
         } else if (holder is AdminViewHolder) {

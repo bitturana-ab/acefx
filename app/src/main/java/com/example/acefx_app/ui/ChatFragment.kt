@@ -54,7 +54,7 @@ class ChatFragment : Fragment() {
         companyName = sharedPrefs.getString("companyName", null)
 
         // Setup RecyclerView
-        adapter = ChatAdapter(messages, currentUser = "client")
+        adapter = ChatAdapter(messages, currentUser = "Client")
         binding.recyclerViewChat.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@ChatFragment.adapter
@@ -80,7 +80,6 @@ class ChatFragment : Fragment() {
             }
 
             val request = ChatMessageRequest(
-                sender = "client",
                 message = messageText
             )
             sendMessage(request)

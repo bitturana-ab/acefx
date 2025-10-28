@@ -9,14 +9,14 @@ package com.example.acefx_app.data
 
 // chat for POST request
 data class ChatMessageRequest(
-    val sender: String,
     val message: String
 )
 // chat message for showing
 data class ChatMessage(
     val _id: String,             // MongoDB document ID
     val clientId: String,        // Reference to User _id
-    val sender: String,          // "client" or "admin"
+    val receiverId: String,        // Reference to User _id
+    val senderRole: String,          // "client" or "admin"
     val message: String,         // Actual chat message
     val time: String,            // Time field from backend (Date)
     val createdAt: String,       // Automatically added by Mongoose
