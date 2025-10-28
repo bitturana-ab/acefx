@@ -4,7 +4,7 @@
     android:id="@+id/rootFrame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_gray"
+    android:background="@color/app_color_gray"
     tools:context=".MainActivity">
 
     <!-- Scrollable content with padding -->
@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                app:cardBackgroundColor="#1E1E1E"
+                android:backgroundTint="@color/app_card_light_gray"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="8dp"
                 app:layout_constraintTop_toBottomOf="@id/tagLine"
@@ -77,6 +77,7 @@
                             android:id="@+id/emailInput"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/app_button_dark"
                             android:inputType="textEmailAddress"
                             android:textSize="18sp" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -86,8 +87,9 @@
                         android:id="@+id/sendOtpBtn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingVertical="10dp"
                         android:layout_marginTop="24dp"
-                        android:backgroundTint="#2979FF"
+                        android:backgroundTint="@color/app_button_dark"
                         android:text="@string/text_sent_otp_view"
                         android:textColor="#FFFFFF"
                         android:textSize="18sp" />
@@ -99,7 +101,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="8dp"
-                        android:textColor="#B0B0B0"
+                        android:textColor="@color/app_button_dark"
                         android:textSize="14sp"
                         android:visibility="gone" />
 
@@ -111,8 +113,8 @@
                         android:layout_marginTop="16dp"
                         android:hint="@string/hint_enter_otp_view"
                         android:inputType="number"
-                        android:textColor="#FFFFFF"
-                        android:textColorHint="#B0B0B0"
+                        android:textColor="@color/app_button_dark"
+                        android:textColorHint="@color/app_button_dark"
                         android:visibility="gone" />
 
                     <!-- Verify OTP Button -->
@@ -133,9 +135,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:backgroundTint="#9C27B0"
+                        android:backgroundTint="@color/cardview_light_background"
                         android:text="@string/text_go_to_dashboard_view"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/app_button_dark"
                         android:textSize="18sp"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -148,7 +150,6 @@
         android:id="@+id/progressOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#88000000"
         android:visibility="gone">
 
         <ProgressBar
