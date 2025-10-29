@@ -26,6 +26,7 @@ class HomeFragment : Fragment() {
     private lateinit var sharedPref: android.content.SharedPreferences
 
     private var companyName: String? = null
+    private var name: String? = null
     private var phoneNumber: String? = null
     private var pinCode: String? = null
     private var token: String? = null
@@ -44,7 +45,7 @@ class HomeFragment : Fragment() {
         sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         // load user data
         loadLocalUserData()
-        if(companyName.toString().isNotEmpty()) binding.tvUserName.text = companyName.toString()
+        if(name.toString().isNotEmpty()) binding.tvUserName.text = name.toString()
         // chat now navigation handle if login
         binding.btnChatNow.setOnClickListener {
             handleHomeNavigation()
@@ -85,6 +86,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadLocalUserData() {
+        name = sharedPref.getString("name",null)
         companyName = sharedPref.getString("companyName", null)
         phoneNumber = sharedPref.getString("phoneNumber", null)
         pinCode = sharedPref.getString("pinCode", null)
