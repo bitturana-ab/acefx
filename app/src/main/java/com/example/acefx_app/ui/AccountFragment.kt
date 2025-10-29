@@ -171,11 +171,11 @@ class AccountFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun updateUI(user: UserDetailsResponse) {
         binding.apply {
-            nameText.text = "Name: ${user.name ?: "N/A"}"
-            emailText.text = "Email: ${user.email ?: "N/A"}"
-            companyText.text = "Company: ${user.companyName ?: "N/A"}"
-            phoneText.text = "Phone: ${user.phoneNumber ?: "N/A"}"
-            pinText.text = "Pincode: ${user.pinCode ?: "N/A"}"
+            nameText.text = user.name ?: "N/A"
+            emailText.text = user.email ?: "N/A"
+            companyText.text = user.companyName ?: "N/A"
+            phoneText.text = user.phoneNumber ?: "N/A"
+            pinText.text = user.pinCode ?: "N/A"
         }
     }
 
