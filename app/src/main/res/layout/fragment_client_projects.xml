@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:backgroundTint="@color/app_color_gray"
-                app:tabBackground="@color/app_card_light_gray"
+                app:tabBackground="@drawable/tab_background_selector"
                 app:tabGravity="fill"
                 app:tabIndicatorHeight="0dp"
                 app:tabMode="fixed"
