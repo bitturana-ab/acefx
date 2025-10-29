@@ -11,4 +11,8 @@
         android:id="@+id/accountFragment"
         android:icon="@drawable/ic_account"
         android:title="@string/text_menu_account" />
+    <item
+        android:id="@+id/clientInvoiceFragment"
+        android:icon="@drawable/ic_history"
+        android:title="@string/text_history" />
 </menu>

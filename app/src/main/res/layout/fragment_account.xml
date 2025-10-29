@@ -1,53 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/accountMainLayout"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/gray"
+    android:background="#2E2E2E"
+    android:padding="16dp"
     tools:context=".ui.AccountFragment">
 
-    <!-- Top toggle buttons like tabs -->
     <LinearLayout
-        android:id="@+id/topTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:tabGravity="fill"
-        app:tabIndicatorHeight="0dp"
-        android:background="@drawable/tab_background_selector"
-        android:padding="8dp"
-        android:gravity="center">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnAccount"
-            android:layout_width="0dp"
+        <!-- 🔹 Header -->
+        <TextView
+            android:id="@+id/accountHeader"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/text_menu_account"
+            android:text="My Account"
+            android:textColor="@android:color/white"
+            android:textSize="28sp"
             android:textStyle="bold"
-            android:backgroundTint="@color/purple_500"
-            android:textColor="@color/white" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp" />
 
-        <Button
-            android:id="@+id/btnInvoice"
-            android:layout_width="0dp"
+        <!-- 👤 Profile Info Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/text_payment_history"
+            android:backgroundTint="#D9D9D9"
+            android:elevation="10dp"
+            android:radius="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="8dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_person"
+                        android:tint="@color/gray"/>
+
+                    <EditText
+                        android:id="@+id/etName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:hint="Enter Name"
+                        android:inputType="textPersonName"
+                        android:background="" />
+                </LinearLayout>
+
+                <!-- Email -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_email"
+                        android:tint="@color/gray" />
+
+                    <EditText
+                        android:id="@+id/etEmail"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:hint="Enter Email"
+                        android:inputType="textEmailAddress"
+                        android:background="@drawable/edittext_background"
+                        android:padding="10dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/companyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Company: AceFX"
+                    android:textColor="#222"
+                    android:textSize="15sp"
+                    android:layout_marginTop="4dp" />
+
+                <TextView
+                    android:id="@+id/phoneText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone: +91 9876543210"
+                    android:textColor="#222"
+                    android:textSize="15sp"
+                    android:layout_marginTop="4dp" />
+
+                <TextView
+                    android:id="@+id/pinText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pincode: 600001"
+                    android:textColor="#222"
+                    android:textSize="15sp"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- ⚙️ Action Buttons Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="24dp">
+
+            <!-- View Projects -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewProjectsBtn"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="My Projects"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:stateListAnimator="@null"
+                app:cornerRadius="10dp"
+                app:backgroundTint="#000000"
+                app:icon="@drawable/ic_projects"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@android:color/white" />
+
+            <!-- Update Profile -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/updateProfileBtn"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Update Profile"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:stateListAnimator="@null"
+                app:cornerRadius="10dp"
+                app:backgroundTint="#000000"
+                app:icon="@drawable/ic_edit"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@android:color/white" />
+        </LinearLayout>
+
+        <!-- 🧾 Logout Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/logoutBtn"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="20dp"
+            android:text="Logout"
+            android:textColor="#FF3B3B"
             android:textStyle="bold"
-            android:backgroundTint="@color/gray"
-            android:textColor="@color/white"
-            />
+            android:stateListAnimator="@null"
+            app:cornerRadius="10dp"
+            app:backgroundTint="@android:color/white"
+            app:icon="@drawable/ic_logout"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconTint="#FF3B3B" />
     </LinearLayout>
-
-    <!-- Container to show child fragments -->
-    <FrameLayout
-        android:id="@+id/accountContentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="8dp" />
-
-</LinearLayout>
+</ScrollView>

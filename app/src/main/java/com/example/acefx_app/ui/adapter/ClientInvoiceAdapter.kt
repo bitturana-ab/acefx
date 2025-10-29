@@ -1,4 +1,4 @@
-package com.example.acefx_app.ui.client.adapters
+package com.example.acefx_app.ui.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -47,17 +47,17 @@ class ClientInvoiceAdapter :
     // 🔹 ViewHolder class
     class InvoiceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvProjectName = itemView.findViewById<TextView>(R.id.tvProjectName)
-        private val tvAmount = itemView.findViewById<TextView>(R.id.tvAmountValue)
+//        private val tvAmount = itemView.findViewById<TextView>(R.id.rtvAmountValue)
         private val tvDate = itemView.findViewById<TextView>(R.id.tvInvoiceDate)
-        private val tvStatus = itemView.findViewById<TextView>(R.id.tvStatus)
+//        private val tvStatus = itemView.findViewById<TextView>(R.id.tvStatus)
         private val clientName = itemView.findViewById<TextView>(R.id.tvClientName)
 
         @SuppressLint("SetTextI18n")
         fun bind(invoice: InvoiceModel) {
             tvProjectName.text = invoice.projectName
-            tvAmount.text = "₹${invoice.amount.toString()}"
+//            tvAmount.text = "₹${invoice.amount.toString()}"
             tvDate.text = invoice.date
-            tvStatus.text = invoice.status
+//            tvStatus.text = invoice.status
             clientName.text = invoice.clientName
 
             // Change color based on status
@@ -67,7 +67,7 @@ class ClientInvoiceAdapter :
                 "unpaid" -> R.color.orange_200
                 else -> R.color.gray
             }
-            tvStatus.setTextColor(context.getColor(colorRes))
+//            tvStatus.setTextColor(context.getColor(colorRes))
         }
     }
 }

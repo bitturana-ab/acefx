@@ -47,7 +47,7 @@
             app:destination="@id/clientProjectsFragment" />
         <action
             android:id="@+id/action_accountFragment_to_clientInvoiceFragment2"
-            app:destination="@id/clientInvoiceFragment2" />
+            app:destination="@id/clientInvoiceFragment" />
         <action
             android:id="@+id/action_accountFragment_to_clientAccountFragment"
             app:destination="@id/clientAccountFragment" />
@@ -114,11 +114,11 @@
         android:label="fragment_payment"
         tools:layout="@layout/fragment_payment" />
     <fragment
-        android:id="@+id/clientInvoiceFragment2"
-        android:name="ClientInvoiceFragment"
+        android:id="@+id/clientInvoiceFragment"
+        android:name="com.example.acefx_app.ui.ClientInvoiceFragment"
         android:label="ClientInvoiceFragment" >
         <action
-            android:id="@+id/action_clientInvoiceFragment2_to_invoiceDetailsFragment"
+            android:id="@+id/action_clientInvoiceFragment_to_invoiceDetailsFragment"
             app:destination="@id/invoiceDetailsFragment" />
     </fragment>
     <action

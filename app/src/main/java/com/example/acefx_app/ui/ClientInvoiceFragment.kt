@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.acefx_app.data.InvoiceModel
 import com.example.acefx_app.databinding.FragmentClientInvoiceBinding
-import com.example.acefx_app.ui.client.adapters.ClientInvoiceAdapter
+import com.example.acefx_app.ui.adapter.ClientInvoiceAdapter
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.*
 

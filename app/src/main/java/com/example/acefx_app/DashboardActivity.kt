@@ -32,6 +32,7 @@ class DashboardActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.homeFragment,
                 R.id.accountFragment,
+                R.id.clientInvoiceFragment,
                 R.id.projectsFragment -> showBottomNav()
 
                 else -> hideBottomNav()
