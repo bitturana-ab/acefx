@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="app_color_gray">#2E2E2E</color>
+    <color name="app_color_gray_2">#3A3A3A</color>
     <color name="app_card_dark_gray">#BDBDBD</color>
     <color name="app_card_light_gray">#D9D9D9</color>
     <color name="app_button_dark">#000000</color>
