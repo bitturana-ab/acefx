@@ -18,9 +18,7 @@ data class ChatMessage(
     val receiverId: String,        // Reference to User _id
     val senderRole: String,          // "client" or "admin"
     val message: String,         // Actual chat message
-    val time: String,            // Time field from backend (Date)
-    val createdAt: String,       // Automatically added by Mongoose
-    val updatedAt: String        // Automatically added by Mongoose
+    val time: String,       // Automatically added by Mongoose
 )
 data class ChatMessageResponse(
     val success: Boolean,

@@ -7,10 +7,13 @@ import android.os.CountDownTimer
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.widget.*
+import androidx.annotation.ContentView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
+import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -62,6 +65,23 @@ class MainActivity : AppCompatActivity() {
         sendOtpBtn.setOnClickListener {
             val email = emailInput.text.toString().trim()
             if (email.isEmpty()) {
+                val snackbar = Snackbar.make(
+                    findViewById(android.R.id.content), // ✅ root view of your Activity
+                    "Please enter your email",
+                    Snackbar.LENGTH_LONG
+                )
+
+                snackbar.view.backgroundTintList =
+                    ContextCompat.getColorStateList(this@MainActivity, R.color.black)
+
+                snackbar.setTextColor(ContextCompat.getColor(this@MainActivity, android.R.color.white))
+                snackbar.setActionTextColor(ContextCompat.getColor(this@MainActivity, R.color.teal_200))
+
+                snackbar.setAction("OK") {
+                    snackbar.dismiss()
+                }
+
+                snackbar.show()
                 Toast.makeText(this, "Please enter your email", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }

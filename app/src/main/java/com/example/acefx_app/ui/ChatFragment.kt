@@ -3,6 +3,7 @@ package com.example.acefx_app.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -111,7 +112,8 @@ class ChatFragment : Fragment() {
                     }
                     Toast.makeText(requireContext(), "Message sent ", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(requireContext(), "Failed to send message", Toast.LENGTH_SHORT)
+                    Log.d("FAILED_SEND",response.toString())
+                    Toast.makeText(requireContext(), "Failed to send message ${response.code()}", Toast.LENGTH_SHORT)
                         .show()
                 }
             } catch (e: Exception) {
