@@ -42,7 +42,9 @@ class HomeFragment : Fragment() {
 
         api = ApiClient.getClient(requireContext()).create(ApiService::class.java)
         sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
-
+        // load user data
+        loadLocalUserData()
+        if(companyName.toString().isNotEmpty()) binding.tvUserName.text = companyName.toString()
         // chat now navigation handle if login
         binding.btnChatNow.setOnClickListener {
             handleHomeNavigation()
