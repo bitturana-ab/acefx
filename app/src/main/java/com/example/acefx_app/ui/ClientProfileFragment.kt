@@ -43,65 +43,96 @@ class ClientProfileFragment : Fragment() {
         token = sharedPref.getString("authToken", "") ?: ""
 
         binding.nextBtn.setOnClickListener {
+            val clientNameInput = binding.clientNameInput.text.toString().trim()
             val companyName = binding.companyNameInput.text.toString().trim()
             val phoneNumber = binding.phoneInput.text.toString().trim()
             val pinCode = binding.pinCodeInput.text.toString().trim()
 
             when {
-                companyName.isEmpty() || phoneNumber.isEmpty() || pinCode.isEmpty() -> {
-                    Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
+                clientNameInput.isEmpty() || companyName.isEmpty() || phoneNumber.isEmpty() || pinCode.isEmpty() -> {
+                    Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT)
+                        .show()
                 }
+
                 token.isEmpty() -> {
-                    Toast.makeText(requireContext(), "User not logged in!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "User not logged in!", Toast.LENGTH_SHORT)
+                        .show()
                 }
+
                 else -> {
-                    saveClientProfile(companyName, phoneNumber, pinCode)
+                    saveClientProfile(clientNameInput, companyName, phoneNumber, pinCode)
                 }
             }
         }
         binding.backBtn.setOnClickListener { findNavController().popBackStack() }
     }
 
-    private fun saveClientProfile(companyName: String, phoneNumber: String, pinCode: String) {
+    private fun saveClientProfile(
+        clientNameInput: String,
+        companyName: String,
+        phoneNumber: String,
+        pinCode: String
+    ) {
         val request = mapOf(
+            "name" to clientNameInput,
             "companyName" to companyName,
             "phoneNumber" to phoneNumber,
             "pinCode" to pinCode
         )
 
-        apiService.updateUser(request, "Bearer $token").enqueue(object : Callback<Map<String, Any>> {
-            override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
-                if (response.isSuccessful) {
-                    // Save companyName for use in other fragments
-                    val sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
-                    sharedPref.edit().apply {
-                        putString("companyName", companyName)
-                        putString("phoneNumber", phoneNumber)
-                        putString("pinCode", pinCode)
-                        apply()
+        apiService.updateUser(request, "Bearer $token")
+            .enqueue(object : Callback<Map<String, Any>> {
+                override fun onResponse(
+                    call: Call<Map<String, Any>>,
+                    response: Response<Map<String, Any>>
+                ) {
+                    if (response.isSuccessful) {
+                        // Save companyName for use in other fragments
+                        val sharedPref = requireContext().getSharedPreferences(
+                            "UserSession",
+                            Context.MODE_PRIVATE
+                        )
+                        sharedPref.edit().apply {
+                            putString("name",clientNameInput)
+                            putString("companyName", companyName)
+                            putString("phoneNumber", phoneNumber)
+                            putString("pinCode", pinCode)
+                            apply()
+                        }
+
+                        Toast.makeText(
+                            requireContext(),
+                            "Profile saved successfully!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        // Navigate to ClientProjectsFragment using Navigation Component
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            delay(100) // Ensure NavController is ready
+                            val action = ClientProfileFragmentDirections
+                                .actionClientProfileFragmentToClientProjectsFragment()
+                            findNavController().navigate(action)
+                            // Remove ClientProfileFragment so user cannot come back by back button
+                            findNavController().popBackStack(R.id.homeFragment, true)
+
+                        }
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Error: ${response.code()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-
-                    Toast.makeText(requireContext(), "Profile saved successfully!", Toast.LENGTH_SHORT).show()
-
-                    // Navigate to ClientProjectsFragment using Navigation Component
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        delay(100) // Ensure NavController is ready
-                        val action = ClientProfileFragmentDirections
-                            .actionClientProfileFragmentToClientProjectsFragment()
-                        findNavController().navigate(action)
-                        // Remove ClientProfileFragment so user cannot come back by back button
-                        findNavController().popBackStack(R.id.homeFragment, true)
-
-                    }
-                } else {
-                    Toast.makeText(requireContext(), "Error: ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
-            }
 
-            override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
-                Toast.makeText(requireContext(), "Network Error! Check Internet Connection", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Network Error! Check Internet Connection",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
     }
 
     override fun onDestroyView() {

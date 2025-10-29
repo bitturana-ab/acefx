@@ -115,7 +115,7 @@
                 android:layout_marginVertical="30dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="35dp"
-                android:text="@string/text_submit_approval_view"
+                android:text="@string/text_update_account"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
