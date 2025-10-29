@@ -8,15 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.acefx_app.R
 import com.example.acefx_app.data.UserDetailsResponse
 import com.example.acefx_app.databinding.FragmentAccountBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import androidx.core.content.edit
 
 class AccountFragment : Fragment() {
 
@@ -63,9 +68,41 @@ class AccountFragment : Fragment() {
             }
         }
 
+        // navigate to account profile update page
         binding.updateProfileBtn.setOnClickListener {
             safeNavigate {
                 findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToClientProfileFragment())
+            }
+        }
+        // logout and navigate to login screen
+        binding.logoutBtn.setOnClickListener { logoutUser() }
+    }
+
+    // logout function with clear token and navigate to login screen
+    private fun logoutUser() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // Clear Room token not avail
+                // db.userDao().clearUserData()
+
+                // Clear SharedPreferences
+                val sharedPref =
+                    requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+                sharedPref.edit { clear() }
+
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT)
+                        .show()
+                    findNavController().navigate(R.id.mainActivity)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Logout failed: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }
@@ -80,11 +117,11 @@ class AccountFragment : Fragment() {
         val pin = sharedPref.getString("pinCode", "N/A")
 
         binding.apply {
-            nameText.text = "Name: $name"
-            emailText.text = "Email: $email"
-            companyText.text = "Company: $company"
-            phoneText.text = "Phone: $phone"
-            pinText.text = "Pincode: $pin"
+            nameText.text = "$name"
+            emailText.text = "$email"
+            companyText.text = "$company"
+            phoneText.text = "$phone"
+            pinText.text = "$pin"
         }
     }
 
@@ -112,7 +149,7 @@ class AccountFragment : Fragment() {
 
             override fun onFailure(call: Call<UserDetailsResponse>, t: Throwable) {
                 if (!isAdded || _binding == null) return
-                Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), "Check Internet Connection", Toast.LENGTH_SHORT)
                     .show()
             }
         })

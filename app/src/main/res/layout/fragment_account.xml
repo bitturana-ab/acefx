@@ -58,7 +58,7 @@
                         app:tint="#AFAFAF" />
 
                     <TextView
-                        android:id="@+id/etName"
+                        android:id="@+id/nameText"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -86,7 +86,7 @@
                         app:tint="#AFAFAF" />
 
                     <TextView
-                        android:id="@+id/etEmail"
+                        android:id="@+id/emailText"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"

@@ -8,7 +8,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val sharedPrefs = getSharedPreferences("AceFXPrefs", MODE_PRIVATE)
+        val sharedPrefs = getSharedPreferences("UserSession", MODE_PRIVATE)
         val token = sharedPrefs.getString("authToken", null)
 
         if (token != null) {

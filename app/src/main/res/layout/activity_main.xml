@@ -70,14 +70,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/text_email_input"
+                        android:textColorHint="@color/black"
                         app:endIconMode="clear_text"
+                        app:boxStrokeColor="@color/black"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/emailInput"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/app_button_dark"
+                            android:textColor="@color/black"
                             android:inputType="textEmailAddress"
                             android:textSize="18sp" />
                     </com.google.android.material.textfield.TextInputLayout>
