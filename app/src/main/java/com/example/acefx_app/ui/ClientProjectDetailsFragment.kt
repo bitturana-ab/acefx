@@ -58,6 +58,8 @@ class ClientProjectDetailsFragment : Fragment() {
                 .actionClientProjectDetailsFragmentToClientAddProjectFragment()
             findNavController().navigate(action)
         }
+        // back button function
+        binding?.backBtn?.setOnClickListener { findNavController().popBackStack() }
 
         // Pay Now button click → navigate to Payment screen
         binding?.payUpfrontButton?.setOnClickListener {
