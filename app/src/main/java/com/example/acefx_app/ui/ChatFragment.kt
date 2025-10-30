@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.acefx_app.data.ChatMessage
 import com.example.acefx_app.data.ChatMessageRequest
@@ -65,6 +66,8 @@ class ChatFragment : Fragment() {
         binding.messageInput.setOnClickListener {
             binding.recyclerViewChat.scrollToPosition(messages.size - 1)
         }
+        // back button function
+        binding.backBtn.setOnClickListener { findNavController().popBackStack() }
         // Load local chat first
         loadLocalChat()
 
