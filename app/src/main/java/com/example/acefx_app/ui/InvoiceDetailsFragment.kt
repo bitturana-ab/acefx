@@ -18,6 +18,9 @@ import com.example.acefx_app.retrofitServices.ApiService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 class InvoiceDetailsFragment : Fragment() {
 
@@ -73,8 +76,8 @@ class InvoiceDetailsFragment : Fragment() {
     private fun updateUI(invoice: InvoiceData) {
         with(binding) {
             tvProjectName.text = invoice.projectId?.title ?: "N/A"
-            tvClientName.text = invoice.currency ?: "N/A"
-            tvInvoiceDate.text = invoice.completedTime ?: "N/A"
+            tvDesc.text = invoice.projectId.description ?: "N/A"
+            tvInvoiceDate.text = formatDateTime(invoice.completedTime) ?: "N/A"
             tvInvoiceAmount.text = "₹${invoice.amount}"
 
             val status = if (invoice.paid) "Paid" else "Pending"
@@ -86,6 +89,19 @@ class InvoiceDetailsFragment : Fragment() {
                 else -> R.drawable.status_failed_bg
             }
             tvInvoiceStatus.setBackgroundResource(bgRes)
+        }
+    }
+    private fun formatDateTime(isoDate: String?): String {
+        if (isoDate.isNullOrEmpty()) return ""
+        return try {
+            val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            parser.timeZone = TimeZone.getTimeZone("UTC")
+            val date = parser.parse(isoDate)
+            val formatter = SimpleDateFormat("hh:mm a, dd MMM", Locale.getDefault())
+            formatter.format(date!!)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            isoDate
         }
     }
 
