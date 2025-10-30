@@ -1,50 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/clientInvoiceFragment"
+    android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray"
     tools:context=".ui.ClientInvoiceFragment">
 
-    <!-- Main Layout -->
+    <!-- ================= MAIN LAYOUT ================= -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Header -->
+        <!-- ========== HEADER ========== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingBottom="10dp"
-            android:orientation="horizontal">
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/tvInvoiceHeader"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/text_client_invoices"
-                android:textStyle="bold"
                 android:padding="10dp"
+                android:text="@string/text_client_invoices"
+                android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textColor="@color/white" />
+                android:textStyle="bold" />
 
-<!--            <ImageButton-->
-<!--                android:id="@+id/btnAddInvoice"-->
-<!--                android:layout_width="40dp"-->
-<!--                android:layout_height="40dp"-->
-<!--                android:backgroundTint="@color/purple_500"-->
-<!--                android:background="@drawable/bg_circle_purple"-->
-<!--                android:src="@drawable/ic_add"-->
-<!--                android:tint="@android:color/white"-->
-<!--                android:contentDescription="Add new invoice" />-->
+            <!-- Uncomment if Add Invoice Button needed -->
+            <!--
+            <ImageButton
+                android:id="@+id/btnAddInvoice"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_circle_purple"
+                android:backgroundTint="@color/purple_500"
+                android:contentDescription="Add new invoice"
+                android:src="@drawable/ic_add"
+                android:tint="@android:color/white" />
+            -->
         </LinearLayout>
 
-        <!-- Filter or Status Tabs -->
+        <!-- ========== FILTER / STATUS TABS ========== -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/invoiceTabLayout"
             android:layout_width="match_parent"
@@ -53,9 +57,9 @@
             android:background="@android:color/white"
             app:tabIndicatorColor="@color/purple_500"
             app:tabIndicatorHeight="3dp"
+            app:tabRippleColor="@android:color/transparent"
             app:tabSelectedTextColor="@color/purple_500"
-            app:tabTextColor="@color/black"
-            app:tabRippleColor="@android:color/transparent">
+            app:tabTextColor="@color/black">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
@@ -73,7 +77,7 @@
                 android:text="@string/text_unpaid" />
         </com.google.android.material.tabs.TabLayout>
 
-        <!-- RecyclerView for invoice list -->
+        <!-- ========== INVOICE LIST ========== -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerInvoices"
             android:layout_width="match_parent"
@@ -85,7 +89,7 @@
 
     </LinearLayout>
 
-    <!-- Loading Overlay -->
+    <!-- ================= LOADING OVERLAY ================= -->
     <FrameLayout
         android:id="@+id/loadingOverlay"
         android:layout_width="match_parent"
@@ -101,4 +105,5 @@
             android:layout_gravity="center"
             android:indeterminate="true" />
     </FrameLayout>
-</FrameLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

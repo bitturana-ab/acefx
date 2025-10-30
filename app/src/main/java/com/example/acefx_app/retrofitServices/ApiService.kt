@@ -1,5 +1,6 @@
 package com.example.acefx_app.retrofitServices
 
+import com.example.acefx_app.data.AllInvoices
 import com.example.acefx_app.data.ChatListResponse
 import com.example.acefx_app.data.ChatMessageRequest
 import com.example.acefx_app.data.ChatMessageResponse
@@ -76,5 +77,12 @@ interface ApiService {
     suspend fun getChatHistory(
         @Header("Authorization") token: String
     ): Response<ChatListResponse>
+
+    // invoice get and post methods are here
+    @GET("api/invoices/my-invoices")
+    fun getMyInvoices(
+        @Header("Authorization") token: String
+    ): Call<AllInvoices>
+
 
 }

@@ -7,26 +7,27 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.acefx_app.R
+import com.example.acefx_app.data.InvoiceData
 import com.example.acefx_app.data.InvoiceModel
 
 class ClientInvoiceAdapter :
     RecyclerView.Adapter<ClientInvoiceAdapter.InvoiceViewHolder>() {
 
-    private var allInvoices: List<InvoiceModel> = emptyList()
-    private var filteredInvoices: List<InvoiceModel> = emptyList()
+    private var allInvoices: List<InvoiceData> = emptyList()
+    private var filteredInvoices: List<InvoiceData> = emptyList()
 
-    // 🔹 Called when invoices are fetched from DB
-    fun submitList(list: List<InvoiceModel>) {
+    // Called when invoices are fetched
+    fun submitList(list: List<InvoiceData>) {
         allInvoices = list
         filteredInvoices = list
         notifyDataSetChanged()
     }
 
-    // 🔹 Filter by status (All / Paid / Unpaid)
+    // Filter by status (All / Paid / Unpaid)
     fun filterList(status: String) {
         filteredInvoices = when (status.lowercase()) {
-            "paid" -> allInvoices.filter { it.status.equals("paid", ignoreCase = true) }
-            "unpaid" -> allInvoices.filter { it.status.equals("unpaid", ignoreCase = true) }
+            "paid" -> allInvoices.filter { it.paid }
+            "unpaid" -> allInvoices.filter { !it.paid  }
             else -> allInvoices
         }
         notifyDataSetChanged()
@@ -39,35 +40,33 @@ class ClientInvoiceAdapter :
     }
 
     override fun onBindViewHolder(holder: InvoiceViewHolder, position: Int) {
-        holder.bind(filteredInvoices[position])
+        if (position in filteredInvoices.indices) {
+            holder.bind(filteredInvoices[position])
+        }
     }
 
     override fun getItemCount(): Int = filteredInvoices.size
 
     // 🔹 ViewHolder class
     class InvoiceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val tvProjectName = itemView.findViewById<TextView>(R.id.tvProjectName)
-//        private val tvAmount = itemView.findViewById<TextView>(R.id.rtvAmountValue)
-        private val tvDate = itemView.findViewById<TextView>(R.id.tvInvoiceDate)
-//        private val tvStatus = itemView.findViewById<TextView>(R.id.tvStatus)
-        private val clientName = itemView.findViewById<TextView>(R.id.tvClientName)
+        private val tvProjectName: TextView = itemView.findViewById(R.id.tvProjectName)
+        private val tvDate: TextView = itemView.findViewById(R.id.tvDate)
+        private val tvAmount: TextView = itemView.findViewById(R.id.tvAmount)
 
         @SuppressLint("SetTextI18n")
-        fun bind(invoice: InvoiceModel) {
-            tvProjectName.text = invoice.projectName
-//            tvAmount.text = "₹${invoice.amount.toString()}"
-            tvDate.text = invoice.date
-//            tvStatus.text = invoice.status
-            clientName.text = invoice.clientName
+        fun bind(invoice: InvoiceData) {
+            tvProjectName.text = invoice.projectId.title
+            tvDate.text = ""
+            tvAmount.text = "₹${invoice.amount}"
 
-            // Change color based on status
+            // Change color dynamically (optional)
             val context = itemView.context
-            val colorRes = when (invoice.status.lowercase()) {
-                "paid" -> R.color.green_400
-                "unpaid" -> R.color.orange_200
+            val colorRes = when (invoice.paid) {
+                true -> R.color.green_400
+                false -> R.color.orange_200
                 else -> R.color.gray
             }
-//            tvStatus.setTextColor(context.getColor(colorRes))
+            tvAmount.setTextColor(context.getColor(colorRes))
         }
     }
 }

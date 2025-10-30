@@ -58,14 +58,27 @@ data class InvoiceModel(
     val amount: Double,
     val status: String
 )
+// get all invoices
+data class AllInvoices(
+    val success: Boolean,
+    val message: String,
+    val data: List<InvoiceData>
+)
 // get invoice
 data class InvoiceData(
     val _id: String,
-    val projectId: String,
+    val projectId: ProjectIdDetails,
     val clientId: String,
     val amount: Double,
     val currency: String = "INR",
     val paid: Boolean = false,
     val razorpayOrderId: String? = null,
     val razorpayPaymentId: String? = null
+)
+// invoice project title
+data class ProjectIdDetails(
+    val title: String,
+    val description: String,
+    val expectedAmount: Double,
+    val actualAmount: Double
 )
