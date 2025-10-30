@@ -1,5 +1,7 @@
 package com.example.acefx_app.data
 
+import java.util.Objects
+
 // post create project response after creating project by client
 // when creating project res will send these
 data class ProjectResponse(
@@ -67,19 +69,7 @@ data class AllInvoices(
 data class GetInvoiceById(
     val success: Boolean,
     val message: String,
-    val data: InvoiceSchema
-)
-// single invoice schema
-data class InvoiceSchema(
-    val _id: String,
-    val projectId: String,
-    val clientId: String,
-    val amount: Double,
-    val currency: String = "INR",
-    val paid: Boolean = false,
-    val completedTime: String,
-    val razorpayOrderId: String? = null,
-    val razorpayPaymentId: String? = null
+    val data: InvoiceData
 )
 // get invoice
 data class InvoiceData(

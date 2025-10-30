@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import com.example.acefx_app.R
 import com.example.acefx_app.data.GetInvoiceById
 import com.example.acefx_app.data.InvoiceData
-import com.example.acefx_app.data.InvoiceSchema
 import com.example.acefx_app.databinding.FragmentInvoiceDetailsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
@@ -71,10 +70,9 @@ class InvoiceDetailsFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun updateUI(invoice: InvoiceSchema) {
+    private fun updateUI(invoice: InvoiceData) {
         with(binding) {
-            // later find name by id of project
-            tvProjectName.text = invoice.projectId ?: "N/A"
+            tvProjectName.text = invoice.projectId?.title ?: "N/A"
             tvClientName.text = invoice.currency ?: "N/A"
             tvInvoiceDate.text = invoice.completedTime ?: "N/A"
             tvInvoiceAmount.text = "₹${invoice.amount}"
