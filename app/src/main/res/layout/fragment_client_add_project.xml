@@ -178,12 +178,12 @@
         android:id="@+id/loadingOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:visibility="gone">
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleLarge"
+            android:layout_gravity="center"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:indeterminate="true" />
