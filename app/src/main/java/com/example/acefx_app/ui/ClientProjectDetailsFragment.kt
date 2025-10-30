@@ -22,6 +22,9 @@ import com.example.acefx_app.retrofitServices.ApiService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 class ClientProjectDetailsFragment : Fragment() {
 
@@ -90,8 +93,7 @@ class ClientProjectDetailsFragment : Fragment() {
                 if (!isAdded) return
 
                 if (response.isSuccessful && response.body() != null) {
-//                    TODO("response handle")
-                    Toast.makeText(requireContext(),"res ${response.toString()}", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(requireContext(),"res ${response.toString()}", Toast.LENGTH_SHORT).show()
                     displayProjectDetails(response.body()?.data!!)
                 } else {
                     Toast.makeText(
@@ -106,7 +108,7 @@ class ClientProjectDetailsFragment : Fragment() {
                 showLoading(false)
                 if (!isAdded) return
                 Log.d("PROJECT_DETAILS", "Error fetching project: ${t.localizedMessage}")
-                Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Check internet connection", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -117,7 +119,7 @@ class ClientProjectDetailsFragment : Fragment() {
         with(binding) {
             this?.projectTitleText?.text = project.title
             this?.projectDescriptionText?.text = project.description
-            this?.projectDeadlineText?.text = "Deadline: ${project.deadline ?: "N/A"}"
+            this?.projectDeadlineText?.text = "Deadline: ${formatDateTime(project.deadline) ?: "N/A"}"
             this?.projectAmountText?.text = "₹${project.expectedAmount.toString() ?: 0}"
 
             // Status color badge
@@ -167,6 +169,23 @@ class ClientProjectDetailsFragment : Fragment() {
             binding?.loadingOverlay?.fadeOut()
         }
     }
+    // formate deadline date to readable
+    private fun formatDateTime(isoDate: String?): String {
+        if (isoDate.isNullOrEmpty()) return ""
+
+        return try {
+            val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            parser.timeZone = TimeZone.getTimeZone("UTC")
+            val date = parser.parse(isoDate)
+
+            val formatter = SimpleDateFormat("hh:mm a, dd MMM", Locale.getDefault())
+            formatter.format(date!!)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            isoDate
+        }
+    }
+
 
     private fun View.fadeIn(duration: Long = 300) {
         alpha = 0f
