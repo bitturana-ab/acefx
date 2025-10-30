@@ -6,8 +6,8 @@
     app:startDestination="@id/homeFragment">
 
     <activity
-        android:name="com.example.acefx_app.MainActivity"
         android:id="@+id/mainActivity"
+        android:name="com.example.acefx_app.MainActivity"
         android:label="Main"
         tools:layout="@layout/activity_main">
 
@@ -35,20 +35,24 @@
         android:id="@+id/projectsFragment"
         android:name="com.example.acefx_app.ui.ProjectsFragment"
         android:label="Projects"
-        tools:layout="@layout/fragment_projects" >
+        tools:layout="@layout/fragment_projects">
         <action
             android:id="@+id/action_projectsFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
         <action
             android:id="@+id/action_projectsFragment_to_clientProjectDetailsFragment"
-            app:destination="@id/clientProjectDetailsFragment" />
+            app:destination="@id/clientProjectDetailsFragment">
+            <argument
+                android:name="projectId"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
         android:id="@+id/accountFragment"
         android:name="com.example.acefx_app.ui.AccountFragment"
         android:label="Account"
-        tools:layout="@layout/fragment_account" >
+        tools:layout="@layout/fragment_account">
         <action
             android:id="@+id/action_accountFragment_to_clientProfileFragment"
             app:destination="@id/clientProfileFragment" />
@@ -70,7 +74,7 @@
         android:id="@+id/clientProfileFragment"
         android:name="com.example.acefx_app.ui.ClientProfileFragment"
         android:label="Client Profile"
-        tools:layout="@layout/fragment_client_profile" >
+        tools:layout="@layout/fragment_client_profile">
         <action
             android:id="@+id/action_clientProfileFragment_to_clientProjectsFragment"
             app:destination="@id/clientProjectsFragment" />
@@ -78,16 +82,14 @@
     <fragment
         android:id="@+id/clientProjectsFragment"
         android:name="com.example.acefx_app.ui.ClientProjectsFragment"
-        android:label="ClientProjectsFragment" >
+        android:label="ClientProjectsFragment">
         <action
             android:id="@+id/action_clientProjectsFragment_to_clientProjectDetailsFragment"
-            app:destination="@id/clientProjectDetailsFragment"
-            >
+            app:destination="@id/clientProjectDetailsFragment">
             <argument
                 android:name="projectId"
-                app:argType="string"
-                />
-            </action>
+                app:argType="string" />
+        </action>
         <action
             android:id="@+id/action_clientProjectsFragment_to_clientAddProjectFragment"
             app:destination="@id/clientAddProjectFragment" />
@@ -96,7 +98,7 @@
         android:id="@+id/clientProjectDetailsFragment"
         android:name="com.example.acefx_app.ui.ClientProjectDetailsFragment"
         android:label="fragment_client_project_details"
-        tools:layout="@layout/fragment_client_project_details" >
+        tools:layout="@layout/fragment_client_project_details">
         <action
             android:id="@+id/action_clientProjectDetailsFragment_to_clientAddProjectFragment"
             app:destination="@id/clientAddProjectFragment" />
@@ -129,7 +131,7 @@
     <fragment
         android:id="@+id/clientInvoiceFragment"
         android:name="com.example.acefx_app.ui.ClientInvoiceFragment"
-        android:label="ClientInvoiceFragment" >
+        android:label="ClientInvoiceFragment">
         <action
             android:id="@+id/action_clientInvoiceFragment_to_invoiceDetailsFragment"
             app:destination="@id/invoiceDetailsFragment" />
@@ -162,7 +164,7 @@
     <fragment
         android:id="@+id/clientAccountFragment"
         android:name="com.example.acefx_app.ui.ClientAccountFragment"
-        android:label="ClientAccountFragment" >
+        android:label="ClientAccountFragment">
         <action
             android:id="@+id/action_clientAccountFragment_to_clientProjectsFragment"
             app:destination="@id/clientProjectsFragment" />

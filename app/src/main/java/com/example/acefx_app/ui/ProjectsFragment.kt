@@ -77,6 +77,7 @@ class ProjectsFragment : Fragment() {
     /** Setup RecyclerView */
     private fun setupRecyclerView() {
         adapter = ProjectsAdapter(emptyList()) { project ->
+            findNavController().navigate(ProjectsFragmentDirections.actionProjectsFragmentToClientProjectDetailsFragment(project._id))
             Toast.makeText(requireContext(), "Project: ${project.title}", Toast.LENGTH_SHORT).show()
         }
         binding.projectsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
