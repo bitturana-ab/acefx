@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.acefx_app.data.InvoiceModel
 import com.example.acefx_app.data.AllInvoices
 import com.example.acefx_app.data.InvoiceData
 import com.example.acefx_app.databinding.FragmentClientInvoiceBinding
@@ -93,7 +92,7 @@ class ClientInvoiceFragment : Fragment() {
         val prefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         val cachedJson = prefs.getString("cachedInvoices", null)
         if (cachedJson != null) {
-            val type = object : TypeToken<List<InvoiceModel>>() {}.type
+            val type = object : TypeToken<List<InvoiceData>>() {}.type
             val cachedList: List<InvoiceData> = gson.fromJson(cachedJson, type)
             if (cachedList.isNotEmpty()) {
                 allInvoices = cachedList

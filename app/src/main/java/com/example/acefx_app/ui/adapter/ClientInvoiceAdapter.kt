@@ -23,6 +23,7 @@ class ClientInvoiceAdapter :
         notifyDataSetChanged()
     }
 
+    // this is tab match filter but invoice fragment has own match filter
     // Filter by status (All / Paid / Unpaid)
     fun filterList(status: String) {
         filteredInvoices = when (status.lowercase()) {
