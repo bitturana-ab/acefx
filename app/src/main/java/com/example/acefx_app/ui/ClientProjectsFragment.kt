@@ -165,7 +165,7 @@ class ClientProjectsFragment : Fragment() {
                 showLoading(false)
                 binding.swipeRefresh.isRefreshing = false
                 Toast.makeText(
-                    requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT
+                    requireContext(), "Check internet connection", Toast.LENGTH_SHORT
                 ).show()
             }
         })

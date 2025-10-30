@@ -1,6 +1,7 @@
 package com.example.acefx_app.ui
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -80,31 +81,47 @@ class AccountFragment : Fragment() {
 
     // logout function with clear token and navigate to login screen
     private fun logoutUser() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                // Clear Room token not avail
-                // db.userDao().clearUserData()
+        AlertDialog.Builder(requireContext())
+            .setTitle("Logout Confirmation")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Logout") { _, _ ->
+                Thread {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        try {
+                            // Clear Room token not avail
+                            // db.userDao().clearUserData()
 
-                // Clear SharedPreferences
-                val sharedPref =
-                    requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
-                sharedPref.edit { clear() }
+                            // Clear SharedPreferences
+                            val sharedPref =
+                                requireContext().getSharedPreferences(
+                                    "UserSession",
+                                    Context.MODE_PRIVATE
+                                )
+                            sharedPref.edit { clear() }
 
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT)
-                        .show()
-                    findNavController().navigate(R.id.mainActivity)
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Logout failed: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Logged out successfully",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                                findNavController().navigate(R.id.mainActivity)
+                            }
+                        } catch (e: Exception) {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Logout failed: ${e.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                }.start()
             }
-        }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     //     Load user details instantly from SharedPreferences
@@ -127,32 +144,37 @@ class AccountFragment : Fragment() {
 
     //    Load user details from API and save to SharedPreferences
     private fun loadUserFromServer() {
-        apiService.getUserProfile("Bearer $token").enqueue(object : Callback<UserDetailsResponse> {
-            override fun onResponse(
-                call: Call<UserDetailsResponse>,
-                response: Response<UserDetailsResponse>
-            ) {
-                if (!isAdded || _binding == null) return
+        apiService.getUserProfile("Bearer $token")
+            .enqueue(object : Callback<UserDetailsResponse> {
+                override fun onResponse(
+                    call: Call<UserDetailsResponse>,
+                    response: Response<UserDetailsResponse>
+                ) {
+                    if (!isAdded || _binding == null) return
 
-                if (response.isSuccessful && response.body() != null) {
-                    val user = response.body()!!
-                    updateUI(user)
-                    saveUserToSharedPref(user)
-                } else {
+                    if (response.isSuccessful && response.body() != null) {
+                        val user = response.body()!!
+                        updateUI(user)
+                        saveUserToSharedPref(user)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to refresh user details!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<UserDetailsResponse>, t: Throwable) {
+                    if (!isAdded || _binding == null) return
                     Toast.makeText(
                         requireContext(),
-                        "Failed to refresh user details!",
+                        "Check Internet Connection",
                         Toast.LENGTH_SHORT
-                    ).show()
+                    )
+                        .show()
                 }
-            }
-
-            override fun onFailure(call: Call<UserDetailsResponse>, t: Throwable) {
-                if (!isAdded || _binding == null) return
-                Toast.makeText(requireContext(), "Check Internet Connection", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        })
+            })
     }
 
     /** Save latest user details locally */
