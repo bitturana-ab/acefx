@@ -24,6 +24,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import androidx.core.content.edit
+import com.google.android.material.snackbar.Snackbar
 
 class AccountFragment : Fragment() {
 
@@ -111,9 +112,10 @@ class AccountFragment : Fragment() {
                             }
                         } catch (e: Exception) {
                             withContext(Dispatchers.Main) {
+                                Snackbar.make(binding.root, "Network error, please check your connection", Snackbar.LENGTH_SHORT).show()
                                 Toast.makeText(
                                     requireContext(),
-                                    "Logout failed: ${e.message}",
+                                    "Logout failed!",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }

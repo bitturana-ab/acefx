@@ -17,6 +17,7 @@ import com.example.acefx_app.databinding.FragmentClientProjectsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
 import com.example.acefx_app.ui.adapter.ProjectsAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -164,6 +165,7 @@ class ClientProjectsFragment : Fragment() {
                 if (!isAdded) return
                 showLoading(false)
                 binding.swipeRefresh.isRefreshing = false
+                Snackbar.make(binding.root, "Network error, please check your connection", Snackbar.LENGTH_SHORT).show()
                 Toast.makeText(
                     requireContext(), "Check internet connection", Toast.LENGTH_SHORT
                 ).show()

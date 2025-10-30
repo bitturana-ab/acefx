@@ -18,6 +18,7 @@ import com.example.acefx_app.data.ProjectRequest
 import com.example.acefx_app.data.ProjectResponse
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
+import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -173,7 +174,7 @@ class ClientAddProjectFragment : Fragment() {
                     override fun onFailure(call: Call<ProjectResponse>, t: Throwable) {
                         loadingOverlay.visibility = View.GONE
                         Log.e("ADD_PROJECT", "Failure: ${t.localizedMessage}")
-                        Toast.makeText(requireContext(), "Network error: ${t.localizedMessage}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_LONG).show()
                     }
                 })
         } catch (e: Exception) {

@@ -18,6 +18,7 @@ import com.example.acefx_app.databinding.FragmentChatBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
 import com.example.acefx_app.ui.adapter.ChatAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
@@ -113,14 +114,15 @@ class ChatFragment : Fragment() {
                         // Save updated chat to SharedPreferences
                         saveLocalChat(messages)
                     }
-                    Toast.makeText(requireContext(), "Message sent ", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(requireContext(), "Message sent ", Toast.LENGTH_SHORT).show()
                 } else {
                     Log.d("FAILED_SEND",response.toString())
-                    Toast.makeText(requireContext(), "Failed to send message ${response.code()}", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireContext(), "Failed to send message!", Toast.LENGTH_SHORT)
                         .show()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                Snackbar.make(binding.root, "Network error, please check your connection", Snackbar.LENGTH_SHORT).show()
                 Toast.makeText(requireContext(), "Error sending message!", Toast.LENGTH_SHORT)
                     .show()
             }
