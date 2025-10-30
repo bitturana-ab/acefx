@@ -1,5 +1,6 @@
 package com.example.acefx_app.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.acefx_app.R
 import com.example.acefx_app.data.ProjectData
+import com.example.acefx_app.data.ProjectDetailResponse
 import com.example.acefx_app.databinding.FragmentClientProjectDetailsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
@@ -82,13 +84,15 @@ class ClientProjectDetailsFragment : Fragment() {
             return
         }
 
-        apiService.getProjectById("Bearer $token", id).enqueue(object : Callback<ProjectData> {
-            override fun onResponse(call: Call<ProjectData>, response: Response<ProjectData>) {
+        apiService.getProjectById("Bearer $token", id).enqueue(object : Callback<ProjectDetailResponse> {
+            override fun onResponse(call: Call<ProjectDetailResponse>, response: Response<ProjectDetailResponse>) {
                 showLoading(false)
                 if (!isAdded) return
 
                 if (response.isSuccessful && response.body() != null) {
-                    displayProjectDetails(response.body()!!)
+//                    TODO("response handle")
+                    Toast.makeText(requireContext(),"res ${response.toString()}", Toast.LENGTH_SHORT).show()
+                    displayProjectDetails(response.body()?.data!!)
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -98,38 +102,41 @@ class ClientProjectDetailsFragment : Fragment() {
                 }
             }
 
-            override fun onFailure(call: Call<ProjectData>, t: Throwable) {
+            override fun onFailure(call: Call<ProjectDetailResponse>, t: Throwable) {
                 showLoading(false)
                 if (!isAdded) return
-                Log.e("PROJECT_DETAILS", "Error fetching project: ${t.localizedMessage}")
+                Log.d("PROJECT_DETAILS", "Error fetching project: ${t.localizedMessage}")
                 Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
     /** Display project data in UI */
+    @SuppressLint("SetTextI18n")
     private fun displayProjectDetails(project: ProjectData) {
         with(binding) {
             this?.projectTitleText?.text = project.title
             this?.projectDescriptionText?.text = project.description
             this?.projectDeadlineText?.text = "Deadline: ${project.deadline ?: "N/A"}"
-            this?.projectAmountText?.text = "₹${project.expectedAmount ?: 0}"
+            this?.projectAmountText?.text = "₹${project.expectedAmount.toString() ?: 0}"
 
             // Status color badge
             this?.projectStatusText?.text = project.status
             val statusBg = this?.projectStatusText?.background?.mutate()
-            val color = when (project.status?.lowercase()) {
-                "approved" -> R.color.green_400
+            val color = when (project.status.lowercase()) {
+                "approved" -> R.color.status_active
                 "on hold" -> R.color.orange_200
                 else -> R.color.gray
             }
             statusBg?.setTint(ContextCompat.getColor(requireContext(), color))
             this?.projectStatusText?.background = statusBg
 
-            // Links
+            // Links and also openable
             this?.projectDataLink?.setOnClickListener { openUrl(project.dataLink) }
             this?.projectAttachLink?.setOnClickListener { openUrl(project.attachLink) }
 
+            //set amount at least half or something will decide later
+            this?.payUpfrontButton?.text = "Pay Upfront of ${project.expectedAmount.toString()}"
             // Pay button only if unpaid invoice
             this?.payUpfrontButton?.visibility =
                 if (project.invoiceId?.paid == false) View.VISIBLE else View.GONE

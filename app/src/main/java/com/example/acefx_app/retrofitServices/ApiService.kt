@@ -4,6 +4,7 @@ import com.example.acefx_app.data.ChatListResponse
 import com.example.acefx_app.data.ChatMessageRequest
 import com.example.acefx_app.data.ChatMessageResponse
 import com.example.acefx_app.data.ProjectData
+import com.example.acefx_app.data.ProjectDetailResponse
 import com.example.acefx_app.data.ProjectItem
 import com.example.acefx_app.data.ProjectRequest
 import com.example.acefx_app.data.ProjectResponse
@@ -60,7 +61,7 @@ interface ApiService {
     fun getProjectById(
         @Header("Authorization") authToken: String,
         @Path("id") id: String
-    ): Call<ProjectData>
+    ): Call<ProjectDetailResponse>
 
     // chat api
     /** Send chat message */

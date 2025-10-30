@@ -30,6 +30,11 @@ data class ProjectRequest(
 )
 
 // get project res by user or id
+data class ProjectDetailResponse(
+    val success: Boolean,
+    val message: String,
+    val data: ProjectData
+)
 data class ProjectData(
     val _id: String,
     val title: String,
