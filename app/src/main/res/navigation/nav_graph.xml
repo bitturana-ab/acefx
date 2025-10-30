@@ -60,12 +60,6 @@
             android:id="@+id/action_accountFragment_to_clientProjectsFragment"
             app:destination="@id/clientProjectsFragment" />
         <action
-            android:id="@+id/action_accountFragment_to_clientInvoiceFragment2"
-            app:destination="@id/clientInvoiceFragment" />
-        <action
-            android:id="@+id/action_accountFragment_to_clientAccountFragment"
-            app:destination="@id/clientAccountFragment" />
-        <action
             android:id="@+id/action_accountFragment_to_mainActivity"
             app:destination="@id/mainActivity" />
     </fragment>
@@ -82,7 +76,8 @@
     <fragment
         android:id="@+id/clientProjectsFragment"
         android:name="com.example.acefx_app.ui.ClientProjectsFragment"
-        android:label="ClientProjectsFragment">
+        android:label="ClientProjectsFragment"
+        tools:layout="@layout/fragment_client_projects">
         <action
             android:id="@+id/action_clientProjectsFragment_to_clientProjectDetailsFragment"
             app:destination="@id/clientProjectDetailsFragment">
@@ -131,10 +126,15 @@
     <fragment
         android:id="@+id/clientInvoiceFragment"
         android:name="com.example.acefx_app.ui.ClientInvoiceFragment"
-        android:label="ClientInvoiceFragment">
+        android:label="ClientInvoiceFragment"
+        tools:layout="@layout/fragment_client_invoice">
         <action
             android:id="@+id/action_clientInvoiceFragment_to_invoiceDetailsFragment"
-            app:destination="@id/invoiceDetailsFragment" />
+            app:destination="@id/invoiceDetailsFragment" >
+            <argument
+                android:name="invoiceId"
+                app:argType="string"/>
+        </action>
     </fragment>
     <action
         android:id="@+id/action_clientInvoiceFragment_to_invoiceDetailsFragment"
@@ -145,29 +145,6 @@
         android:name="com.example.acefx_app.ui.InvoiceDetailsFragment"
         android:label="Invoice Details"
         tools:layout="@layout/fragment_invoice_details">
-        <argument
-            android:name="invoiceProject"
-            app:argType="string" />
-        <argument
-            android:name="invoiceClient"
-            app:argType="string" />
-        <argument
-            android:name="invoiceDate"
-            app:argType="string" />
-        <argument
-            android:name="invoiceAmount"
-            app:argType="string" />
-        <argument
-            android:name="invoiceStatus"
-            app:argType="string" />
-    </fragment>
-    <fragment
-        android:id="@+id/clientAccountFragment"
-        android:name="com.example.acefx_app.ui.ClientAccountFragment"
-        android:label="ClientAccountFragment">
-        <action
-            android:id="@+id/action_clientAccountFragment_to_clientProjectsFragment"
-            app:destination="@id/clientProjectsFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"

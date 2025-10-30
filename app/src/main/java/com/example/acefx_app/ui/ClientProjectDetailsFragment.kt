@@ -109,7 +109,7 @@ class ClientProjectDetailsFragment : Fragment() {
             override fun onFailure(call: Call<ProjectDetailResponse>, t: Throwable) {
                 showLoading(false)
                 if (!isAdded) return
-                Log.d("PROJECT_DETAILS", "Error fetching project: ${t.localizedMessage}")
+                Log.d("PROJECT_DETAILS", "Error fetching project!")
                 Toast.makeText(requireContext(), "Check internet connection", Toast.LENGTH_SHORT).show()
             }
         })

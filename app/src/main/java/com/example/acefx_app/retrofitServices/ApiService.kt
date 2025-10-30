@@ -4,6 +4,8 @@ import com.example.acefx_app.data.AllInvoices
 import com.example.acefx_app.data.ChatListResponse
 import com.example.acefx_app.data.ChatMessageRequest
 import com.example.acefx_app.data.ChatMessageResponse
+import com.example.acefx_app.data.GetInvoiceById
+import com.example.acefx_app.data.InvoiceData
 import com.example.acefx_app.data.ProjectData
 import com.example.acefx_app.data.ProjectDetailResponse
 import com.example.acefx_app.data.ProjectItem
@@ -83,6 +85,14 @@ interface ApiService {
     fun getMyInvoices(
         @Header("Authorization") token: String
     ): Call<AllInvoices>
+
+    // get invoice by id
+    @GET("api/invoices/{id}")
+    fun getInvoiceDetails(
+        @Header("Authorization") token: String,
+        @Path("id") invoiceId: String
+    ): Call<GetInvoiceById>
+
 
 
 }

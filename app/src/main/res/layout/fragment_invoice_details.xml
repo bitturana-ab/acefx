@@ -25,7 +25,6 @@
                 android:id="@+id/tvProjectName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Project: Website Development"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/purple_500"
@@ -35,25 +34,24 @@
                 android:id="@+id/tvClientName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Client: John Doe"
                 android:textSize="16sp"
+                android:textColor="@color/black"
                 android:layout_marginBottom="4dp" />
 
             <TextView
                 android:id="@+id/tvInvoiceDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Date: 25 Oct 2025"
                 android:textSize="15sp"
+                android:textColor="@color/black"
                 android:layout_marginBottom="4dp" />
 
             <TextView
                 android:id="@+id/tvInvoiceAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="₹29,500"
                 android:textStyle="bold"
-                android:textColor="@color/teal_700"
+                android:textColor="@color/black"
                 android:textSize="17sp"
                 android:layout_marginVertical="8dp" />
 
@@ -61,7 +59,6 @@
                 android:id="@+id/tvInvoiceStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Paid"
                 android:textStyle="bold"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="6dp"
@@ -80,7 +77,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Additional Notes:"
                 android:textStyle="bold"
                 android:textSize="15sp"
                 android:layout_marginBottom="6dp" />
@@ -89,7 +85,6 @@
                 android:id="@+id/tvNotes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Payment received via UPI. Thank you for your business!"
                 android:textSize="14sp"
                 android:textColor="@color/black"
                 android:lineSpacingExtra="4dp" />

@@ -64,6 +64,23 @@ data class AllInvoices(
     val message: String,
     val data: List<InvoiceData>
 )
+data class GetInvoiceById(
+    val success: Boolean,
+    val message: String,
+    val data: InvoiceSchema
+)
+// single invoice schema
+data class InvoiceSchema(
+    val _id: String,
+    val projectId: String,
+    val clientId: String,
+    val amount: Double,
+    val currency: String = "INR",
+    val paid: Boolean = false,
+    val completedTime: String,
+    val razorpayOrderId: String? = null,
+    val razorpayPaymentId: String? = null
+)
 // get invoice
 data class InvoiceData(
     val _id: String,
@@ -78,9 +95,18 @@ data class InvoiceData(
 )
 // invoice project title
 data class ProjectIdDetails(
+    val _id: String,
+    val dataLink: String?,
+    val attachLink: String?,
     val title: String,
-    val description: String,
-    val expectedAmount: Double,
-    val actualAmount: Double,
-    val completedTime:String
+    val deliverableUrl: String?,
+    val deadline: String,
+    val clientId: String?,
+    val editorId: String?,
+    val status: String,
+    val invoiceId: String?,
+    val description: String?,
+    val expectedAmount: Double?,
+    val actualAmount: Double?,
+    val completedTime:String?
 )

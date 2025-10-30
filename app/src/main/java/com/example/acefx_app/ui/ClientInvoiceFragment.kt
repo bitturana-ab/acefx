@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.acefx_app.data.AllInvoices
 import com.example.acefx_app.data.InvoiceData
@@ -57,7 +58,7 @@ class ClientInvoiceFragment : Fragment() {
             Toast.makeText(requireContext(), "User not logged in!", Toast.LENGTH_SHORT).show()
             return
         }
-        // set header name by company name
+
         binding.tvInvoiceHeader.text = "$companyName's Invoices"
 
         setupRecyclerView()
@@ -69,7 +70,16 @@ class ClientInvoiceFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        invoiceAdapter = ClientInvoiceAdapter()
+        invoiceAdapter = ClientInvoiceAdapter(emptyList()) { invoice ->
+            invoice._id?.let { id ->
+                findNavController().navigate(
+                    ClientInvoiceFragmentDirections
+                        .actionClientInvoiceFragmentToInvoiceDetailsFragment(id)
+                )
+                Toast.makeText(requireContext(), "Invoice ID: $id", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         binding.recyclerInvoices.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerInvoices.adapter = invoiceAdapter
     }
@@ -87,13 +97,11 @@ class ClientInvoiceFragment : Fragment() {
 
     private fun setupSwipeRefresh() {
         binding.swipeRefresh.setOnRefreshListener {
-            val firstTab = binding.invoiceTabLayout.getTabAt(0)
-            firstTab?.select()
+            binding.invoiceTabLayout.getTabAt(0)?.select()
             fetchInvoices()
         }
     }
 
-    /** Load cached invoices from SharedPreferences */
     private fun loadCachedInvoices() {
         val prefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         val cachedJson = prefs.getString("cachedInvoices", null)
@@ -109,7 +117,6 @@ class ClientInvoiceFragment : Fragment() {
         }
     }
 
-    /** Save invoices to SharedPreferences */
     private fun saveInvoicesToCache(invoices: List<InvoiceData>) {
         val prefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         val json = gson.toJson(invoices)
@@ -117,7 +124,6 @@ class ClientInvoiceFragment : Fragment() {
         Log.d("CACHE", "Saved ${invoices.size} invoices to cache")
     }
 
-    /** Fetch invoices from backend */
     private fun fetchInvoices() {
         showLoading(true)
         apiService.getMyInvoices("Bearer $token").enqueue(object : Callback<AllInvoices> {
@@ -160,7 +166,6 @@ class ClientInvoiceFragment : Fragment() {
         })
     }
 
-    /** Filter invoices based on tab selection */
     private fun filterInvoices(statusText: String) {
         val filtered = when (statusText.lowercase()) {
             "paid" -> allInvoices.filter { it.paid }
@@ -178,7 +183,6 @@ class ClientInvoiceFragment : Fragment() {
     }
 
     private fun showEmptyState(show: Boolean) {
-//        binding.emptyText.visibility = if (show) View.VISIBLE else View.GONE
         binding.recyclerInvoices.visibility = if (show) View.GONE else View.VISIBLE
     }
 

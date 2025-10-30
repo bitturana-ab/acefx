@@ -8,81 +8,64 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.acefx_app.R
 import com.example.acefx_app.data.InvoiceData
-import com.example.acefx_app.data.InvoiceModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
-class ClientInvoiceAdapter :
-    RecyclerView.Adapter<ClientInvoiceAdapter.InvoiceViewHolder>() {
-
-    private var allInvoices: List<InvoiceData> = emptyList()
-    private var filteredInvoices: List<InvoiceData> = emptyList()
-
-    // Called when invoices are fetched
-    fun submitList(list: List<InvoiceData>) {
-        allInvoices = list
-        filteredInvoices = list
-        notifyDataSetChanged()
-    }
-
-    // this is tab match filter but invoice fragment has own match filter
-    // Filter by status (All / Paid / Unpaid)
-    fun filterList(status: String) {
-        filteredInvoices = when (status.lowercase()) {
-            "paid" -> allInvoices.filter { it.paid }
-            "unpaid" -> allInvoices.filter { !it.paid }
-            else -> allInvoices
-        }
-        notifyDataSetChanged()
-    }
+class ClientInvoiceAdapter(
+    private var invoiceList: List<InvoiceData>,
+    private val onInvoiceClick: (InvoiceData) -> Unit
+) : RecyclerView.Adapter<ClientInvoiceAdapter.InvoiceViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InvoiceViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_invoice, parent, false)
-        return InvoiceViewHolder(view)
+        return InvoiceViewHolder(view, onInvoiceClick)
     }
 
     override fun onBindViewHolder(holder: InvoiceViewHolder, position: Int) {
-        if (position in filteredInvoices.indices) {
-            holder.bind(filteredInvoices[position])
+        if (position in invoiceList.indices) {
+            holder.bind(invoiceList[position])
         }
     }
 
-    override fun getItemCount(): Int = filteredInvoices.size
+    override fun getItemCount(): Int = invoiceList.size
 
-    // 🔹 ViewHolder class
-    class InvoiceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    fun submitList(newList: List<InvoiceData>) {
+        invoiceList = newList
+        notifyDataSetChanged()
+    }
+
+    class InvoiceViewHolder(
+        itemView: View,
+        private val onInvoiceClick: (InvoiceData) -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
+
         private val tvProjectName: TextView = itemView.findViewById(R.id.tvProjectName)
         private val tvDate: TextView = itemView.findViewById(R.id.tvDate)
         private val tvAmount: TextView = itemView.findViewById(R.id.tvAmount)
 
         @SuppressLint("SetTextI18n")
         fun bind(invoice: InvoiceData) {
-            tvProjectName.text = invoice.projectId.title
+            tvProjectName.text = invoice.projectId?.title ?: "No Project"
             tvDate.text = formatDateTime(invoice.completedTime)
             tvAmount.text = "₹${invoice.amount}"
-//            tvDate.text = "ab"
 
-            // Change color dynamically (optional)
             val context = itemView.context
-            val colorRes = when (invoice.paid) {
-                true -> R.color.green_400
-                false -> R.color.orange_200
-                else -> R.color.gray
-            }
+            val colorRes = if (invoice.paid) R.color.green_400 else R.color.orange_200
             tvAmount.setTextColor(context.getColor(colorRes))
+
+            itemView.setOnClickListener {
+                onInvoiceClick(invoice)
+            }
         }
-        // formate deadline date to readable
 
         private fun formatDateTime(isoDate: String?): String {
             if (isoDate.isNullOrEmpty()) return ""
-
             return try {
                 val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
                 parser.timeZone = TimeZone.getTimeZone("UTC")
                 val date = parser.parse(isoDate)
-
                 val formatter = SimpleDateFormat("hh:mm a, dd MMM", Locale.getDefault())
                 formatter.format(date!!)
             } catch (e: Exception) {
@@ -91,5 +74,4 @@ class ClientInvoiceAdapter :
             }
         }
     }
-
 }
