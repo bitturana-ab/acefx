@@ -76,7 +76,7 @@ class ClientInvoiceFragment : Fragment() {
                     ClientInvoiceFragmentDirections
                         .actionClientInvoiceFragmentToInvoiceDetailsFragment(id)
                 )
-                Toast.makeText(requireContext(), "Invoice ID: $id", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(requireContext(), "Invoice ID: $id", Toast.LENGTH_SHORT).show()
             }
         }
 
