@@ -72,6 +72,7 @@ data class InvoiceData(
     val amount: Double,
     val currency: String = "INR",
     val paid: Boolean = false,
+    val completedTime: String,
     val razorpayOrderId: String? = null,
     val razorpayPaymentId: String? = null
 )

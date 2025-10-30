@@ -60,8 +60,9 @@ class ClientInvoiceAdapter :
         @SuppressLint("SetTextI18n")
         fun bind(invoice: InvoiceData) {
             tvProjectName.text = invoice.projectId.title
-            tvDate.text = formatDateTime(invoice.projectId.completedTime)
+            tvDate.text = formatDateTime(invoice.completedTime)
             tvAmount.text = "₹${invoice.amount}"
+//            tvDate.text = "ab"
 
             // Change color dynamically (optional)
             val context = itemView.context
