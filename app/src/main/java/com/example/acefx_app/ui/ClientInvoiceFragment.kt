@@ -31,6 +31,7 @@ class ClientInvoiceFragment : Fragment() {
     private lateinit var invoiceAdapter: ClientInvoiceAdapter
     private lateinit var apiService: ApiService
     private lateinit var token: String
+    private lateinit var companyName: String
     private var allInvoices = listOf<InvoiceData>()
     private val gson = Gson()
 
@@ -48,11 +49,14 @@ class ClientInvoiceFragment : Fragment() {
         apiService = ApiClient.getClient(requireContext()).create(ApiService::class.java)
         val sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         token = sharedPref.getString("authToken", "") ?: ""
+        companyName = sharedPref.getString("companyName", "") ?: ""
 
         if (token.isEmpty()) {
             Toast.makeText(requireContext(), "User not logged in!", Toast.LENGTH_SHORT).show()
             return
         }
+        // set header name by company name
+        binding.tvInvoiceHeader.text = "$companyName's Invoices"
 
         setupRecyclerView()
         setupTabs()

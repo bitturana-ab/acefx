@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.acefx_app.R
 import com.example.acefx_app.data.InvoiceData
 import com.example.acefx_app.data.InvoiceModel
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 class ClientInvoiceAdapter :
     RecyclerView.Adapter<ClientInvoiceAdapter.InvoiceViewHolder>() {
@@ -28,7 +31,7 @@ class ClientInvoiceAdapter :
     fun filterList(status: String) {
         filteredInvoices = when (status.lowercase()) {
             "paid" -> allInvoices.filter { it.paid }
-            "unpaid" -> allInvoices.filter { !it.paid  }
+            "unpaid" -> allInvoices.filter { !it.paid }
             else -> allInvoices
         }
         notifyDataSetChanged()
@@ -57,7 +60,7 @@ class ClientInvoiceAdapter :
         @SuppressLint("SetTextI18n")
         fun bind(invoice: InvoiceData) {
             tvProjectName.text = invoice.projectId.title
-            tvDate.text = ""
+            tvDate.text = formatDateTime(invoice.projectId.completedTime)
             tvAmount.text = "₹${invoice.amount}"
 
             // Change color dynamically (optional)
@@ -69,5 +72,23 @@ class ClientInvoiceAdapter :
             }
             tvAmount.setTextColor(context.getColor(colorRes))
         }
+        // formate deadline date to readable
+
+        private fun formatDateTime(isoDate: String?): String {
+            if (isoDate.isNullOrEmpty()) return ""
+
+            return try {
+                val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+                parser.timeZone = TimeZone.getTimeZone("UTC")
+                val date = parser.parse(isoDate)
+
+                val formatter = SimpleDateFormat("hh:mm a, dd MMM", Locale.getDefault())
+                formatter.format(date!!)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                isoDate
+            }
+        }
     }
+
 }

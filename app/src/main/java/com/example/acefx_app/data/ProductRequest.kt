@@ -80,5 +80,6 @@ data class ProjectIdDetails(
     val title: String,
     val description: String,
     val expectedAmount: Double,
-    val actualAmount: Double
+    val actualAmount: Double,
+    val completedTime:String
 )
