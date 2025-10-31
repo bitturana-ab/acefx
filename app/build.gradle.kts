@@ -49,6 +49,8 @@ dependencies {
     // for navigation
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.0")
+    // razor pay
+    implementation("com.razorpay:checkout:1.6.33")
 
     // default
     implementation(libs.androidx.core.ktx)

@@ -4,15 +4,15 @@ import com.example.acefx_app.data.AllInvoices
 import com.example.acefx_app.data.ChatListResponse
 import com.example.acefx_app.data.ChatMessageRequest
 import com.example.acefx_app.data.ChatMessageResponse
+import com.example.acefx_app.data.CreatePaymentResponse
 import com.example.acefx_app.data.GetInvoiceById
-import com.example.acefx_app.data.InvoiceData
-import com.example.acefx_app.data.ProjectData
+import com.example.acefx_app.data.PaymentRequest
 import com.example.acefx_app.data.ProjectDetailResponse
-import com.example.acefx_app.data.ProjectItem
 import com.example.acefx_app.data.ProjectRequest
 import com.example.acefx_app.data.ProjectResponse
 import com.example.acefx_app.data.ProjectsResponse
 import com.example.acefx_app.data.UserDetailsResponse
+import com.example.acefx_app.data.VerifyPaymentResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -92,6 +92,20 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") invoiceId: String
     ): Call<GetInvoiceById>
+
+    // razor pay
+    @POST("api/payment/create-order")
+    fun createPaymentOrder(
+        @Header("Authorization") token: String,
+        @Body paymentData: PaymentRequest
+    ): Call<CreatePaymentResponse>
+
+    @POST("api/payment/verify")
+    fun verifyPayment(
+        @Header("Authorization") token: String,
+        @Body body: Map<String, String>
+    ): Call<VerifyPaymentResponse>
+
 
 
 

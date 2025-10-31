@@ -66,13 +66,14 @@ class ClientProjectDetailsFragment : Fragment() {
         binding?.payUpfrontButton?.setOnClickListener {
             val projectTitle = binding?.projectTitleText?.text.toString()
             val amount = binding?.projectAmountText?.text.toString().replace("₹", "").trim()
-            val action = ClientProjectDetailsFragmentDirections
-                .actionClientProjectDetailsFragmentToPaymentFragment(
-                    projectId = projectId ?: "",
-                    amount = amount,
-                    projectName = projectTitle
-                )
-            findNavController().navigate(action)
+            val bundle = Bundle().apply {
+                putString("projectId", projectId)
+                putDouble("amount", amount.toDouble())
+                putString("projectName", projectTitle)
+            }
+
+            findNavController().navigate(R.id.action_clientProjectDetailsFragment_to_paymentFragment, bundle)
+
         }
     }
 
