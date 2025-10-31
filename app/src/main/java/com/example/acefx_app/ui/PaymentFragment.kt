@@ -77,6 +77,9 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
         // Display info
         binding.tvProjectName.text = projectName ?: "Project"
         binding.tvAmount.text = "₹$amount"
+        binding.tvCompany.text = "Company: $companyName"
+        binding.tvEmail.text = "Email: $userEmail"
+        binding.tvPhone.text = "Phone: $userPhone"
 
         // Fetch Razorpay key securely
         fetchRazorpayKey()
@@ -128,6 +131,7 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
                 }
 
                 override fun onFailure(call: Call<CreatePaymentResponse>, t: Throwable) {
+//                    TODO("npe and not navigating")
                     Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
             })
