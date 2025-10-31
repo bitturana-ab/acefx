@@ -184,7 +184,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.9"
                         android:backgroundTint="@color/app_color_gray_2"
-                        android:text="@string/text_open_attach_link"
+                        android:text="@string/text_download_file"
                         android:textColor="@android:color/white"
                         app:cornerRadius="10dp"
                         android:textSize="10sp"

@@ -11,10 +11,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.acefx_app.R
-import com.example.acefx_app.data.ProjectData
+import com.example.acefx_app.data.ProjectDataByProject
 import com.example.acefx_app.data.ProjectDetailResponse
 import com.example.acefx_app.databinding.FragmentClientProjectDetailsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
@@ -68,7 +69,7 @@ class ClientProjectDetailsFragment : Fragment() {
             val action = ClientProjectDetailsFragmentDirections
                 .actionClientProjectDetailsFragmentToPaymentFragment(
                     projectId = projectId ?: "",
-                    amount = amount.toFloat(),
+                    amount = amount,
                     projectName = projectTitle
                 )
             findNavController().navigate(action)
@@ -89,39 +90,48 @@ class ClientProjectDetailsFragment : Fragment() {
             return
         }
 
-        apiService.getProjectById("Bearer $token", id).enqueue(object : Callback<ProjectDetailResponse> {
-            override fun onResponse(call: Call<ProjectDetailResponse>, response: Response<ProjectDetailResponse>) {
-                showLoading(false)
-                if (!isAdded) return
+        apiService.getProjectById("Bearer $token", id)
+            .enqueue(object : Callback<ProjectDetailResponse> {
+                override fun onResponse(
+                    call: Call<ProjectDetailResponse>,
+                    response: Response<ProjectDetailResponse>
+                ) {
+                    showLoading(false)
+                    if (!isAdded) return
 
-                if (response.isSuccessful && response.body() != null) {
+                    if (response.isSuccessful && response.body() != null) {
 //                    Toast.makeText(requireContext(),"res ${response.toString()}", Toast.LENGTH_SHORT).show()
-                    displayProjectDetails(response.body()?.data!!)
-                } else {
+                        displayProjectDetails(response.body()?.data!!)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Project not found or failed to fetch!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<ProjectDetailResponse>, t: Throwable) {
+                    showLoading(false)
+                    if (!isAdded) return
+                    Log.d("PROJECT_DETAILS", "Error fetching project! ${t.toString()}")
                     Toast.makeText(
                         requireContext(),
-                        "Project not found or failed to fetch!",
+                        "Check internet connection",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-            }
-
-            override fun onFailure(call: Call<ProjectDetailResponse>, t: Throwable) {
-                showLoading(false)
-                if (!isAdded) return
-                Log.d("PROJECT_DETAILS", "Error fetching project!")
-                Toast.makeText(requireContext(), "Check internet connection", Toast.LENGTH_SHORT).show()
-            }
-        })
+            })
     }
 
     /** Display project data in UI */
     @SuppressLint("SetTextI18n")
-    private fun displayProjectDetails(project: ProjectData) {
+    private fun displayProjectDetails(project: ProjectDataByProject) {
         with(binding) {
             this?.projectTitleText?.text = project.title
             this?.projectDescriptionText?.text = project.description
-            this?.projectDeadlineText?.text = "Deadline: ${formatDateTime(project.deadline) ?: "N/A"}"
+            this?.projectDeadlineText?.text =
+                "Deadline: ${formatDateTime(project.deadline) ?: "N/A"}"
             this?.projectAmountText?.text = "₹${project.expectedAmount.toString() ?: 0}"
 
             // Status color badge
@@ -135,9 +145,17 @@ class ClientProjectDetailsFragment : Fragment() {
             statusBg?.setTint(ContextCompat.getColor(requireContext(), color))
             this?.projectStatusText?.background = statusBg
 
-            // Links and also openable
-            this?.projectDataLink?.setOnClickListener { openUrl(project.dataLink) }
-            this?.projectAttachLink?.setOnClickListener { openUrl(project.attachLink) }
+            // Links visibility setup
+            this?.projectDataLink?.visibility =
+                if (project.invoiceId?.paid == false) View.VISIBLE else View.GONE
+            if (this?.projectDataLink?.isVisible == true)
+                this.projectDataLink.setOnClickListener { openUrl(project.dataLink) }
+            // also not able to download if not  paid
+
+            this?.projectAttachLink?.visibility =
+                if (project.invoiceId?.paid == true) View.VISIBLE else View.GONE
+            if (this?.projectAttachLink?.isVisible == true)
+                this.projectAttachLink.setOnClickListener { openUrl(project.deliverableUrl) }
 
             //set amount at least half or something will decide later
             this?.payUpfrontButton?.text = "Pay Upfront of ${project.expectedAmount.toString()}"
@@ -171,6 +189,7 @@ class ClientProjectDetailsFragment : Fragment() {
             binding?.loadingOverlay?.fadeOut()
         }
     }
+
     // formate deadline date to readable
     private fun formatDateTime(isoDate: String?): String {
         if (isoDate.isNullOrEmpty()) return ""

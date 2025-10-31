@@ -35,8 +35,35 @@ data class ProjectRequest(
 data class ProjectDetailResponse(
     val success: Boolean,
     val message: String,
-    val data: ProjectData
+    val data: ProjectDataByProject
 )
+data class ProjectDataByProject(
+    val _id: String,
+    val title: String,
+    val description: String,
+    val dataLink: String,
+    val attachLink: String,
+    val deadline: String,
+    val expectedAmount: Double,
+    val clientId: String?,
+    val editorId: String?,
+    val status: String,
+    val invoiceId: InvoiceDataByProject?,
+    val actualAmount: Double,
+    val deliverableUrl: String?
+)
+data class InvoiceDataByProject(
+    val _id: String,
+    val projectId: String,
+    val clientId: String,
+    val amount: Double,
+    val currency: String = "INR",
+    val paid: Boolean = false,
+    val completedTime: String,
+    val razorpayOrderId: String? = null,
+    val razorpayPaymentId: String? = null
+)
+// for someone
 data class ProjectData(
     val _id: String,
     val title: String,

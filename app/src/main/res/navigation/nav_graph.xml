@@ -106,7 +106,7 @@
 
             <argument
                 android:name="amount"
-                app:argType="float" />
+                app:argType="string" />
 
             <argument
                 android:name="projectName"
