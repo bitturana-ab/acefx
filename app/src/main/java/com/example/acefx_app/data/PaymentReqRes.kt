@@ -5,7 +5,10 @@ data class PaymentRequest(
     val amount: Double,
     val projectId: String
 )
-
+// key response but wont use now
+//data class GetRazorpayKeyResponse(
+//    val key: String
+//)
 // response of payment or order with razorpay
 data class CreatePaymentResponse(
     val success: Boolean,
@@ -41,5 +44,23 @@ data class PaymentInfo(
 
 data class VerifyPaymentResponse(
     val success: Boolean,
-    val message: String
+    val message: String,
+    val data: PaymentDataVerify?
+)
+
+data class PaymentDataVerify(
+    val _id: String,
+    val amount: Double,
+    val status: String,
+    val projectId: ProjectDataVerify?,
+    val orderId: String,
+    val currency: String,
+    val clientId:String,
+    val email: String,
+    val signature: String,
+    val paymentId: String,
+)
+
+data class ProjectDataVerify(
+    val title: String?
 )

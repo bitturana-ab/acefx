@@ -17,6 +17,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+
+        val razorpayKey = (project.findProperty("razorpay.key_id") as? String) ?: ""
+        buildConfigField("String", "RAZORPAY_KEY_ID", "\"$razorpayKey\"")
     }
 
     buildTypes {
@@ -36,6 +40,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 

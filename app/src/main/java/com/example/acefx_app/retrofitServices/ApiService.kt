@@ -105,7 +105,11 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Body body: Map<String, String>
     ): Call<VerifyPaymentResponse>
-
+    // get key from backend
+    @GET("/api/payment/key")
+    fun getRazorpayKey(
+        @Header("Authorization") token: String
+    ): Call<Map<String, String>>
 
 
 

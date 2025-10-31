@@ -122,7 +122,21 @@
         android:id="@+id/paymentFragment"
         android:name="com.example.acefx_app.ui.PaymentFragment"
         android:label="fragment_payment"
-        tools:layout="@layout/fragment_payment" />
+        tools:layout="@layout/fragment_payment" >
+        <action
+            android:id="@+id/action_paymentFragment_to_paymentSuccessFragment"
+            app:destination="@id/paymentSuccessFragment" >
+            <argument
+                android:name="razorpayPaymentId"
+                app:argType="string"/>
+            <argument
+                android:name="amount"
+                app:argType="float"/>
+            <argument
+                android:name="projectName"
+                app:argType="string"/>
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/clientInvoiceFragment"
         android:name="com.example.acefx_app.ui.ClientInvoiceFragment"
@@ -151,6 +165,11 @@
         android:name="com.example.acefx_app.ui.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/paymentSuccessFragment"
+        android:name="com.example.acefx_app.ui.PaymentSuccessFragment"
+        android:label="PaymentSuccessFragment"
+        tools:layout="@layout/fragment_payment_success"/>
 
 
 </navigation>
