@@ -15,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.acefx_app.R
+import com.example.acefx_app.data.ProjectDataByForPaid
 import com.example.acefx_app.data.ProjectDataByProject
 import com.example.acefx_app.data.ProjectDetailResponse
 import com.example.acefx_app.databinding.FragmentClientProjectDetailsBinding
@@ -127,13 +128,14 @@ class ClientProjectDetailsFragment : Fragment() {
 
     /** Display project data in UI */
     @SuppressLint("SetTextI18n")
-    private fun displayProjectDetails(project: ProjectDataByProject) {
+    private fun displayProjectDetails(project: ProjectDataByForPaid) {
         with(binding) {
             this?.projectTitleText?.text = project.title
             this?.projectDescriptionText?.text = project.description
             this?.projectDeadlineText?.text =
                 "Deadline: ${formatDateTime(project.deadline) ?: "N/A"}"
-            this?.projectAmountText?.text = "₹${project.expectedAmount.toString() ?: 0}"
+
+            this?.projectAmountText?.text = "₹${project.paymentId?.amount ?: project.expectedAmount.toString() ?: 0}"
 
             // Status color badge
             this?.projectStatusText?.text = project.status
@@ -148,21 +150,27 @@ class ClientProjectDetailsFragment : Fragment() {
 
             // Links visibility setup
             this?.projectDataLink?.visibility =
-                if (project.invoiceId?.paid == false) View.VISIBLE else View.GONE
+                if (project.paymentId?.status == "success") View.VISIBLE else View.GONE
             if (this?.projectDataLink?.isVisible == true)
                 this.projectDataLink.setOnClickListener { openUrl(project.dataLink) }
             // also not able to download if not  paid
 
+//            TODO("change logic by fetching payment details")
             this?.projectAttachLink?.visibility =
-                if (project.invoiceId?.paid == true) View.VISIBLE else View.GONE
+                if (project.paymentId?.status == "success") View.VISIBLE else View.GONE
             if (this?.projectAttachLink?.isVisible == true)
                 this.projectAttachLink.setOnClickListener { openUrl(project.deliverableUrl) }
 
             //set amount at least half or something will decide later
             this?.payUpfrontButton?.text = "Pay Upfront of ${project.expectedAmount.toString()}"
-            // Pay button only if unpaid invoice
-            this?.payUpfrontButton?.visibility =
-                if (project.invoiceId?.paid == false) View.VISIBLE else View.GONE
+            // Pay button only if unpaid or status is !success
+         binding?.payUpfrontButton.apply {
+                this?.visibility = View.VISIBLE  // always visible
+                this?.isEnabled = project.paymentId?.status != "success"  // disable if already paid
+
+                // Optionally: change background color to gray when disabled
+//                this?.alpha = if (isEnabled) 1.0f else 0.5f
+            }
         }
     }
 

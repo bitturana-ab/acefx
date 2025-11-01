@@ -8,6 +8,7 @@ data class ProjectResponse(
     val message: String,
     val project: ProjectData,
 )
+
 // get projects of array
 data class ProjectsResponse(
     val success: Boolean,
@@ -21,6 +22,7 @@ data class ProjectItem(
     val title: String,
     val status: String
 )
+
 // this is before req the project or projects for creating project
 data class ProjectRequest(
     val title: String,
@@ -31,12 +33,45 @@ data class ProjectRequest(
     val expectedAmount: Double
 )
 
-// get project res by user or id
+// get project [ also paymentId ] res by user or id
 data class ProjectDetailResponse(
     val success: Boolean,
     val message: String,
-    val data: ProjectDataByProject
+    val data: ProjectDataByForPaid
 )
+
+// project details and payment paid or what
+data class PaymentInfoForPaid(
+    val _id: String?,
+    val amount: Int?,
+    val orderId: String?,
+    val status: String?,
+    val currency: String?,
+    val clientId: String?,
+    val projectId: String?,
+    val email: String?,
+    val signature: String?,
+    val paymentId: String?,
+)
+
+// details of project
+data class ProjectDataByForPaid(
+    val _id: String,
+    val title: String,
+    val description: String,
+    val dataLink: String,
+    val attachLink: String,
+    val deadline: String,
+    val expectedAmount: Double,
+    val clientId: String?,
+    val editorId: String?,
+    val status: String,
+    val invoiceId: String?,
+    val paymentId: PaymentInfoForPaid?,
+    val actualAmount: Double,
+    val deliverableUrl: String?
+)
+
 data class ProjectDataByProject(
     val _id: String,
     val title: String,
@@ -52,6 +87,7 @@ data class ProjectDataByProject(
     val actualAmount: Double,
     val deliverableUrl: String?
 )
+
 data class InvoiceDataByProject(
     val _id: String,
     val projectId: String,
@@ -63,6 +99,7 @@ data class InvoiceDataByProject(
     val razorpayOrderId: String? = null,
     val razorpayPaymentId: String? = null
 )
+
 // for someone
 data class ProjectData(
     val _id: String,
@@ -79,6 +116,7 @@ data class ProjectData(
     val actualAmount: Double,
     val deliverableUrl: String?
 )
+
 // for invoice adapter
 data class InvoiceModel(
     val projectName: String,
@@ -87,18 +125,21 @@ data class InvoiceModel(
     val amount: Double,
     val status: String
 )
+
 // get all invoices
 data class AllInvoices(
     val success: Boolean,
     val message: String,
     val data: List<InvoiceData>
 )
+
 // get payment invoices
 data class GetPaymentById(
     val success: Boolean,
     val message: String,
     val data: List<PaymentInfoForInvoice>
 )
+
 // get invoice
 data class InvoiceData(
     val _id: String,
@@ -111,6 +152,7 @@ data class InvoiceData(
     val razorpayOrderId: String? = null,
     val razorpayPaymentId: String? = null
 )
+
 // invoice project title
 data class ProjectIdDetails(
     val _id: String,
@@ -126,5 +168,5 @@ data class ProjectIdDetails(
     val description: String?,
     val expectedAmount: Double?,
     val actualAmount: Double?,
-    val completedTime:String?
+    val completedTime: String?
 )
