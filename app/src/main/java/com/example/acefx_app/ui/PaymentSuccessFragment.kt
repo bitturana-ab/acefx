@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.acefx_app.databinding.FragmentPaymentSuccessBinding
 
 class PaymentSuccessFragment : Fragment() {
@@ -13,15 +14,15 @@ class PaymentSuccessFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var projectName: String? = null
-    private var amount: Double = 0.0
+    private var amount: Float = 0f
     private var transactionId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            projectName = it.getString("projectName")
-            amount = it.getDouble("amount")
             transactionId = it.getString("transactionId")
+            projectName = it.getString("projectName")
+            amount = it.getFloat("amount")
         }
     }
 
@@ -36,12 +37,16 @@ class PaymentSuccessFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvProjectName.text = projectName
-        binding.tvAmount.text = "₹$amount"
-        binding.tvTransactionId.text = transactionId
+        // Display details
+        binding.apply {
+            tvProjectName.text = projectName ?: "Project"
+            tvAmount.text = "₹%.2f".format(amount)
+            tvTransactionId.text = transactionId ?: "N/A"
+        }
 
+        // Button: Back to Home
         binding.btnBackToHome.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().navigateUp() // safely navigates back
         }
     }
 

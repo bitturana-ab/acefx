@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.acefx_app"
     tools:ignore="MissingLeanbackLauncher">
 
+    <!-- Internet permission for Razorpay and APIs -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Optional: specify device features -->
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
     <uses-feature
         android:name="android.software.leanback"
-        android:required="true" />
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -22,24 +25,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Acefxapp">
 
-        <!-- Required Razorpay Key Meta Data -->
+        <!-- Razorpay API Key -->
         <meta-data
             android:name="com.razorpay.ApiKey"
             android:value="rzp_test_1234567890abcdef" />
-        <activity
-            android:name=".DashboardActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-        <!-- check user islogged in splash screen -->
-<!--        <activity-->
-<!--            android:name=".SplashActivity"-->
-<!--            android:exported="true">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
+        <!-- MainActivity (Login screen) -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -49,6 +40,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- DashboardActivity (with NavHost + BottomNav) -->
+        <activity
+            android:name=".DashboardActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Razorpay Checkout Activity (auto handled but safe override) -->
+        <activity
+            android:name="com.razorpay.CheckoutActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            tools:replace="android:exported,android:theme" />
+
     </application>
 
 </manifest>

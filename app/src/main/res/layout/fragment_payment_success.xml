@@ -1,76 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     android:padding="24dp"
-    android:background="@color/white">
+    android:background="@color/app_color_gray_2"
+    tools:context=".ui.PaymentSuccessFragment">
 
     <ImageView
-        android:id="@+id/imgSuccess"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/ic_success"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:contentDescription="Success Icon"
+        android:layout_marginBottom="16dp" />
 
     <TextView
         android:id="@+id/tvSuccessTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Payment Successful!"
-        android:textColor="@color/black"
         android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/imgSuccess"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="8dp" />
 
     <TextView
         android:id="@+id/tvProjectName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Project: --"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/tvSuccessTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp" />
+        android:text="Project: AceFX"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="8dp" />
 
     <TextView
         android:id="@+id/tvAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Amount: ₹0"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/tvProjectName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        android:text="₹999.00"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="8dp" />
 
     <TextView
         android:id="@+id/tvTransactionId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Transaction ID: --"
+        android:text="Transaction ID: pay_KHJ23abx"
         android:textSize="14sp"
-        android:textColor="@color/gray"
-        app:layout_constraintTop_toBottomOf="@id/tvAmount"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="32dp" />
 
     <Button
         android:id="@+id/btnBackToHome"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Back to Home"
-        android:backgroundTint="@color/teal_700"
-        app:layout_constraintTop_toBottomOf="@id/tvTransactionId"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:text="Back to Dashboard"
+        android:textAllCaps="false"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/app_button_dark"
+        android:paddingVertical="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="24dp"
+        android:elevation="4dp" />
+
+</LinearLayout>

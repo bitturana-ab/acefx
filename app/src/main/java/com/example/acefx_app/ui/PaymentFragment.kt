@@ -27,18 +27,16 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
     private var _binding: FragmentPaymentBinding? = null
     private val binding get() = _binding!!
 
-    // Razorpay and backend variables
     private lateinit var apiService: ApiService
     private lateinit var token: String
-    private var razorpayKeyId: String = ""
-    private var orderId: String = ""
 
-    // Project details
+    private var razorpayKeyId = ""
+    private var orderId = ""
+
     private var projectId: String? = null
-    private var amount: Double = 0.0
+    private var amount = 0.0
     private var projectName: String? = null
 
-    // User details
     private var userName: String? = null
     private var companyName: String? = null
     private var userEmail: String? = null
@@ -54,7 +52,8 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPaymentBinding.inflate(inflater, container, false)
@@ -66,7 +65,6 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
 
         apiService = ApiClient.getClient(requireContext()).create(ApiService::class.java)
 
-        // Load data from SharedPreferences
         val sharedPref = requireContext().getSharedPreferences("UserSession", 0)
         token = sharedPref.getString("authToken", "") ?: ""
         userName = sharedPref.getString("name", "")
@@ -74,65 +72,73 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
         userEmail = sharedPref.getString("email", "")
         userPhone = sharedPref.getString("phoneNumber", "")
 
-        // Display info
-        binding.tvProjectName.text = projectName ?: "Project"
-        binding.tvAmount.text = "₹$amount"
-        binding.tvCompany.text = "Company: $companyName"
-        binding.tvEmail.text = "Email: $userEmail"
-        binding.tvPhone.text = "Phone: $userPhone"
-
-        // Fetch Razorpay key securely
-        fetchRazorpayKey()
-
-        // Handle Pay button
-        binding.btnPayNow.setOnClickListener {
-            if (token.isNotEmpty() && projectId != null) {
-                createOrder()
-            } else {
-                Toast.makeText(requireContext(), "Invalid project or session", Toast.LENGTH_SHORT).show()
-            }
+        binding.apply {
+            tvProjectName.text = projectName ?: "Project"
+            tvAmount.text = "₹$amount"
+            tvCompany.text = "Company: ${companyName ?: "N/A"}"
+            tvEmail.text = "Email: ${userEmail ?: "N/A"}"
+            tvPhone.text = "Phone: ${userPhone ?: "N/A"}"
         }
 
         Checkout.preload(requireContext())
+        fetchRazorpayKey()
+
+        binding.btnPayNow.setOnClickListener {
+            if (token.isNotEmpty() && projectId != null)
+                createOrder()
+            else
+                Toast.makeText(requireContext(), "Invalid session", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    /** Step 1: Fetch Razorpay Key from Backend */
+    /** Step 1: Fetch Razorpay Key */
     private fun fetchRazorpayKey() {
-        apiService.getRazorpayKey("Bearer $token").enqueue(object : Callback<Map<String, String>> {
-            override fun onResponse(call: Call<Map<String, String>>, response: Response<Map<String, String>>) {
-                if (response.isSuccessful) {
+        apiService.getRazorpayKey("Bearer $token")
+            .enqueue(object : Callback<Map<String, String>> {
+                override fun onResponse(
+                    call: Call<Map<String, String>>,
+                    response: Response<Map<String, String>>
+                ) {
                     razorpayKeyId = response.body()?.get("key") ?: ""
-                    Log.d("RAZORPAY_KEY", "Fetched key: $razorpayKeyId")
-                } else {
-                    Toast.makeText(requireContext(), "Failed to fetch Razorpay key", Toast.LENGTH_SHORT).show()
                 }
-            }
 
-            override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
-                Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Network error: ${t.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
     }
 
     /** Step 2: Create Order in Backend */
     private fun createOrder() {
         val paymentRequest = PaymentRequest(amount, projectId ?: "")
-
         apiService.createPaymentOrder("Bearer $token", paymentRequest)
             .enqueue(object : Callback<CreatePaymentResponse> {
-                override fun onResponse(call: Call<CreatePaymentResponse>, response: Response<CreatePaymentResponse>) {
+                override fun onResponse(
+                    call: Call<CreatePaymentResponse>,
+                    response: Response<CreatePaymentResponse>
+                ) {
                     if (response.isSuccessful && response.body()?.success == true) {
-                        val order = response.body()?.data?.order
-                        orderId = order?.id ?: ""
+                        orderId = response.body()?.data?.order?.id ?: ""
                         startRazorpay(orderId)
                     } else {
-                        Toast.makeText(requireContext(), "Failed to create order", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to create order",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<CreatePaymentResponse>, t: Throwable) {
-//                    TODO("npe and not navigating")
-                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Create Error: ${t.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
     }
@@ -140,47 +146,47 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
     /** Step 3: Start Razorpay Checkout */
     private fun startRazorpay(orderId: String) {
         try {
-            val checkout = Checkout()
-            checkout.setKeyID(razorpayKeyId)
+            val checkout = Checkout().apply { setKeyID(razorpayKeyId) }
 
             val options = JSONObject().apply {
                 put("name", companyName ?: userName ?: "Client")
                 put("description", "Payment for $projectName")
                 put("order_id", orderId)
                 put("currency", "INR")
-                put("amount", (amount * 100).toInt()) // amount in paise
-                put("prefill", JSONObject().apply {
-                    put("email", userEmail ?: "test@example.com")
-                    put("contact", userPhone ?: "9999999999")
-                })
+                put("amount", (amount * 100).toLong())
+                put(
+                    "prefill",
+                    JSONObject().apply {
+                        put("email", userEmail ?: "test@example.com")
+                        put("contact", userPhone ?: "9999999999")
+                    }
+                )
             }
 
             checkout.open(requireActivity(), options)
+
         } catch (e: Exception) {
-            Log.e("RAZORPAY_ERROR", "Error initializing Razorpay: ${e.message}")
-            Toast.makeText(requireContext(), "Error initializing Razorpay", Toast.LENGTH_SHORT).show()
+            Log.e("RAZORPAY_ERROR", e.message.toString())
+            Toast.makeText(requireContext(), "Failed to start Razorpay", Toast.LENGTH_SHORT).show()
         }
     }
 
-    /** Step 4: Payment Success — with all details */
+    /** Called from Activity on success */
     override fun onPaymentSuccess(razorpayPaymentId: String?, paymentData: PaymentData?) {
-        Toast.makeText(requireContext(), "Payment Success!", Toast.LENGTH_SHORT).show()
-
         val orderId = paymentData?.orderId ?: ""
         val signature = paymentData?.signature ?: ""
         val paymentId = razorpayPaymentId ?: ""
-
-        Log.d("RAZORPAY_PAYMENT", "OrderID: $orderId | PaymentID: $paymentId | Signature: $signature")
+        Toast.makeText(requireContext(), "Payment verifying: ${paymentData.toString()}", Toast.LENGTH_LONG).show()
 
         verifyPayment(orderId, paymentId, signature)
     }
 
-    /** Step 5: Payment Failed */
+    /** Called from Activity on error */
     override fun onPaymentError(code: Int, description: String?, paymentData: PaymentData?) {
         Toast.makeText(requireContext(), "Payment Failed: $description", Toast.LENGTH_LONG).show()
     }
 
-    /** Step 6: Verify Payment with Backend */
+    /** Step 4: Verify Payment */
     private fun verifyPayment(orderId: String, razorpayPaymentId: String, signature: String) {
         val verifyBody = mapOf(
             "razorpay_order_id" to orderId,
@@ -190,24 +196,33 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
 
         apiService.verifyPayment("Bearer $token", verifyBody)
             .enqueue(object : Callback<VerifyPaymentResponse> {
-                override fun onResponse(call: Call<VerifyPaymentResponse>, response: Response<VerifyPaymentResponse>) {
+                override fun onResponse(
+                    call: Call<VerifyPaymentResponse>,
+                    response: Response<VerifyPaymentResponse>
+                ) {
                     if (response.isSuccessful && response.body()?.success == true) {
-                        Toast.makeText(requireContext(), "Payment Verified Successfully!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Payment Verified!", Toast.LENGTH_SHORT)
+                            .show()
 
                         val action = PaymentFragmentDirections
                             .actionPaymentFragmentToPaymentSuccessFragment(
-                                razorpayPaymentId,
-                                amount.toFloat(),
-                                projectName ?: "Project"
+                                projectName=projectName ?: "Project",
+                                amount = amount.toFloat(),
+                                razorpayPaymentId = razorpayPaymentId
                             )
                         findNavController().navigate(action)
                     } else {
-                        Toast.makeText(requireContext(), "Verification Failed!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Verification Failed!", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
 
                 override fun onFailure(call: Call<VerifyPaymentResponse>, t: Throwable) {
-                    Toast.makeText(requireContext(), "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Network Error: ${t.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
     }
