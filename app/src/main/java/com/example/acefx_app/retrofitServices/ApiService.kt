@@ -1,11 +1,11 @@
 package com.example.acefx_app.retrofitServices
 
-import com.example.acefx_app.data.AllInvoices
 import com.example.acefx_app.data.ChatListResponse
 import com.example.acefx_app.data.ChatMessageRequest
 import com.example.acefx_app.data.ChatMessageResponse
 import com.example.acefx_app.data.CreatePaymentResponse
-import com.example.acefx_app.data.GetInvoiceById
+import com.example.acefx_app.data.GetPaymentById
+import com.example.acefx_app.data.PaymentInfoForDetailsRes
 import com.example.acefx_app.data.PaymentRequest
 import com.example.acefx_app.data.ProjectDetailResponse
 import com.example.acefx_app.data.ProjectRequest
@@ -81,17 +81,22 @@ interface ApiService {
     ): Response<ChatListResponse>
 
     // invoice get and post methods are here
-    @GET("api/invoices/my-invoices")
-    fun getMyInvoices(
+//    @GET("api/invoices/my-invoices")
+//    fun getMyInvoices(
+//        @Header("Authorization") token: String
+//    ): Call<AllInvoices>api/invoices/my-invoices")
+
+    @GET("api/payment/my-payments")
+    fun getMyPayments(
         @Header("Authorization") token: String
-    ): Call<AllInvoices>
+    ): Call<GetPaymentById>
 
     // get invoice by id
-    @GET("api/invoices/{id}")
-    fun getInvoiceDetails(
+    @GET("api/payment/project/{paymentId}")
+    fun getPaymentDetails(
         @Header("Authorization") token: String,
-        @Path("id") invoiceId: String
-    ): Call<GetInvoiceById>
+        @Path("paymentId") paymentId: String
+    ): Call<PaymentInfoForDetailsRes>
 
     // razor pay
     @POST("api/payment/create-order")

@@ -5,6 +5,7 @@ data class PaymentRequest(
     val amount: Double,
     val projectId: String
 )
+
 // key response but wont use now
 //data class GetRazorpayKeyResponse(
 //    val key: String
@@ -35,12 +36,58 @@ data class PaymentInfo(
     val orderId: String,
     val status: String,
     val currency: String,
-    val clientId:String,
-    val projectId : String,
+    val clientId: String,
+    val projectId: String,
     val email: String,
     val signature: String,
     val paymentId: String,
 )
+
+// payment info on click on payment invoices
+data class PaymentInfoForDetailsRes(
+    val success: Boolean,
+    val message: String,
+    val data: PaymentInfoForDetails
+)
+
+data class PaymentInfoForDetails(
+    val _id: String,
+    val amount: Int,
+    val orderId: String,
+    val status: String,
+    val currency: String,
+    val clientId: ClientDetails,
+    val projectId: ProjectIdDetails,
+    val email: String,
+    val signature: String,
+    val paymentId: String,
+)
+
+data class ClientDetails(
+    val name: String,
+    val email: String
+)
+
+// payment for invoices
+data class PaymentInfoForInvoice(
+    val _id: String,
+    val amount: Int,
+    val orderId: String,
+    val status: String,
+    val currency: String,
+    val clientId: String,
+    val projectId: ProjectForInvoice,
+    val email: String,
+    val signature: String,
+    val paymentId: String,
+)
+
+data class ProjectForInvoice(
+    val title: String,
+    val description: String,
+    val actualAmount: String,
+
+    )
 
 data class VerifyPaymentResponse(
     val success: Boolean,
@@ -55,7 +102,7 @@ data class PaymentDataVerify(
     val projectId: ProjectDataVerify?,
     val orderId: String,
     val currency: String,
-    val clientId:String,
+    val clientId: String,
     val email: String,
     val signature: String,
     val paymentId: String,

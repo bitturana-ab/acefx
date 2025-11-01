@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.acefx_app.R
-import com.example.acefx_app.data.InvoiceData
+import com.example.acefx_app.data.PaymentInfoForInvoice
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
 class ClientInvoiceAdapter(
-    private var invoiceList: List<InvoiceData>,
-    private val onInvoiceClick: (InvoiceData) -> Unit
+    private var invoiceList: List<PaymentInfoForInvoice>,
+    private val onInvoiceClick: (PaymentInfoForInvoice) -> Unit
 ) : RecyclerView.Adapter<ClientInvoiceAdapter.InvoiceViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InvoiceViewHolder {
@@ -31,14 +31,14 @@ class ClientInvoiceAdapter(
 
     override fun getItemCount(): Int = invoiceList.size
 
-    fun submitList(newList: List<InvoiceData>) {
+    fun submitList(newList: List<PaymentInfoForInvoice>) {
         invoiceList = newList
         notifyDataSetChanged()
     }
 
     class InvoiceViewHolder(
         itemView: View,
-        private val onInvoiceClick: (InvoiceData) -> Unit
+        private val onInvoiceClick: (PaymentInfoForInvoice) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         private val tvProjectName: TextView = itemView.findViewById(R.id.tvProjectName)
@@ -46,13 +46,13 @@ class ClientInvoiceAdapter(
         private val tvAmount: TextView = itemView.findViewById(R.id.tvAmount)
 
         @SuppressLint("SetTextI18n")
-        fun bind(invoice: InvoiceData) {
+        fun bind(invoice: PaymentInfoForInvoice) {
             tvProjectName.text = invoice.projectId?.title ?: "No Project"
-            tvDate.text = formatDateTime(invoice.completedTime)
+            tvDate.text = formatDateTime(invoice.status)
             tvAmount.text = "₹${invoice.amount}"
 
             val context = itemView.context
-            val colorRes = if (invoice.paid) R.color.green_400 else R.color.orange_200
+            val colorRes = if (invoice.status == "success") R.color.status_active else R.color.orange_200
             tvAmount.setTextColor(context.getColor(colorRes))
 
             itemView.setOnClickListener {

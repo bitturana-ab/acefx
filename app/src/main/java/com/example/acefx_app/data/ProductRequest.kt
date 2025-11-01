@@ -93,10 +93,11 @@ data class AllInvoices(
     val message: String,
     val data: List<InvoiceData>
 )
-data class GetInvoiceById(
+// get payment invoices
+data class GetPaymentById(
     val success: Boolean,
     val message: String,
-    val data: InvoiceData
+    val data: List<PaymentInfoForInvoice>
 )
 // get invoice
 data class InvoiceData(

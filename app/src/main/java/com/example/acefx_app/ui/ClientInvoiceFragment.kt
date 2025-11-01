@@ -11,8 +11,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.acefx_app.data.AllInvoices
-import com.example.acefx_app.data.InvoiceData
+import com.example.acefx_app.data.GetPaymentById
+import com.example.acefx_app.data.PaymentInfoForInvoice
 import com.example.acefx_app.databinding.FragmentClientInvoiceBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
@@ -34,7 +34,7 @@ class ClientInvoiceFragment : Fragment() {
     private lateinit var apiService: ApiService
     private lateinit var token: String
     private lateinit var companyName: String
-    private var allInvoices = listOf<InvoiceData>()
+    private var allInvoices = listOf<PaymentInfoForInvoice>()
     private val gson = Gson()
 
     override fun onCreateView(
@@ -74,9 +74,8 @@ class ClientInvoiceFragment : Fragment() {
             invoice._id?.let { id ->
                 findNavController().navigate(
                     ClientInvoiceFragmentDirections
-                        .actionClientInvoiceFragmentToInvoiceDetailsFragment(id)
+                        .actionClientInvoiceFragmentToInvoiceDetailsFragment(invoice._id)
                 )
-//                Toast.makeText(requireContext(), "Invoice ID: $id", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -106,8 +105,8 @@ class ClientInvoiceFragment : Fragment() {
         val prefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         val cachedJson = prefs.getString("cachedInvoices", null)
         if (cachedJson != null) {
-            val type = object : TypeToken<List<InvoiceData>>() {}.type
-            val cachedList: List<InvoiceData> = gson.fromJson(cachedJson, type)
+            val type = object : TypeToken<List<PaymentInfoForInvoice>>() {}.type
+            val cachedList: List<PaymentInfoForInvoice> = gson.fromJson(cachedJson, type)
             if (cachedList.isNotEmpty()) {
                 allInvoices = cachedList
                 invoiceAdapter.submitList(allInvoices)
@@ -117,7 +116,7 @@ class ClientInvoiceFragment : Fragment() {
         }
     }
 
-    private fun saveInvoicesToCache(invoices: List<InvoiceData>) {
+    private fun saveInvoicesToCache(invoices: List<PaymentInfoForInvoice>) {
         val prefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         val json = gson.toJson(invoices)
         prefs.edit().putString("cachedInvoices", json).apply()
@@ -126,8 +125,8 @@ class ClientInvoiceFragment : Fragment() {
 
     private fun fetchInvoices() {
         showLoading(true)
-        apiService.getMyInvoices("Bearer $token").enqueue(object : Callback<AllInvoices> {
-            override fun onResponse(call: Call<AllInvoices>, response: Response<AllInvoices>) {
+        apiService.getMyPayments("Bearer $token").enqueue(object : Callback<GetPaymentById> {
+            override fun onResponse(call: Call<GetPaymentById>, response: Response<GetPaymentById>) {
                 if (!isAdded) return
                 showLoading(false)
                 binding.swipeRefresh.isRefreshing = false
@@ -142,21 +141,19 @@ class ClientInvoiceFragment : Fragment() {
                     } else {
                         showEmptyState(false)
                         saveInvoicesToCache(allInvoices)
-
                         val selectedTab = binding.invoiceTabLayout.getTabAt(
                             binding.invoiceTabLayout.selectedTabPosition
                         )
                         val tabText = selectedTab?.text?.toString() ?: "All"
                         filterInvoices(tabText)
                     }
-
                 } else {
                     Snackbar.make(binding.root, "Failed to load invoices", Snackbar.LENGTH_SHORT).show()
                     showEmptyState(true)
                 }
             }
 
-            override fun onFailure(call: Call<AllInvoices>, t: Throwable) {
+            override fun onFailure(call: Call<GetPaymentById>, t: Throwable) {
                 if (!isAdded) return
                 showLoading(false)
                 binding.swipeRefresh.isRefreshing = false
@@ -168,8 +165,8 @@ class ClientInvoiceFragment : Fragment() {
 
     private fun filterInvoices(statusText: String) {
         val filtered = when (statusText.lowercase()) {
-            "paid" -> allInvoices.filter { it.paid }
-            "unpaid" -> allInvoices.filter { !it.paid }
+            "paid" -> allInvoices.filter { it.status == "success" }
+            "unpaid" -> allInvoices.filter { it.status != "success" }
             else -> allInvoices
         }
 
