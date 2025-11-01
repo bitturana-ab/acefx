@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,6 +37,7 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- Body -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -53,16 +55,17 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/app_card_dark_gray"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="20dp"
+                    android:background="@color/app_card_dark_gray">
 
+                    <!-- Project Name -->
                     <TextView
                         android:id="@+id/tvProjectName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="@string/text_project_name"
+                        android:text="Project Name:"
                         android:textColor="@color/purple_500"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -73,11 +76,55 @@
                         android:layout_marginVertical="16dp"
                         android:background="#E0E0E0" />
 
+                    <!-- Client Name -->
+                    <TextView
+                        android:id="@+id/tvClientName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name:"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <!-- Client Email -->
+                    <TextView
+                        android:id="@+id/tvClientEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Email:"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="16dp"
+                        android:background="#E0E0E0" />
+
+                    <!-- Payment ID -->
+                    <TextView
+                        android:id="@+id/tvPaymentId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Payment ID:"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <!-- Transaction ID -->
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="16dp"
+                        android:background="#E0E0E0" />
+
+                    <!-- Description -->
                     <TextView
                         android:id="@+id/tvDesc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
                         android:text="@string/text_description_hint"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
@@ -88,11 +135,11 @@
                         android:layout_marginVertical="16dp"
                         android:background="#E0E0E0" />
 
+                    <!-- Date -->
                     <TextView
                         android:id="@+id/tvInvoiceDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
                         android:text="@string/text_date"
                         android:textColor="@color/black"
                         android:textSize="15sp" />
@@ -103,6 +150,7 @@
                         android:layout_marginVertical="16dp"
                         android:background="#E0E0E0" />
 
+                    <!-- Amount + Status -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -113,7 +161,6 @@
                             android:id="@+id/tvInvoiceAmount"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="8dp"
                             android:layout_weight="0.9"
                             android:text="@string/text_amount"
                             android:textColor="@color/black"
@@ -134,13 +181,13 @@
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <!-- Optional extra info section -->
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginVertical="16dp"
                         android:background="#E0E0E0" />
 
+                    <!-- Notes -->
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -173,6 +220,5 @@
                     android:layout_gravity="center" />
             </FrameLayout>
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

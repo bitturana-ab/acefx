@@ -76,11 +76,19 @@ class InvoiceDetailsFragment : Fragment() {
                         if (body.success && body.data != null) {
                             updateUI(body.data)
                         } else {
-                            Toast.makeText(requireContext(), body.message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), body.message, Toast.LENGTH_SHORT)
+                                .show()
                         }
                     } else {
-                        Log.e("INVOICE_DETAILS", "Response Error: ${response.errorBody()?.string()}")
-                        Toast.makeText(requireContext(), "Failed to fetch details", Toast.LENGTH_SHORT).show()
+                        Log.e(
+                            "INVOICE_DETAILS",
+                            "Response Error: ${response.errorBody()?.string()}"
+                        )
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to fetch details",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
@@ -88,7 +96,11 @@ class InvoiceDetailsFragment : Fragment() {
                     if (!isAdded || _binding == null) return
                     showLoading(false)
                     Log.e("INVOICE_DETAILS", "API Failure: ${t.message}", t)
-                    Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Network error: ${t.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
     }
@@ -96,10 +108,14 @@ class InvoiceDetailsFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun updateUI(invoice: PaymentInfoForDetails) {
         binding?.let { b ->
-            b.tvProjectName.text = invoice.projectId?.title ?: "N/A"
-            b.tvDesc.text = invoice.projectId?.description ?: "N/A"
-            b.tvInvoiceDate.text = formatDateTime(invoice.projectId?.completedTime) ?: "N/A"
+            b.tvProjectName.text = " Project Name: ${invoice.projectId.title}" ?: "N/A"
+            b.tvDesc.text = "Description: ${invoice.projectId.description}" ?: "N/A"
+            b.tvClientName.text = "Name: ${invoice.clientId.name}" ?: "N/A"
+            b.tvClientEmail.text = "Email: ${invoice.clientId.email}" ?: "N/A"
+            b.tvPaymentId.text = "Payment ID: ${invoice.paymentId}" ?: "N/A"
+            b.tvInvoiceDate.text = "Invoice Date: ${formatDateTime(invoice.projectId.completedTime)}" ?: "N/A"
             b.tvInvoiceAmount.text = "₹${invoice.amount}"
+            b.tvNotes.text = "we are doing best work for you!"
 
             val status = when (invoice.status.lowercase(Locale.ROOT)) {
                 "success", "paid" -> "Paid"
