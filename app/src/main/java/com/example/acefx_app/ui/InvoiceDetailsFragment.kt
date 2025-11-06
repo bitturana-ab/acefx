@@ -117,7 +117,7 @@ class InvoiceDetailsFragment : Fragment() {
             b.tvInvoiceAmount.text = "₹${invoice.amount}"
             b.tvNotes.text = "we are doing best work for you!"
 
-            val status = when (invoice.status.lowercase(Locale.ROOT)) {
+            val status = when (invoice.status?.lowercase(Locale.ROOT)) {
                 "success", "paid" -> "Paid"
                 else -> "Pending"
             }

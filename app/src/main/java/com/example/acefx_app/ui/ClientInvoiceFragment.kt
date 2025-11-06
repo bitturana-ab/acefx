@@ -130,7 +130,7 @@ class ClientInvoiceFragment : Fragment() {
                 if (!isAdded) return
                 showLoading(false)
                 binding.swipeRefresh.isRefreshing = false
-
+//                Log.d("INVOICES", "${response.toString()} ")
                 if (response.isSuccessful) {
                     val invoiceResponse = response.body()
                     allInvoices = invoiceResponse?.data ?: emptyList()

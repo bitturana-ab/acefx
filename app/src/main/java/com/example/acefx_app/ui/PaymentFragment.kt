@@ -105,7 +105,7 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
                 override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                     Toast.makeText(
                         requireContext(),
-                        "Network error: ${t.message}",
+                        "Check Internet Connections}",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -123,6 +123,12 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
                 ) {
                     if (response.isSuccessful && response.body()?.success == true) {
                         orderId = response.body()?.data?.order?.id ?: ""
+
+                        Toast.makeText(
+                            requireContext(),
+                            "Verifying! Please wait a minute!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         startRazorpay(orderId)
                     } else {
                         Toast.makeText(
@@ -136,7 +142,7 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
                 override fun onFailure(call: Call<CreatePaymentResponse>, t: Throwable) {
                     Toast.makeText(
                         requireContext(),
-                        "Create Error: ${t.message}",
+                        "Check Internet Connections",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -176,7 +182,7 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
         val orderId = paymentData?.orderId ?: ""
         val signature = paymentData?.signature ?: ""
         val paymentId = razorpayPaymentId ?: ""
-        Toast.makeText(requireContext(), "Payment verifying: ${paymentData.toString()}", Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), "Verifying Payment: ${paymentData.toString()}", Toast.LENGTH_LONG).show()
 
         verifyPayment(orderId, paymentId, signature)
     }
@@ -201,7 +207,7 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
                     response: Response<VerifyPaymentResponse>
                 ) {
                     if (response.isSuccessful && response.body()?.success == true) {
-                        Toast.makeText(requireContext(), "Payment Verified!", Toast.LENGTH_SHORT)
+                        Toast.makeText(requireContext(), "Payment Successful!", Toast.LENGTH_SHORT)
                             .show()
 
                         val action = PaymentFragmentDirections

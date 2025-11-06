@@ -105,7 +105,7 @@ interface ApiService {
         @Body paymentData: PaymentRequest
     ): Call<CreatePaymentResponse>
 
-    @POST("api/payment/verify")
+    @POST("api/payment/verify-half")
     fun verifyPayment(
         @Header("Authorization") token: String,
         @Body body: Map<String, String>

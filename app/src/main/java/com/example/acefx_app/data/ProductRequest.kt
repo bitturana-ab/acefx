@@ -41,6 +41,7 @@ data class ProjectDetailResponse(
 )
 
 // project details and payment paid or what
+// new update like schema
 data class PaymentInfoForPaid(
     val _id: String?,
     val clientId: String?,

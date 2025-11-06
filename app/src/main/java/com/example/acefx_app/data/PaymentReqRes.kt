@@ -19,12 +19,12 @@ data class CreatePaymentResponse(
 
 data class PaymentData(
     val order: RazorpayOrder,
-    val payment: PaymentInfo
+    val payment: PaymentInfoForPaid
 )
 
 data class RazorpayOrder(
     val id: String,
-    val amount: Int,
+    val amount: Double,
     val currency: String,
     val receipt: String,
     val payment_capture: Int,
@@ -51,16 +51,22 @@ data class PaymentInfoForDetailsRes(
 )
 
 data class PaymentInfoForDetails(
-    val _id: String,
-    val amount: Int,
-    val orderId: String,
-    val status: String,
-    val currency: String,
+
+    val _id: String?,
+    val orderId: String?,
+    val fullOrderId: String?,
+    val paymentId: String?,
+    val fullPaymentId: String?,
+    val halfPaymentId: String?,
+    val signature: String?,
+    val amount: Double?,
+    val paidType: String?,
+    val halfAmount: Double?,
+    val currency: String?,
+    val status: String?,
+    val email: String?,
     val clientId: ClientDetails,
     val projectId: ProjectIdDetails,
-    val email: String,
-    val signature: String,
-    val paymentId: String,
 )
 
 data class ClientDetails(
@@ -70,23 +76,32 @@ data class ClientDetails(
 
 // payment for invoices
 data class PaymentInfoForInvoice(
-    val _id: String,
-    val amount: Int,
-    val orderId: String,
-    val status: String,
-    val currency: String,
-    val clientId: String,
+
+    val _id: String?,
+    val clientId: String?,
+    val orderId: String?,
+    val fullOrderId: String?,
+    val fullPaymentId: String?,
+    val halfPaymentId: String?,
+    val paymentId: String?,
+    val signature: String?,
+    val amount: Double?,
+    val paidType: String?,
+    val halfAmount: Double?,
+    val currency: String?,
+    val status: String?,
+    val email: String?,
+
     val projectId: ProjectForInvoice,
-    val email: String,
-    val signature: String,
-    val paymentId: String,
 )
 
 data class ProjectForInvoice(
     val title: String,
-    val description: String,
+    val description: String?,
+    val deadline: String,
+    val expectedAmount: String,
     val actualAmount: String,
-
+    val status: String
     )
 
 data class VerifyPaymentResponse(
