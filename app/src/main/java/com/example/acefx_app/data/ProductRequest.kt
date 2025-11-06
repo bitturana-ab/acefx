@@ -43,15 +43,20 @@ data class ProjectDetailResponse(
 // project details and payment paid or what
 data class PaymentInfoForPaid(
     val _id: String?,
-    val amount: Int?,
-    val orderId: String?,
-    val status: String?,
-    val currency: String?,
     val clientId: String?,
     val projectId: String?,
-    val email: String?,
-    val signature: String?,
+    val orderId: String?,
+    val fullOrderId: String?,
     val paymentId: String?,
+    val fullPaymentId: String?,
+    val halfPaymentId: String?,
+    val signature: String?,
+    val amount: Double?,
+    val paidType: String?,
+    val halfAmount: Double?,
+    val currency: String?,
+    val status: String?,
+    val email: String?,
 )
 
 // details of project

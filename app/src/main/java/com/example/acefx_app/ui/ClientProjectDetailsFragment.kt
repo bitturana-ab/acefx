@@ -73,7 +73,10 @@ class ClientProjectDetailsFragment : Fragment() {
                 putString("projectName", projectTitle)
             }
 
-            findNavController().navigate(R.id.action_clientProjectDetailsFragment_to_paymentFragment, bundle)
+            findNavController().navigate(
+                R.id.action_clientProjectDetailsFragment_to_paymentFragment,
+                bundle
+            )
 
         }
     }
@@ -135,7 +138,13 @@ class ClientProjectDetailsFragment : Fragment() {
             this?.projectDeadlineText?.text =
                 "Deadline: ${formatDateTime(project.deadline) ?: "N/A"}"
 
-            this?.projectAmountText?.text = "₹${project.paymentId?.amount ?: project.expectedAmount.toString() ?: 0}"
+//            this?.projectAmountText?.text = "₹${project.actualAmount ?: project.expectedAmount.toString() ?: 0}"
+            val amount = if (project.actualAmount != 0.0)
+                project.actualAmount
+            else
+                project.expectedAmount
+
+            this?.projectAmountText?.text = "₹${String.format("%.2f", amount ?: 0.0)}"
 
             // Status color badge
             this?.projectStatusText?.text = project.status
@@ -154,23 +163,48 @@ class ClientProjectDetailsFragment : Fragment() {
             if (this?.projectDataLink?.isVisible == true)
                 this.projectDataLink.setOnClickListener { openUrl(project.dataLink) }
             // also not able to download if not  paid
-
-//            TODO("change logic by fetching payment details")
             this?.projectAttachLink?.visibility =
                 if (project.paymentId?.status == "success") View.VISIBLE else View.GONE
             if (this?.projectAttachLink?.isVisible == true)
                 this.projectAttachLink.setOnClickListener { openUrl(project.deliverableUrl) }
 
             //set amount at least half or something will decide later
-            this?.payUpfrontButton?.text = "Pay Upfront of ${project.expectedAmount.toString()}"
+            this?.payUpfrontButton?.text = "Pay Upfront of ${project.paymentId?.halfAmount.toString()}"
             // Pay button only if unpaid or status is !success
-         binding?.payUpfrontButton.apply {
-                this?.visibility = View.VISIBLE  // always visible
-                this?.isEnabled = project.paymentId?.status != "success"  // disable if already paid
+            // change text of button if half or full paid
+            binding?.apply {
+                // Determine button label and visibility based on payment status
+                val status = project.paymentId?.status
 
-                // Optionally: change background color to gray when disabled
-//                this?.alpha = if (isEnabled) 1.0f else 0.5f
+                when (status) {
+                    null, "", "created", "failed" -> {
+                        payUpfrontButton.visibility = View.VISIBLE
+                        payUpfrontButton.text = "Pay Upfront ₹${amount.div(2) ?: 0}"
+                        payUpfrontButton.isEnabled = true
+                    }
+
+                    "half-paid" -> {
+                        payUpfrontButton.visibility = View.VISIBLE
+                        payUpfrontButton.text = "Pay Remaining ₹${amount.div(2) ?: 0}"
+                        payUpfrontButton.isEnabled = true
+                    }
+
+                    "success", "full" -> {
+                        payUpfrontButton.visibility = View.GONE
+                    }
+
+                    else -> {
+                        // For any unexpected status
+                        payUpfrontButton.visibility = View.VISIBLE
+                        payUpfrontButton.text = "Pay ₹${project.expectedAmount ?: 0}"
+                        payUpfrontButton.isEnabled = true
+                    }
+                }
+
+                // Optionally adjust alpha for disabled states
+                payUpfrontButton.alpha = if (payUpfrontButton.isEnabled) 1.0f else 0.6f
             }
+
         }
     }
 

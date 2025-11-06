@@ -46,7 +46,7 @@ class PaymentFragment : Fragment(), PaymentResultWithDataListener {
         super.onCreate(savedInstanceState)
         arguments?.let {
             projectId = it.getString("projectId")
-            amount = it.getDouble("amount")
+            amount = it.getDouble("amount").div(2)
             projectName = it.getString("projectName")
         }
     }
