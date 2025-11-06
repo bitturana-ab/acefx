@@ -68,7 +68,7 @@ class InvoiceDetailsFragment : Fragment() {
                     call: Call<PaymentInfoForDetailsRes>,
                     response: Response<PaymentInfoForDetailsRes>
                 ) {
-                    if (!isAdded || _binding == null) return // 🧠 Fragment might be destroyed
+                    if (!isAdded || _binding == null) return // Fragment might be destroyed
                     showLoading(false)
 
                     if (response.isSuccessful && response.body() != null) {
@@ -113,7 +113,8 @@ class InvoiceDetailsFragment : Fragment() {
             b.tvClientName.text = "Name: ${invoice.clientId.name}" ?: "N/A"
             b.tvClientEmail.text = "Email: ${invoice.clientId.email}" ?: "N/A"
             b.tvPaymentId.text = "Payment ID: ${invoice.paymentId}" ?: "N/A"
-            b.tvInvoiceDate.text = "Invoice Date: ${formatDateTime(invoice.projectId.completedTime)}" ?: "N/A"
+            b.tvInvoiceDate.text =
+                "Invoice Date: ${formatDateTime(invoice.projectId.completedTime)}" ?: "N/A"
             b.tvInvoiceAmount.text = "₹${invoice.amount}"
             b.tvNotes.text = "we are doing best work for you!"
 

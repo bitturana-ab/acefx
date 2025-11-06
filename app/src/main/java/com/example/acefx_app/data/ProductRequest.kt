@@ -166,7 +166,7 @@ data class ProjectIdDetails(
     val attachLink: String?,
     val title: String,
     val deliverableUrl: String?,
-    val deadline: String,
+    val deadline: String?,
     val clientId: String?,
     val editorId: String?,
     val status: String,

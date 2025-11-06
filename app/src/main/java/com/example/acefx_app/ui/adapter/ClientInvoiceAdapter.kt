@@ -31,6 +31,7 @@ class ClientInvoiceAdapter(
 
     override fun getItemCount(): Int = invoiceList.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun submitList(newList: List<PaymentInfoForInvoice>) {
         invoiceList = newList
         notifyDataSetChanged()
