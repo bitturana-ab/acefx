@@ -121,8 +121,8 @@ data class ProjectData(
     val status: String,
     val expectedAmount: Double,
     val actualAmount: Double?,
-    val invoiceId: InvoiceData?,
-    val paymentId: String?
+    val invoiceId: InvoiceDataByProject?,
+    val paymentId: PaymentInfoForPaid?
 
 )
 

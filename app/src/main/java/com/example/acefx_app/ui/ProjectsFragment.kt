@@ -3,6 +3,7 @@ package com.example.acefx_app.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -134,6 +135,7 @@ class ProjectsFragment : Fragment() {
             override fun onFailure(call: Call<ProjectsResponse>, t: Throwable) {
                 if (!isAdded) return
                 showLoading(false)
+                Log.d("PROJECTS",t.message.toString())
                 binding.swipeRefresh.isRefreshing = false
                 Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
             }

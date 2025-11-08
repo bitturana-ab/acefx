@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.acefx_app.R
 import com.example.acefx_app.data.ProjectData
 import com.example.acefx_app.data.ProjectItem
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 class ProjectsAdapter(
     private var projects: List<ProjectData>,
@@ -19,6 +22,7 @@ class ProjectsAdapter(
     inner class ProjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val projectName: TextView = itemView.findViewById(R.id.projectTitle)
         val projectStatusBadge: TextView = itemView.findViewById(R.id.projectStatusBadge)
+        val deadlineText: TextView = itemView.findViewById(R.id.deadlineText)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectViewHolder {
@@ -31,6 +35,7 @@ class ProjectsAdapter(
         val project = projects[position]
         holder.projectName.text = project.title
         holder.projectStatusBadge.text = project.status
+        holder.deadlineText.text = formatDateTime(project.deadline)
 
         // Apply badge color based on status
         val context = holder.itemView.context
@@ -45,6 +50,19 @@ class ProjectsAdapter(
         holder.projectStatusBadge.background = bgDrawable
 
         holder.itemView.setOnClickListener { onProjectClick(project) }
+    }
+    private fun formatDateTime(isoDate: String?): String {
+        if (isoDate.isNullOrEmpty()) return ""
+        return try {
+            val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            parser.timeZone = TimeZone.getTimeZone("UTC")
+            val date = parser.parse(isoDate)
+            val formatter = SimpleDateFormat("hh:mm a, dd MMM", Locale.getDefault())
+            formatter.format(date!!)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            isoDate
+        }
     }
 
     override fun getItemCount(): Int = projects.size
