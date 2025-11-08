@@ -105,4 +105,5 @@
     <string name="text_extra_text">Thank you</string>
     <string name="text_invoice_details">Invoice Details</string>
     <string name="text_download_file">Download File</string>
+    <string name="text_bill_amount">Total Bill Amount</string>
 </resources>
