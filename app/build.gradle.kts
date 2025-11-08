@@ -45,6 +45,8 @@ android {
 }
 
 dependencies {
+    // paynow button effect for loading
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
 
     // retro fit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

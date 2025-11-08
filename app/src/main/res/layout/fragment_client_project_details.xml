@@ -167,13 +167,13 @@
                         style="@style/Widget.MaterialComponents.Button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.9"
                         android:layout_margin="20dp"
+                        android:layout_weight="0.9"
                         android:backgroundTint="@color/app_button_dark"
                         android:text="@string/text_open_data_link"
                         android:textColor="@android:color/white"
-                        app:cornerRadius="10dp"
                         android:textSize="10sp"
+                        app:cornerRadius="10dp"
                         app:iconPadding="8dp"
                         tools:ignore="SmallSp" />
 
@@ -186,33 +186,52 @@
                         android:backgroundTint="@color/app_color_gray_2"
                         android:text="@string/text_download_file"
                         android:textColor="@android:color/white"
-                        app:cornerRadius="10dp"
                         android:textSize="10sp"
+                        app:cornerRadius="10dp"
                         app:iconPadding="8dp"
                         tools:ignore="SmallSp" />
                 </LinearLayout>
             </LinearLayout>
 
             <!-- Pay Section -->
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/paymentButtonContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingTop="24dp"
-                android:paddingBottom="16dp">
+                android:layout_height="wrap_content">
 
-                <Button
-                    android:id="@+id/payUpfrontButton"
-                    android:layout_width="wrap_content"
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_button_bg"
-                    android:paddingHorizontal="40dp"
-                    android:paddingVertical="10dp"
-                    android:text="@string/text_pay_upfront"
-                    android:textColor="@android:color/white"
-                    android:textSize="15sp" />
-            </LinearLayout>
+                    android:visibility="visible"
+                    app:shimmer_auto_start="true"
+                    android:padding="20dp"
+                    app:shimmer_base_alpha="0.9"
+                    app:shimmer_duration="800"
+                    app:shimmer_highlight_alpha="1.0">
+
+                    <Button
+                        android:id="@+id/payUpfrontButton"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_button_bg"
+                        android:paddingHorizontal="40dp"
+                        android:paddingVertical="10dp"
+                        android:text="@string/text_pay_upfront"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp" />
+                </com.facebook.shimmer.ShimmerFrameLayout>
+                <!-- ProgressBar overlay -->
+                <ProgressBar
+                    android:id="@+id/paymentProgress"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:indeterminate="true" />
+            </FrameLayout>
 
             <!-- Loading Overlay -->
             <FrameLayout

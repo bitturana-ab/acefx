@@ -6,33 +6,31 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.acefx_app.R
 import com.example.acefx_app.data.ProjectDataByForPaid
-import com.example.acefx_app.data.ProjectDataByProject
 import com.example.acefx_app.data.ProjectDetailResponse
 import com.example.acefx_app.databinding.FragmentClientProjectDetailsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
+import java.util.*
 
 class ClientProjectDetailsFragment : Fragment() {
 
     private var _binding: FragmentClientProjectDetailsBinding? = null
     private val binding get() = _binding
-
     private var projectId: String? = null
     private lateinit var apiService: ApiService
 
@@ -42,7 +40,8 @@ class ClientProjectDetailsFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentClientProjectDetailsBinding.inflate(inflater, container, false)
@@ -54,30 +53,43 @@ class ClientProjectDetailsFragment : Fragment() {
 
         projectId?.let { fetchProjectDetails(it) }
 
-        // Navigate to Add Project screen
-        binding?.addProjectButton?.setOnClickListener {
-            val action = ClientProjectDetailsFragmentDirections
-                .actionClientProjectDetailsFragmentToClientAddProjectFragment()
-            findNavController().navigate(action)
-        }
-        // back button function
-        binding?.backBtn?.setOnClickListener { findNavController().popBackStack() }
+        binding?.apply {
+            backBtn.setOnClickListener { findNavController().popBackStack() }
 
-        // Pay Now button click → navigate to Payment screen
-        binding?.payUpfrontButton?.setOnClickListener {
-            val projectTitle = binding?.projectTitleText?.text.toString()
-            val amount = binding?.projectAmountText?.text.toString().replace("₹", "").trim()
-            val bundle = Bundle().apply {
-                putString("projectId", projectId)
-                putDouble("amount", amount.toDouble())
-                putString("projectName", projectTitle)
+            addProjectButton.setOnClickListener {
+                val action = ClientProjectDetailsFragmentDirections
+                    .actionClientProjectDetailsFragmentToClientAddProjectFragment()
+                findNavController().navigate(action)
             }
 
-            findNavController().navigate(
-                R.id.action_clientProjectDetailsFragment_to_paymentFragment,
-                bundle
-            )
 
+            payUpfrontButton.setOnClickListener {
+                showLoading(true)
+                shimmerLayout.visibility = View.VISIBLE
+                shimmerLayout.startShimmer()
+                payUpfrontButton.isEnabled = false
+
+                lifecycleScope.launch {
+                    delay(2000)
+                    shimmerLayout.stopShimmer()
+                    shimmerLayout.visibility = View.GONE
+                    payUpfrontButton.isEnabled = true
+
+
+                    val projectTitle = projectTitleText.text.toString()
+                    val amount = projectAmountText.text.toString().replace("₹", "").trim()
+                    val bundle = Bundle().apply {
+                        putString("projectId", projectId)
+                        putDouble("amount", amount.toDoubleOrNull() ?: 0.0)
+                        putString("projectName", projectTitle)
+                    }
+
+                    findNavController().navigate(
+                        R.id.action_clientProjectDetailsFragment_to_paymentFragment,
+                        bundle
+                    )
+                }
+            }
         }
     }
 
@@ -105,8 +117,7 @@ class ClientProjectDetailsFragment : Fragment() {
                     if (!isAdded) return
 
                     if (response.isSuccessful && response.body() != null) {
-//                    Toast.makeText(requireContext(),"res ${response.toString()}", Toast.LENGTH_SHORT).show()
-                        displayProjectDetails(response.body()?.data!!)
+                        displayProjectDetails(response.body()!!.data)
                     } else {
                         Toast.makeText(
                             requireContext(),
@@ -119,7 +130,7 @@ class ClientProjectDetailsFragment : Fragment() {
                 override fun onFailure(call: Call<ProjectDetailResponse>, t: Throwable) {
                     showLoading(false)
                     if (!isAdded) return
-                    Log.d("PROJECT_DETAILS", "Error fetching project! ${t.toString()}")
+                    Log.e("PROJECT_DETAILS", "Error fetching project: ${t.message}")
                     Toast.makeText(
                         requireContext(),
                         "Check internet connection",
@@ -133,78 +144,102 @@ class ClientProjectDetailsFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun displayProjectDetails(project: ProjectDataByForPaid) {
         with(binding) {
-            this?.projectTitleText?.text = project.title
-            this?.projectDescriptionText?.text = project.description
-            this?.projectDeadlineText?.text =
-                "Deadline: ${formatDateTime(project.deadline) ?: "N/A"}"
+            this?.apply {
 
-//            this?.projectAmountText?.text = "₹${project.actualAmount ?: project.expectedAmount.toString() ?: 0}"
-            val amount = if (project.actualAmount != 0.0)
-                project.actualAmount
-            else
-                project.expectedAmount
+                // --- Payment Button Setup ---
+                when (project.paymentId?.paidType) {
+                    "none" -> payUpfrontButton.text = "Pay Half ₹${project.expectedAmount / 2}"
+                    "half" -> payUpfrontButton.text = "Pay Remaining ₹${project.expectedAmount / 2}"
+                    "full" -> payUpfrontButton.visibility = View.GONE
+                }
 
-            this?.projectAmountText?.text = "₹${String.format("%.2f", amount ?: 0.0)}"
 
-            // Status color badge
-            this?.projectStatusText?.text = project.status
-            val statusBg = this?.projectStatusText?.background?.mutate()
-            val color = when (project.status.lowercase()) {
-                "approved" -> R.color.status_active
-                "on hold" -> R.color.orange_200
-                else -> R.color.gray
-            }
-            statusBg?.setTint(ContextCompat.getColor(requireContext(), color))
-            this?.projectStatusText?.background = statusBg
+                // --- Project Details ---
+                projectTitleText.text = project.title
+                projectDescriptionText.text = project.description
+                projectDeadlineText.text =
+                    "Deadline: ${formatDateTime(project.deadline) ?: "N/A"}"
 
-            // Links visibility setup
-            this?.projectDataLink?.visibility =
-                if (project.paymentId?.status == "success") View.VISIBLE else View.GONE
-            if (this?.projectDataLink?.isVisible == true)
-                this.projectDataLink.setOnClickListener { openUrl(project.dataLink) }
-            // also not able to download if not  paid
-            this?.projectAttachLink?.visibility =
-                if (project.paymentId?.status == "success") View.VISIBLE else View.GONE
-            if (this?.projectAttachLink?.isVisible == true)
-                this.projectAttachLink.setOnClickListener { openUrl(project.deliverableUrl) }
+                val amount = if (project.actualAmount != 0.0)
+                    project.actualAmount
+                else
+                    project.expectedAmount
 
-            //set amount at least half or something will decide later
-            this?.payUpfrontButton?.text = "Pay Upfront of ${project.paymentId?.halfAmount.toString()}"
-            // Pay button only if unpaid or status is !success
-            // change text of button if half or full paid
-            binding?.apply {
-                // Determine button label and visibility based on payment status
-                val status = project.paymentId?.status
+                projectAmountText.text = "₹${String.format("%.2f", amount ?: 0.0)}"
+
+                // --- Status Display ---
+                projectStatusText.text = project.status
+                val statusBg = projectStatusText.background?.mutate()
+                val color = when (project.status.lowercase()) {
+                    "approved" -> R.color.status_active
+                    "on hold" -> R.color.orange_200
+                    else -> R.color.gray
+                }
+                statusBg?.setTint(ContextCompat.getColor(requireContext(), color))
+                projectStatusText.background = statusBg
+
+                // --- Payment Button Logic ---
+                val status = project.paymentId?.status ?: "unpaid"
+                val halfAmount = (amount ?: 0.0) / 2
 
                 when (status) {
-                    null, "", "created", "failed" -> {
+                    "created", "failed", "unpaid" -> {
                         payUpfrontButton.visibility = View.VISIBLE
-                        payUpfrontButton.text = "Pay Upfront ₹${amount.div(2) ?: 0}"
+                        payUpfrontButton.text =
+                            "Pay Upfront ₹${String.format("%.2f", halfAmount)}"
                         payUpfrontButton.isEnabled = true
                     }
 
                     "half-paid" -> {
                         payUpfrontButton.visibility = View.VISIBLE
-                        payUpfrontButton.text = "Pay Remaining ₹${amount.div(2) ?: 0}"
+                        payUpfrontButton.text =
+                            "Pay Remaining ₹${String.format("%.2f", halfAmount)}"
                         payUpfrontButton.isEnabled = true
                     }
 
-                    "success", "full" -> {
-                        payUpfrontButton.visibility = View.GONE
-                    }
+                    "success", "full" -> payUpfrontButton.visibility = View.GONE
 
                     else -> {
-                        // For any unexpected status
                         payUpfrontButton.visibility = View.VISIBLE
-                        payUpfrontButton.text = "Pay ₹${project.expectedAmount ?: 0}"
+                        payUpfrontButton.text =
+                            "Pay ₹${String.format("%.2f", amount ?: 0.0)}"
                         payUpfrontButton.isEnabled = true
                     }
                 }
 
-                // Optionally adjust alpha for disabled states
                 payUpfrontButton.alpha = if (payUpfrontButton.isEnabled) 1.0f else 0.6f
-            }
 
+                // --- Data & Download Links ---
+                projectDataLink.visibility = View.VISIBLE
+                projectAttachLink.visibility = View.VISIBLE
+
+                val isPaid = project.paymentId?.status == "success"
+                projectDataLink.isEnabled = isPaid
+                projectAttachLink.isEnabled = isPaid
+
+                projectDataLink.alpha = if (isPaid) 1.0f else 0.5f
+                projectAttachLink.alpha = if (isPaid) 1.0f else 0.5f
+
+                if (isPaid) {
+                    projectDataLink.setOnClickListener { openUrl(project.dataLink) }
+                    projectAttachLink.setOnClickListener { openUrl(project.deliverableUrl) }
+                } else {
+                    projectDataLink.setOnClickListener {
+                        Toast.makeText(
+                            requireContext(),
+                            "Pay to unlock data",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    projectAttachLink.setOnClickListener {
+                        Toast.makeText(
+                            requireContext(),
+                            "Pay to download file",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
         }
     }
 
@@ -222,7 +257,7 @@ class ClientProjectDetailsFragment : Fragment() {
         }
     }
 
-    /** Fade-in/out loading overlay */
+    /** Loading overlay animation */
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
             binding?.loadingOverlay?.fadeIn()
@@ -233,15 +268,13 @@ class ClientProjectDetailsFragment : Fragment() {
         }
     }
 
-    // formate deadline date to readable
+    /** Format ISO date to readable format */
     private fun formatDateTime(isoDate: String?): String {
         if (isoDate.isNullOrEmpty()) return ""
-
         return try {
             val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
             parser.timeZone = TimeZone.getTimeZone("UTC")
             val date = parser.parse(isoDate)
-
             val formatter = SimpleDateFormat("hh:mm a, dd MMM", Locale.getDefault())
             formatter.format(date!!)
         } catch (e: Exception) {
@@ -250,7 +283,7 @@ class ClientProjectDetailsFragment : Fragment() {
         }
     }
 
-
+    /** Fade animations for smooth transitions */
     private fun View.fadeIn(duration: Long = 300) {
         alpha = 0f
         visibility = View.VISIBLE
