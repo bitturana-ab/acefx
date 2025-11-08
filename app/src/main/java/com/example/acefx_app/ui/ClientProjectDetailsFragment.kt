@@ -145,12 +145,21 @@ class ClientProjectDetailsFragment : Fragment() {
     private fun displayProjectDetails(project: ProjectDataByForPaid) {
         with(binding) {
             this?.apply {
+                val amount = if (project.actualAmount != 0.0)
+                    project.actualAmount
+                else
+                    project.expectedAmount
 
                 // --- Payment Button Setup ---
                 when (project.paymentId?.paidType) {
-                    "none" -> payUpfrontButton.text = "Pay Half ₹${project.expectedAmount / 2}"
-                    "half" -> payUpfrontButton.text = "Pay Remaining ₹${project.expectedAmount / 2}"
-                    "full" -> payUpfrontButton.visibility = View.GONE
+                    "none" -> payUpfrontButton.text = "Pay Half ₹${amount.div(2)}"
+                    "half" -> payUpfrontButton.text =
+                        "Pay Remaining ₹${project.paymentId?.halfAmount?.div(2) }"
+
+                    "full" -> {
+                        payUpfrontButton.text = "Already paid"
+                        payUpfrontButton.visibility = View.GONE
+                    }
                 }
 
 
@@ -160,10 +169,7 @@ class ClientProjectDetailsFragment : Fragment() {
                 projectDeadlineText.text =
                     "Deadline: ${formatDateTime(project.deadline) ?: "N/A"}"
 
-                val amount = if (project.actualAmount != 0.0)
-                    project.actualAmount
-                else
-                    project.expectedAmount
+
 
                 projectAmountText.text = "₹${String.format("%.2f", amount ?: 0.0)}"
 
