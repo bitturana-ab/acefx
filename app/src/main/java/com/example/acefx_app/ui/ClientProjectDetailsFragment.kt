@@ -51,6 +51,7 @@ class ClientProjectDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding?.payUpfrontButton?.isEnabled = false
         projectId?.let { fetchProjectDetails(it) }
 
         binding?.apply {

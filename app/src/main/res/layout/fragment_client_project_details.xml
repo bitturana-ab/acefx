@@ -218,6 +218,7 @@
                         android:background="@drawable/rounded_button_bg"
                         android:paddingHorizontal="40dp"
                         android:paddingVertical="10dp"
+                        android:enabled="false"
                         android:text="@string/text_pay_upfront"
                         android:textColor="@android:color/white"
                         android:textSize="15sp" />

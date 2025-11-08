@@ -3,7 +3,6 @@ package com.example.acefx_app.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.acefx_app.R
-import com.example.acefx_app.data.ProjectItem
+import com.example.acefx_app.data.ProjectData
 import com.example.acefx_app.data.ProjectsResponse
 import com.example.acefx_app.databinding.FragmentProjectsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
@@ -33,7 +32,7 @@ class ProjectsFragment : Fragment() {
     private lateinit var adapter: ProjectsAdapter
     private lateinit var apiService: ApiService
     private lateinit var token: String
-    private var allProjects = listOf<ProjectItem>()
+    private var allProjects = listOf<ProjectData>()
 
     private val gson = Gson()
 
@@ -154,7 +153,7 @@ class ProjectsFragment : Fragment() {
     }
 
     /** Save list of projects locally */
-    private fun saveLocalProjects(projectList: List<ProjectItem>) {
+    private fun saveLocalProjects(projectList: List<ProjectData>) {
         val sharedPrefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         val editor = sharedPrefs.edit()
         val json = gson.toJson(projectList)
@@ -165,17 +164,20 @@ class ProjectsFragment : Fragment() {
     /** Load locally saved projects */
     @SuppressLint("NotifyDataSetChanged")
     private fun loadLocalProjects() {
+        showLoading(true)
         val sharedPrefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         val json = sharedPrefs.getString("cachedProjects", null)
         if (!json.isNullOrEmpty()) {
-            val type = object : TypeToken<List<ProjectItem>>() {}.type
-            val savedProjects: List<ProjectItem> = gson.fromJson(json, type)
+            showLoading(false)
+            val type = object : TypeToken<List<ProjectData>>() {}.type
+            val savedProjects: List<ProjectData> = gson.fromJson(json, type)
             allProjects = savedProjects
             adapter.updateData(savedProjects)
 
             val firstTab = binding.projectTabLayout.getTabAt(0)
             filterProjectsByStatus(firstTab?.text.toString())
         }
+        showLoading(false)
     }
 
     /** Show or hide loading overlay */

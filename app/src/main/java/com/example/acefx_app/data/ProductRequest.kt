@@ -13,7 +13,7 @@ data class ProjectResponse(
 data class ProjectsResponse(
     val success: Boolean,
     val message: String,
-    val data: List<ProjectItem>
+    val data: List<ProjectData>
 )
 
 // get or fetch projects and save
@@ -110,17 +110,20 @@ data class InvoiceDataByProject(
 data class ProjectData(
     val _id: String,
     val title: String,
-    val description: String,
     val dataLink: String,
     val attachLink: String,
+    val deliverableUrl: String?,
+    val description: String,
     val deadline: String,
-    val expectedAmount: Double,
+    val completedTime: String,
     val clientId: String?,
     val editorId: String?,
     val status: String,
+    val expectedAmount: Double,
+    val actualAmount: Double?,
     val invoiceId: InvoiceData?,
-    val actualAmount: Double,
-    val deliverableUrl: String?
+    val paymentId: String?
+
 )
 
 // for invoice adapter

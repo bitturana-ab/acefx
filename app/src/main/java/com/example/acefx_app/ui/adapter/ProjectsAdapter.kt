@@ -8,11 +8,12 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.acefx_app.R
+import com.example.acefx_app.data.ProjectData
 import com.example.acefx_app.data.ProjectItem
 
 class ProjectsAdapter(
-    private var projects: List<ProjectItem>,
-    private val onProjectClick: (ProjectItem) -> Unit
+    private var projects: List<ProjectData>,
+    private val onProjectClick: (ProjectData) -> Unit
 ) : RecyclerView.Adapter<ProjectsAdapter.ProjectViewHolder>() {
 
     inner class ProjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -48,7 +49,7 @@ class ProjectsAdapter(
 
     override fun getItemCount(): Int = projects.size
 
-    fun updateData(newProjects: List<ProjectItem>) {
+    fun updateData(newProjects: List<ProjectData>) {
         projects = newProjects
         notifyDataSetChanged()
     }

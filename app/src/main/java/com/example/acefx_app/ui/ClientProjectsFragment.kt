@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.acefx_app.R
-import com.example.acefx_app.data.ProjectItem
+import com.example.acefx_app.data.ProjectData
 import com.example.acefx_app.data.ProjectsResponse
 import com.example.acefx_app.databinding.FragmentClientProjectsBinding
 import com.example.acefx_app.retrofitServices.ApiClient
@@ -33,7 +33,7 @@ class ClientProjectsFragment : Fragment() {
     private lateinit var adapter: ProjectsAdapter
     private lateinit var apiService: ApiService
     private lateinit var token: String
-    private var allProjects = listOf<ProjectItem>()
+    private var allProjects = listOf<ProjectData>()
 
     private val gson = Gson()
 
@@ -106,11 +106,13 @@ class ClientProjectsFragment : Fragment() {
 
     /** Load projects from local cache */
     private fun loadCachedProjects() {
+        showLoading(true)
         val prefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         val cachedJson = prefs.getString("cachedProjects", null)
         if (cachedJson != null) {
-            val type = object : TypeToken<List<ProjectItem>>() {}.type
-            val cachedList: List<ProjectItem> = gson.fromJson(cachedJson, type)
+            showLoading(false)
+            val type = object : TypeToken<List<ProjectData>>() {}.type
+            val cachedList: List<ProjectData> = gson.fromJson(cachedJson, type)
             if (cachedList.isNotEmpty()) {
                 allProjects = cachedList
                 adapter.updateData(allProjects)
@@ -118,10 +120,11 @@ class ClientProjectsFragment : Fragment() {
                 Log.d("CACHE", "Loaded ${cachedList.size} cached projects")
             }
         }
+        showLoading(false)
     }
 
     /** Save projects to SharedPreferences */
-    private fun saveProjectsToCache(projects: List<ProjectItem>) {
+    private fun saveProjectsToCache(projects: List<ProjectData>) {
         val prefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         val json = gson.toJson(projects)
         prefs.edit().putString("cachedProjects", json).apply()
