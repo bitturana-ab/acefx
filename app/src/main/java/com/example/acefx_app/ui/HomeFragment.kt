@@ -84,17 +84,25 @@ class HomeFragment : Fragment() {
                         val paidType = payment?.paidType ?: "none"
 
                         // Safely get the main amount
-                        val totalAmount = project.actualAmount?.takeIf { it > 0 } ?: project.expectedAmount ?: 0.0
+                        val totalAmount =
+                            project.actualAmount?.takeIf { it > 0 } ?: project.expectedAmount ?: 0.0
 
                         // Calculate unpaid amount
                         unpaidTotal += when {
                             paymentStatus == "success" -> 0.0                // fully paid
-                            paidType.equals("half", true) -> totalAmount.div(2) // half-paid -> remaining half
+                            paidType.equals(
+                                "half",
+                                true
+                            ) -> totalAmount.div(2) // half-paid -> remaining half
                             else -> totalAmount                              // unpaid -> full amount due
                         }
 
                         // Completed projects list
-                        if (project.status.equals("success", true) || paymentStatus.equals("success", true)) {
+                        if (project.status.equals(
+                                "success",
+                                true
+                            ) || paymentStatus.equals("success", true)
+                        ) {
                             completedProjects.add(project)
                         }
                     }
@@ -145,15 +153,37 @@ class HomeFragment : Fragment() {
             downloadBtn.isEnabled = isPaid
             downloadBtn.alpha = if (isPaid) 1f else 0.6f
 
+            // Click listener for card to open project details
+            card.setOnClickListener {
+                navigateToProjectDetails(project._id)
+            }
+
+            // Click listener for download button
             downloadBtn.setOnClickListener {
                 if (isPaid) {
                     openUrl(project.deliverableUrl)
                 } else {
-                    Toast.makeText(requireContext(), "Pay to download deliverables", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Pay to download deliverables",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
+
         }
     }
+    private fun navigateToProjectDetails(projectId: String?) {
+        if (projectId.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Invalid project", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val bundle = Bundle().apply {
+            putString("projectId", projectId)
+        }
+        findNavController().navigate(R.id.clientProjectDetailsFragment, bundle)
+    }
+
 
     private fun openUrl(url: String?) {
         if (url.isNullOrEmpty()) {
@@ -161,7 +191,10 @@ class HomeFragment : Fragment() {
             return
         }
         try {
-            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url))
+            val intent = android.content.Intent(
+                android.content.Intent.ACTION_VIEW,
+                android.net.Uri.parse(url)
+            )
             startActivity(intent)
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Cannot open file", Toast.LENGTH_SHORT).show()
@@ -195,7 +228,8 @@ class HomeFragment : Fragment() {
 
     private fun handleHomeNavigation() {
         if (isProfileComplete()) {
-            Toast.makeText(requireContext(), "Welcome back, $companyName!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Welcome back, $companyName!", Toast.LENGTH_SHORT)
+                .show()
             navigateToChat()
         } else if (!token.isNullOrEmpty()) fetchUpdatedProfile() else navigateToProfile()
     }
@@ -213,7 +247,8 @@ class HomeFragment : Fragment() {
                         if (isProfileComplete()) navigateToProjects() else navigateToProfile()
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Failed to fetch profile", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Failed to fetch profile", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
 

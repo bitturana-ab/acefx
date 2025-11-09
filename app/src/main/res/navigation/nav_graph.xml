@@ -29,6 +29,13 @@
         <action
             android:id="@+id/action_homeFragment_to_mainActivity"
             app:destination="@id/mainActivity" />
+        <action
+            android:id="@+id/action_homeFragment_to_clientProjectDetailsFragment"
+            app:destination="@id/clientProjectDetailsFragment">
+            <argument
+                android:name="projectId"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -122,19 +129,19 @@
         android:id="@+id/paymentFragment"
         android:name="com.example.acefx_app.ui.PaymentFragment"
         android:label="fragment_payment"
-        tools:layout="@layout/fragment_payment" >
+        tools:layout="@layout/fragment_payment">
         <action
             android:id="@+id/action_paymentFragment_to_paymentSuccessFragment"
-            app:destination="@id/paymentSuccessFragment" >
+            app:destination="@id/paymentSuccessFragment">
             <argument
                 android:name="razorpayPaymentId"
-                app:argType="string"/>
+                app:argType="string" />
             <argument
                 android:name="amount"
-                app:argType="float"/>
+                app:argType="float" />
             <argument
                 android:name="projectName"
-                app:argType="string"/>
+                app:argType="string" />
         </action>
     </fragment>
     <fragment
@@ -144,10 +151,10 @@
         tools:layout="@layout/fragment_client_invoice">
         <action
             android:id="@+id/action_clientInvoiceFragment_to_invoiceDetailsFragment"
-            app:destination="@id/invoiceDetailsFragment" >
+            app:destination="@id/invoiceDetailsFragment">
             <argument
                 android:name="invoiceId"
-                app:argType="string"/>
+                app:argType="string" />
         </action>
     </fragment>
     <action
@@ -158,8 +165,7 @@
         android:id="@+id/invoiceDetailsFragment"
         android:name="com.example.acefx_app.ui.InvoiceDetailsFragment"
         android:label="Invoice Details"
-        tools:layout="@layout/fragment_invoice_details">
-    </fragment>
+        tools:layout="@layout/fragment_invoice_details"></fragment>
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.example.acefx_app.ui.ChatFragment"
@@ -169,7 +175,7 @@
         android:id="@+id/paymentSuccessFragment"
         android:name="com.example.acefx_app.ui.PaymentSuccessFragment"
         android:label="PaymentSuccessFragment"
-        tools:layout="@layout/fragment_payment_success"/>
+        tools:layout="@layout/fragment_payment_success" />
 
 
 </navigation>
