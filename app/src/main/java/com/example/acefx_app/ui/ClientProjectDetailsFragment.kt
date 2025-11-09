@@ -150,19 +150,6 @@ class ClientProjectDetailsFragment : Fragment() {
                 else
                     project.expectedAmount
 
-                // --- Payment Button Setup ---
-                when (project.paymentId?.paidType) {
-                    "none" -> payUpfrontButton.text = "Pay Half ₹${amount.div(2)}"
-                    "half" -> payUpfrontButton.text =
-                        "Pay Remaining ₹${project.paymentId.halfAmount?.div(2) }"
-
-                    "full" -> {
-                        payUpfrontButton.text = "Already paid"
-                        payUpfrontButton.visibility = View.GONE
-                    }
-                }
-
-
                 // --- Project Details ---
                 projectTitleText.text = project.title
                 projectDescriptionText.text = project.description
