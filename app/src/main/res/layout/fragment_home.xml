@@ -118,6 +118,7 @@
 
 
                     <TextView
+                        android:id="@+id/totalBillView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
@@ -148,6 +149,7 @@
 
         <!-- 📦 Project Card 1 -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/projectCard1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
@@ -170,6 +172,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/projectName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Project Name"
@@ -178,7 +181,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-
+                        android:id="@+id/projectDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -187,6 +190,7 @@
                         android:textSize="14sp" />
 
                     <Button
+                        android:id="@+id/downloadBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="#000000"
@@ -225,6 +229,7 @@
 
         <!-- 📦 Project Card 2 -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/projectCard2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#BDBDBD"
