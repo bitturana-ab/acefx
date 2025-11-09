@@ -108,6 +108,8 @@ class ProjectsFragment : Fragment() {
 
     /** Load projects from backend */
     private fun loadProjects() {
+        showLoading(true)
+        binding.swipeRefresh.isRefreshing = true
         apiService.getClientProjects("Bearer $token").enqueue(object : Callback<ProjectsResponse> {
             override fun onResponse(call: Call<ProjectsResponse>, response: Response<ProjectsResponse>) {
                 if (!isAdded) return
@@ -184,15 +186,14 @@ class ProjectsFragment : Fragment() {
 
     /** Show or hide loading overlay */
     private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.loadingOverlay.fadeIn()
-            binding.progressBar.fadeIn()
-        } else {
-            binding.progressBar.fadeOut()
-            binding.loadingOverlay.fadeOut()
+        binding.chatNow.isEnabled = !isLoading
+        // Loop through all tabs dynamically (in case more are added later)
+        for (i in 0 until binding.projectTabLayout.tabCount) {
+            val tabView = binding.projectTabLayout.getTabAt(i)?.view
+            tabView?.isClickable = !isLoading
+            tabView?.alpha = if (isLoading) 0.5f else 1f   // optional fade effect
         }
     }
-
     /** Show or hide empty message */
     private fun showEmptyState(show: Boolean, message: String = "You don’t have any projects yet. Please add one.") {
         binding.emptyText.visibility = if (show) View.VISIBLE else View.GONE

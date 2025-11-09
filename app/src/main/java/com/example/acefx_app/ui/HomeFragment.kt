@@ -61,16 +61,30 @@ class HomeFragment : Fragment() {
         binding.btnPayBill.setOnClickListener { navigateToProjects() }
 
         token?.let { fetchClientProjects(it) }
+
+        // swipe refresh
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            token?.let {
+                fetchClientProjects(it)
+            } ?: run {
+                Toast.makeText(requireContext(), "Please login again", Toast.LENGTH_SHORT).show()
+                binding.swipeRefreshLayout.isRefreshing = false
+            }
+        }
+
     }
 
     /** Fetch all projects of this client **/
     private fun fetchClientProjects(token: String) {
         showLoading(true)
+        binding.swipeRefreshLayout.isRefreshing = true  // stop spinner
         api.getClientProjects("Bearer $token").enqueue(object : Callback<ProjectsResponse> {
             override fun onResponse(
                 call: Call<ProjectsResponse>, response: Response<ProjectsResponse>
             ) {
                 showLoading(false)
+                binding.swipeRefreshLayout.isRefreshing = false  // stop spinner
+
                 if (!isAdded) return
 
                 if (response.isSuccessful && response.body() != null) {
@@ -117,6 +131,8 @@ class HomeFragment : Fragment() {
 
             override fun onFailure(call: Call<ProjectsResponse>, t: Throwable) {
                 showLoading(false)
+                binding.swipeRefreshLayout.isRefreshing = false  // stop spinner
+
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })

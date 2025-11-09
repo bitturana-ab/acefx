@@ -59,7 +59,11 @@ class ClientProjectsFragment : Fragment() {
         }
 
         adapter = ProjectsAdapter(emptyList()) { project ->
-            findNavController().navigate(ClientProjectsFragmentDirections.actionClientProjectsFragmentToClientProjectDetailsFragment(project._id))
+            findNavController().navigate(
+                ClientProjectsFragmentDirections.actionClientProjectsFragmentToClientProjectDetailsFragment(
+                    project._id
+                )
+            )
             Toast.makeText(requireContext(), "Project: ${project.title}", Toast.LENGTH_SHORT).show()
         }
 
@@ -133,6 +137,8 @@ class ClientProjectsFragment : Fragment() {
 
     /** Fetch projects from backend */
     private fun loadProjects() {
+        showLoading(true)
+        binding.swipeRefresh.isRefreshing = true
         apiService.getClientProjects("Bearer $token").enqueue(object : Callback<ProjectsResponse> {
             override fun onResponse(
                 call: Call<ProjectsResponse>, response: Response<ProjectsResponse>
@@ -168,7 +174,11 @@ class ClientProjectsFragment : Fragment() {
                 if (!isAdded) return
                 showLoading(false)
                 binding.swipeRefresh.isRefreshing = false
-                Snackbar.make(binding.root, "Network error, please check your connection", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    binding.root,
+                    "Network error, please check your connection",
+                    Snackbar.LENGTH_SHORT
+                ).show()
                 Toast.makeText(
                     requireContext(), "Check internet connection", Toast.LENGTH_SHORT
                 ).show()
@@ -190,8 +200,13 @@ class ClientProjectsFragment : Fragment() {
 
     /** Show or hide loading */
     private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        binding.loadingOverlay.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.addProjectBtn.isEnabled = !isLoading
+        // Loop through all tabs dynamically (in case more are added later)
+        for (i in 0 until binding.projectTabLayout.tabCount) {
+            val tabView = binding.projectTabLayout.getTabAt(i)?.view
+            tabView?.isClickable = !isLoading
+            tabView?.alpha = if (isLoading) 0.5f else 1f   // optional fade effect
+        }
     }
 
     /** Show or hide empty message */
