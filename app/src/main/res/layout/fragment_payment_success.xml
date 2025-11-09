@@ -13,14 +13,14 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/ic_success"
-        android:contentDescription="Success Icon"
+        android:contentDescription="@string/text_image_success_icon"
         android:layout_marginBottom="16dp" />
 
     <TextView
         android:id="@+id/tvSuccessTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Payment Successful!"
+        android:text="@string/text_payment_successful"
         android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
@@ -30,7 +30,7 @@
         android:id="@+id/tvProjectName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Project: AceFX"
+        android:text="@string/text_project_name"
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:layout_marginBottom="8dp" />
@@ -39,7 +39,7 @@
         android:id="@+id/tvAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="₹999.00"
+        android:text="@string/text_bill_amount"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
@@ -49,7 +49,7 @@
         android:id="@+id/tvTransactionId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Transaction ID: pay_KHJ23abx"
+        android:text="@string/text_transaction"
         android:textSize="14sp"
         android:textColor="@android:color/white"
         android:layout_marginBottom="32dp" />
@@ -58,7 +58,7 @@
         android:id="@+id/btnBackToHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Back to Dashboard"
+        android:text="@string/text_back_to_dashboard"
         android:textAllCaps="false"
         android:backgroundTint="@color/white"
         android:textColor="@color/app_button_dark"

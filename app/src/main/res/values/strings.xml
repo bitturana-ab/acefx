@@ -106,4 +106,8 @@
     <string name="text_invoice_details">Invoice Details</string>
     <string name="text_download_file">Download File</string>
     <string name="text_bill_amount">Total Bill Amount</string>
+    <string name="text_transaction">Transaction ID: pay_KHJ23abx</string>
+    <string name="text_back_to_dashboard">Back to Dashboard</string>
+    <string name="text_payment_successful">Payment Successful!</string>
+    <string name="text_image_success_icon">Success Icon</string>
 </resources>

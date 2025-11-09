@@ -46,7 +46,6 @@ class PaymentSuccessFragment : Fragment() {
 
         // Button: Back to Home
         binding.btnBackToHome.setOnClickListener {
-            TODO("on back navigate to invoice")
             findNavController().navigateUp() // safely navigates back
         }
     }
