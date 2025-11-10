@@ -23,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
+import androidx.core.content.edit
 
 class ChatFragment : Fragment() {
 
@@ -71,6 +72,7 @@ class ChatFragment : Fragment() {
     }
 
     /** Setup all UI listeners and animations */
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupUI() {
         binding.companyNameChat.text = companyName ?: "Company"
 
@@ -179,11 +181,12 @@ class ChatFragment : Fragment() {
     }
 
     /** Save chat to SharedPreferences */
+    @SuppressLint("UseKtx")
     private fun saveLocalChat(chatList: List<ChatMessage>) {
         try {
             val sharedPrefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
             val json = gson.toJson(chatList)
-            sharedPrefs.edit().putString("chatMessages", json).apply()
+            sharedPrefs.edit { putString("chatMessages", json) }
         } catch (e: Exception) {
             e.printStackTrace()
         }
