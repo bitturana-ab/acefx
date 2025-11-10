@@ -1,11 +1,11 @@
 package com.example.acefx_app.ui
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
+import android.view.*
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.acefx_app.R
@@ -15,16 +15,14 @@ import com.example.acefx_app.data.UserDetailsResponse
 import com.example.acefx_app.databinding.FragmentHomeBinding
 import com.example.acefx_app.retrofitServices.ApiClient
 import com.example.acefx_app.retrofitServices.ApiService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import retrofit2.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
 
     private lateinit var api: ApiService
     private lateinit var sharedPref: android.content.SharedPreferences
@@ -42,7 +40,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,75 +50,65 @@ class HomeFragment : Fragment() {
         sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         loadLocalUserData()
 
-        if (!name.isNullOrEmpty()) binding.tvUserName.text = name
+        binding?.let { bind ->
+            if (!name.isNullOrEmpty()) bind.tvUserName.text = name
 
-        binding.btnChatNow.setOnClickListener { handleHomeNavigation() }
-        binding.addProjectBtn.setOnClickListener {
-            if (isProfileComplete()) navigateToAddProject() else navigateToProfile()
-        }
-        binding.btnPayBill.setOnClickListener { navigateToProjects() }
+            bind.btnChatNow.setOnClickListener { handleHomeNavigation() }
+            bind.addProjectBtn.setOnClickListener {
+                if (isProfileComplete()) navigateToAddProject() else navigateToProfile()
+            }
+            bind.btnPayBill.setOnClickListener { navigateToProjects() }
 
-        token?.let { fetchClientProjects(it) }
+            token?.let { fetchClientProjects(it) }
 
-        // swipe refresh
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            token?.let {
-                fetchClientProjects(it)
-            } ?: run {
-                Toast.makeText(requireContext(), "Please login again", Toast.LENGTH_SHORT).show()
-                binding.swipeRefreshLayout.isRefreshing = false
+            // Swipe refresh
+            bind.swipeRefreshLayout.setOnRefreshListener {
+                token?.let {
+                    fetchClientProjects(it)
+                } ?: run {
+                    Toast.makeText(requireContext(), "Please login again", Toast.LENGTH_SHORT).show()
+                    bind.swipeRefreshLayout.isRefreshing = false
+                }
             }
         }
-
     }
 
-    /** Fetch all projects of this client **/
+    /** Fetch client projects **/
     private fun fetchClientProjects(token: String) {
+        if (!isAdded) return
         showLoading(true)
-        binding.swipeRefreshLayout.isRefreshing = true  // stop spinner
+        binding?.swipeRefreshLayout?.isRefreshing = true
+
         api.getClientProjects("Bearer $token").enqueue(object : Callback<ProjectsResponse> {
             override fun onResponse(
                 call: Call<ProjectsResponse>, response: Response<ProjectsResponse>
             ) {
-                showLoading(false)
-                binding.swipeRefreshLayout.isRefreshing = false  // stop spinner
-
                 if (!isAdded) return
+                showLoading(false)
+                binding?.swipeRefreshLayout?.isRefreshing = false
 
-                if (response.isSuccessful && response.body() != null) {
-                    val projects = response.body()!!.data
+                val body = response.body()
+                if (response.isSuccessful && body != null) {
                     unpaidTotal = 0.0
                     completedProjects.clear()
 
-                    for (project in projects) {
+                    for (project in body.data.orEmpty()) {
                         val payment = project.paymentId
                         val paymentStatus = payment?.status ?: "unpaid"
                         val paidType = payment?.paidType ?: "none"
+                        val totalAmount = project.actualAmount?.takeIf { it > 0 }
+                            ?: project.expectedAmount ?: 0.0
 
-                        // Safely get the main amount
-                        val totalAmount =
-                            project.actualAmount?.takeIf { it > 0 } ?: project.expectedAmount ?: 0.0
-
-                        // Calculate unpaid amount
                         unpaidTotal += when {
-                            paymentStatus == "success" -> 0.0                // fully paid
-                            paidType.equals(
-                                "half",
-                                true
-                            ) -> totalAmount.div(2) // half-paid -> remaining half
-                            else -> totalAmount                              // unpaid -> full amount due
+                            paymentStatus == "success" -> 0.0
+                            paidType.equals("half", true) -> totalAmount / 2
+                            else -> totalAmount
                         }
 
-                        // Completed projects list
-                        if (project.status.equals(
-                                "success",
-                                true
-                            ) || paymentStatus.equals("success", true)
-                        ) {
-                            completedProjects.add(project)
-                        }
+                        if (project.status.equals("success", true)
+                            || paymentStatus.equals("success", true)
+                        ) completedProjects.add(project)
                     }
-
 
                     updateBillView()
                     displayCompletedProjects()
@@ -130,22 +118,22 @@ class HomeFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<ProjectsResponse>, t: Throwable) {
+                if (!isAdded) return
                 showLoading(false)
-                binding.swipeRefreshLayout.isRefreshing = false  // stop spinner
-
+                binding?.swipeRefreshLayout?.isRefreshing = false
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    /** Update total unpaid amount **/
+    /** Update unpaid total **/
     private fun updateBillView() {
-        binding.totalBillView.text = "Total Due: ₹${String.format("%.2f", unpaidTotal)}"
+        binding?.totalBillView?.text = "Total Due: ₹${String.format("%.2f", unpaidTotal)}"
     }
 
-    /** Display last two completed projects **/
+    /** Show completed projects **/
     private fun displayCompletedProjects() {
-        val container = binding.projectListContainer
+        val container = binding?.projectListContainer ?: return
         container.removeAllViews()
 
         if (completedProjects.isEmpty()) {
@@ -154,32 +142,26 @@ class HomeFragment : Fragment() {
         }
 
         val inflater = LayoutInflater.from(requireContext())
-
         for (project in completedProjects) {
             val card = inflater.inflate(R.layout.item_project_card, container, false)
-
-            val nameText = card.findViewById<android.widget.TextView>(R.id.projectName)
-            val dateText = card.findViewById<android.widget.TextView>(R.id.projectDate)
-            val downloadBtn = card.findViewById<android.widget.Button>(R.id.downloadBtn)
-            val daysLeftText = card.findViewById<android.widget.TextView>(R.id.daysLeft)
+            val nameText = card.findViewById<TextView>(R.id.projectName)
+            val dateText = card.findViewById<TextView>(R.id.projectDate)
+            val downloadBtn = card.findViewById<Button>(R.id.downloadBtn)
+            val daysLeftText = card.findViewById<TextView>(R.id.daysLeft)
 
             nameText.text = project.title ?: "Untitled Project"
             dateText.text = formatDateTime(project.deadline ?: project.completedTime)
-
-            // Days left calculation (safe)
             daysLeftText.text = calculateDaysLeft(project.deadline)
 
             val isPaid = project.paymentId?.status.equals("success", true)
             downloadBtn.isEnabled = isPaid
             downloadBtn.alpha = if (isPaid) 1f else 0.6f
 
-            // Open project details
             card.setOnClickListener {
                 project._id?.let { id -> navigateToProjectDetails(id) }
                     ?: Toast.makeText(requireContext(), "Invalid project", Toast.LENGTH_SHORT).show()
             }
 
-            // Download deliverables
             downloadBtn.setOnClickListener {
                 if (isPaid) openUrl(project.deliverableUrl)
                 else Toast.makeText(requireContext(), "Pay to download deliverables", Toast.LENGTH_SHORT).show()
@@ -208,12 +190,9 @@ class HomeFragment : Fragment() {
             Toast.makeText(requireContext(), "Invalid project", Toast.LENGTH_SHORT).show()
             return
         }
-        val bundle = Bundle().apply {
-            putString("projectId", projectId)
-        }
-        findNavController().navigate(R.id.clientProjectDetailsFragment, bundle)
+        val bundle = Bundle().apply { putString("projectId", projectId) }
+        if (isAdded) findNavController().navigate(R.id.clientProjectDetailsFragment, bundle)
     }
-
 
     private fun openUrl(url: String?) {
         if (url.isNullOrEmpty()) {
@@ -221,11 +200,7 @@ class HomeFragment : Fragment() {
             return
         }
         try {
-            val intent = android.content.Intent(
-                android.content.Intent.ACTION_VIEW,
-                android.net.Uri.parse(url)
-            )
-            startActivity(intent)
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Cannot open file", Toast.LENGTH_SHORT).show()
         }
@@ -245,6 +220,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadLocalUserData() {
+        sharedPref = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         name = sharedPref.getString("name", null)
         companyName = sharedPref.getString("companyName", null)
         phoneNumber = sharedPref.getString("phoneNumber", null)
@@ -253,23 +229,31 @@ class HomeFragment : Fragment() {
     }
 
     private fun isProfileComplete(): Boolean {
-        return !companyName.isNullOrEmpty() && !phoneNumber.isNullOrEmpty() && !pinCode.isNullOrEmpty()
+        return !companyName.isNullOrEmpty() &&
+                !phoneNumber.isNullOrEmpty() &&
+                !pinCode.isNullOrEmpty()
     }
 
     private fun handleHomeNavigation() {
-        if (isProfileComplete()) {
-            Toast.makeText(requireContext(), "Welcome back, $companyName!", Toast.LENGTH_SHORT)
-                .show()
-            navigateToChat()
-        } else if (!token.isNullOrEmpty()) fetchUpdatedProfile() else navigateToProfile()
+        if (!isAdded) return
+        when {
+            isProfileComplete() -> {
+                Toast.makeText(requireContext(), "Welcome back, $companyName!", Toast.LENGTH_SHORT).show()
+                navigateToChat()
+            }
+            !token.isNullOrEmpty() -> fetchUpdatedProfile()
+            else -> navigateToProfile()
+        }
     }
 
     private fun fetchUpdatedProfile() {
+        if (!isAdded) return
         showLoading(true)
         api.getUserProfile("Bearer $token").enqueue(object : Callback<UserDetailsResponse> {
             override fun onResponse(
                 call: Call<UserDetailsResponse>, response: Response<UserDetailsResponse>
             ) {
+                if (!isAdded) return
                 showLoading(false)
                 if (response.isSuccessful) {
                     response.body()?.let {
@@ -277,12 +261,12 @@ class HomeFragment : Fragment() {
                         if (isProfileComplete()) navigateToProjects() else navigateToProfile()
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Failed to fetch profile", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(requireContext(), "Failed to fetch profile", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<UserDetailsResponse>, t: Throwable) {
+                if (!isAdded) return
                 showLoading(false)
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
@@ -301,14 +285,25 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun navigateToProjects() = findNavController().navigate(R.id.clientProjectsFragment)
-    private fun navigateToAddProject() = findNavController().navigate(R.id.clientAddProjectFragment)
-    private fun navigateToChat() = findNavController().navigate(R.id.chatFragment)
-    private fun navigateToProfile() = findNavController().navigate(R.id.clientProfileFragment)
+    private fun navigateToProjects() {
+        if (isAdded) findNavController().navigate(R.id.clientProjectsFragment)
+    }
+
+    private fun navigateToAddProject() {
+        if (isAdded) findNavController().navigate(R.id.clientAddProjectFragment)
+    }
+
+    private fun navigateToChat() {
+        if (isAdded) findNavController().navigate(R.id.chatFragment)
+    }
+
+    private fun navigateToProfile() {
+        if (isAdded) findNavController().navigate(R.id.clientProfileFragment)
+    }
 
     private fun showLoading(isLoading: Boolean) {
-        binding.btnChatNow.isEnabled = !isLoading
-        binding.btnPayBill.isEnabled = !isLoading
+        binding?.btnChatNow?.isEnabled = !isLoading
+        binding?.btnPayBill?.isEnabled = !isLoading
     }
 
     override fun onDestroyView() {
