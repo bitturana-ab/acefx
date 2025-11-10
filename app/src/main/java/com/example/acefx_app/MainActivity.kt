@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** Verify OTP API call **/
-    priv    ate fun verifyOtp(email: String, otp: String) {
+    private fun verifyOtp(email: String, otp: String) {
         verifyOtpBtn.isEnabled = false
         verifyOtpBtn.text = "Verifying..."
 
