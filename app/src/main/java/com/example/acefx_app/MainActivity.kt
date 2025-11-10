@@ -1,13 +1,11 @@
 package com.example.acefx_app
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.widget.*
-import androidx.annotation.ContentView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
@@ -36,9 +34,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Auto-login check
-        val token = prefs.getString("authToken", null)
-        if (!token.isNullOrEmpty()) {
+        // Auto-login if token exists
+        prefs.getString("authToken", null)?.let {
             startActivity(Intent(this, DashboardActivity::class.java))
             finish()
             return
@@ -61,28 +58,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
-
         sendOtpBtn.setOnClickListener {
             val email = emailInput.text.toString().trim()
             if (email.isEmpty()) {
-                val snackbar = Snackbar.make(
-                    findViewById(android.R.id.content), // ✅ root view of your Activity
-                    "Please enter your email",
-                    Snackbar.LENGTH_LONG
-                )
-
-                snackbar.view.backgroundTintList =
-                    ContextCompat.getColorStateList(this@MainActivity, R.color.black)
-
-                snackbar.setTextColor(ContextCompat.getColor(this@MainActivity, android.R.color.white))
-                snackbar.setActionTextColor(ContextCompat.getColor(this@MainActivity, R.color.teal_200))
-
-                snackbar.setAction("OK") {
-                    snackbar.dismiss()
-                }
-
-                snackbar.show()
-                Toast.makeText(this, "Please enter your email", Toast.LENGTH_SHORT).show()
+                showSnackbar("Please enter your email")
                 return@setOnClickListener
             }
             animateFadeIn(progressOverlay)
@@ -106,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /** Send OTP API call **/
     private fun sendOtp(email: String) {
         sendOtpBtn.isEnabled = false
         sendOtpBtn.text = "Sending..."
@@ -115,7 +95,7 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
                 animateFadeOut(progressOverlay)
                 if (response.isSuccessful) {
-                    Toast.makeText(this@MainActivity, "OTP sent to email", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity, "OTP sent to your email", Toast.LENGTH_LONG).show()
                     emailInput.isEnabled = false
                     fadeInView(otpInput)
                     fadeInView(verifyOtpBtn)
@@ -123,22 +103,19 @@ class MainActivity : AppCompatActivity() {
                     sendOtpBtn.text = "Resend OTP"
                     startResendTimer()
                 } else {
-                    sendOtpBtn.isEnabled = true
-                    sendOtpBtn.text = "Send OTP"
-                    Toast.makeText(this@MainActivity, "Failed to send OTP", Toast.LENGTH_SHORT).show()
+                    handleOtpFailure("Failed to send OTP")
                 }
             }
 
             override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
                 animateFadeOut(progressOverlay)
-                sendOtpBtn.isEnabled = true
-                sendOtpBtn.text = "Send OTP"
-                Toast.makeText(this@MainActivity, "Network error: Check Internet connection", Toast.LENGTH_SHORT).show()
+                handleOtpFailure("Network error: Check Internet connection")
             }
         })
     }
 
-    private fun verifyOtp(email: String, otp: String) {
+    /** Verify OTP API call **/
+    priv    ate fun verifyOtp(email: String, otp: String) {
         verifyOtpBtn.isEnabled = false
         verifyOtpBtn.text = "Verifying..."
 
@@ -151,21 +128,24 @@ class MainActivity : AppCompatActivity() {
 
                 if (response.isSuccessful) {
                     val data = response.body()
-                    val token = data?.get("token").toString()
+                    val token = data?.get("token")?.toString().orEmpty()
 
                     val userMap = data?.get("user") as? Map<*, *>
-                    val userId = userMap?.get("_id")?.toString() ?: ""
+                    val userId = userMap?.get("_id")?.toString().orEmpty()
+
+                    if (token.isEmpty() || userId.isEmpty()) {
+                        Toast.makeText(this@MainActivity, "Invalid response from server", Toast.LENGTH_SHORT).show()
+                        return
+                    }
 
                     prefs.edit {
                         putString("authToken", token)
                         putString("userId", userId)
-                        apply()
+                        putBoolean("isLoggedIn", true)
                     }
-                    saveUserSession(userId)
 
                     Toast.makeText(this@MainActivity, "Login Successful!", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this@MainActivity, DashboardActivity::class.java))
-                    finish()
+                    navigateToDashboard()
                 } else {
                     Toast.makeText(this@MainActivity, "Invalid OTP!", Toast.LENGTH_SHORT).show()
                 }
@@ -180,14 +160,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun saveUserSession(userId: String) {
-        prefs.edit {
-            putBoolean("isLoggedIn", true)
-            putString("userId", userId)
-            apply()
-        }
-    }
-
+    /** Resend OTP Timer **/
     private fun startResendTimer() {
         sendOtpBtn.isEnabled = false
         resendTimer.visibility = View.VISIBLE
@@ -198,11 +171,11 @@ class MainActivity : AppCompatActivity() {
                 val seconds = millisUntilFinished / 1000
                 resendTimer.text = "Resend in ${seconds}s"
 
-                // Fade in/out animation for the timer text
-                val fade = AlphaAnimation(0.3f, 1f)
-                fade.duration = 500
-                fade.repeatMode = AlphaAnimation.REVERSE
-                fade.repeatCount = 1
+                val fade = AlphaAnimation(0.3f, 1f).apply {
+                    duration = 500
+                    repeatMode = AlphaAnimation.REVERSE
+                    repeatCount = 1
+                }
                 resendTimer.startAnimation(fade)
             }
 
@@ -213,27 +186,44 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
-
-    /** View fade-in animation **/
+    /** Animations **/
     private fun fadeInView(view: View, duration: Long = 300) {
         view.visibility = View.VISIBLE
-        val anim = AlphaAnimation(0f, 1f)
-        anim.duration = duration
-        view.startAnimation(anim)
+        view.startAnimation(AlphaAnimation(0f, 1f).apply { this.duration = duration })
     }
 
-    /** Fade-in overlay **/
     private fun animateFadeIn(view: View, duration: Long = 300) {
         view.visibility = View.VISIBLE
         view.alpha = 0f
         view.animate().alpha(1f).setDuration(duration).start()
     }
 
-    /** Fade-out overlay **/
     private fun animateFadeOut(view: View, duration: Long = 300) {
         view.animate().alpha(0f).setDuration(duration).withEndAction {
             view.visibility = View.GONE
         }.start()
+    }
+
+    /** Snackbar helper **/
+    private fun showSnackbar(message: String) {
+        val snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG)
+        snackbar.view.backgroundTintList = ContextCompat.getColorStateList(this, R.color.black)
+        snackbar.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+        snackbar.setActionTextColor(ContextCompat.getColor(this, R.color.teal_200))
+        snackbar.setAction("OK") { snackbar.dismiss() }
+        snackbar.show()
+    }
+
+    /** Common OTP send failure handler **/
+    private fun handleOtpFailure(message: String) {
+        sendOtpBtn.isEnabled = true
+        sendOtpBtn.text = "Send OTP"
+        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun navigateToDashboard() {
+        startActivity(Intent(this, DashboardActivity::class.java))
+        finish()
     }
 
     override fun onDestroy() {
