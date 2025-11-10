@@ -145,50 +145,64 @@ class HomeFragment : Fragment() {
 
     /** Display last two completed projects **/
     private fun displayCompletedProjects() {
-        val container = listOf(
-            binding.projectCard1 to completedProjects.getOrNull(0),
-            binding.projectCard2 to completedProjects.getOrNull(1)
-        )
+        val container = binding.projectListContainer
+        container.removeAllViews()
 
-        for ((card, project) in container) {
-            if (project == null) {
-                card.visibility = View.GONE
-                continue
-            }
+        if (completedProjects.isEmpty()) {
+            Toast.makeText(requireContext(), "No completed projects found", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-            card.visibility = View.VISIBLE
-            val layout = card.getChildAt(0) as ViewGroup
-            val nameText = layout.findViewById<android.widget.TextView>(R.id.projectName)
-            val dateText = layout.findViewById<android.widget.TextView>(R.id.projectDate)
-            val downloadBtn = layout.findViewById<android.widget.Button>(R.id.downloadBtn)
+        val inflater = LayoutInflater.from(requireContext())
 
-            nameText.text = project.title
+        for (project in completedProjects) {
+            val card = inflater.inflate(R.layout.item_project_card, container, false)
+
+            val nameText = card.findViewById<android.widget.TextView>(R.id.projectName)
+            val dateText = card.findViewById<android.widget.TextView>(R.id.projectDate)
+            val downloadBtn = card.findViewById<android.widget.Button>(R.id.downloadBtn)
+            val daysLeftText = card.findViewById<android.widget.TextView>(R.id.daysLeft)
+
+            nameText.text = project.title ?: "Untitled Project"
             dateText.text = formatDateTime(project.deadline ?: project.completedTime)
 
-            val isPaid = project.paymentId?.status == "success"
+            // Days left calculation (safe)
+            daysLeftText.text = calculateDaysLeft(project.deadline)
+
+            val isPaid = project.paymentId?.status.equals("success", true)
             downloadBtn.isEnabled = isPaid
             downloadBtn.alpha = if (isPaid) 1f else 0.6f
 
-            // Click listener for card to open project details
+            // Open project details
             card.setOnClickListener {
-                navigateToProjectDetails(project._id)
+                project._id?.let { id -> navigateToProjectDetails(id) }
+                    ?: Toast.makeText(requireContext(), "Invalid project", Toast.LENGTH_SHORT).show()
             }
 
-            // Click listener for download button
+            // Download deliverables
             downloadBtn.setOnClickListener {
-                if (isPaid) {
-                    openUrl(project.deliverableUrl)
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Pay to download deliverables",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                if (isPaid) openUrl(project.deliverableUrl)
+                else Toast.makeText(requireContext(), "Pay to download deliverables", Toast.LENGTH_SHORT).show()
             }
 
+            container.addView(card)
         }
     }
+
+    private fun calculateDaysLeft(deadline: String?): String {
+        if (deadline.isNullOrEmpty()) return "-"
+        return try {
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            sdf.timeZone = TimeZone.getTimeZone("UTC")
+            val targetDate = sdf.parse(deadline)
+            val today = Date()
+            val diff = ((targetDate?.time ?: 0) - today.time) / (1000 * 60 * 60 * 24)
+            if (diff >= 0) diff.toString() else "0"
+        } catch (e: Exception) {
+            "-"
+        }
+    }
+
     private fun navigateToProjectDetails(projectId: String?) {
         if (projectId.isNullOrEmpty()) {
             Toast.makeText(requireContext(), "Invalid project", Toast.LENGTH_SHORT).show()

@@ -110,4 +110,5 @@
     <string name="text_back_to_dashboard">Back to Dashboard</string>
     <string name="text_payment_successful">Payment Successful!</string>
     <string name="text_image_success_icon">Success Icon</string>
+    <string name="text_loading">Loading...</string>
 </resources>
