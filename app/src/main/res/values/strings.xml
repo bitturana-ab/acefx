@@ -111,4 +111,5 @@
     <string name="text_payment_successful">Payment Successful!</string>
     <string name="text_image_success_icon">Success Icon</string>
     <string name="text_loading">Loading...</string>
+    <string name="text_you_don_t_have_any_projects_yet_please_add_one">You don’t have any projects yet. Please add one.</string>
 </resources>
