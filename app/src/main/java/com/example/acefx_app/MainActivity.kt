@@ -1,5 +1,6 @@
 package com.example.acefx_app
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -86,6 +87,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** Send OTP API call **/
+    @SuppressLint("SetTextI18n")
     private fun sendOtp(email: String) {
         sendOtpBtn.isEnabled = false
         sendOtpBtn.text = "Sending..."
@@ -115,6 +117,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** Verify OTP API call **/
+    @SuppressLint("SetTextI18n")
     private fun verifyOtp(email: String, otp: String) {
         verifyOtpBtn.isEnabled = false
         verifyOtpBtn.text = "Verifying..."
@@ -167,6 +170,7 @@ class MainActivity : AppCompatActivity() {
 
         resendCountDownTimer?.cancel()
         resendCountDownTimer = object : CountDownTimer(60000, 1000) {
+            @SuppressLint("SetTextI18n")
             override fun onTick(millisUntilFinished: Long) {
                 val seconds = millisUntilFinished / 1000
                 resendTimer.text = "Resend in ${seconds}s"
@@ -215,6 +219,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** Common OTP send failure handler **/
+    @SuppressLint("SetTextI18n")
     private fun handleOtpFailure(message: String) {
         sendOtpBtn.isEnabled = true
         sendOtpBtn.text = "Send OTP"
