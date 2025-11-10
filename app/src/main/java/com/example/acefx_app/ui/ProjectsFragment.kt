@@ -63,10 +63,10 @@ class ProjectsFragment : Fragment() {
         setupTabLayout()
         setupSwipeRefresh()
 
-        // Load locally saved projects first (offline support)
+        // Load cached projects first
         loadLocalProjects()
 
-        // Then fetch latest from backend and override
+        // Then refresh from backend
         loadProjects()
 
         binding.chatNow.setOnClickListener {
@@ -77,11 +77,16 @@ class ProjectsFragment : Fragment() {
     /** Setup RecyclerView */
     private fun setupRecyclerView() {
         adapter = ProjectsAdapter(emptyList()) { project ->
-            findNavController().navigate(ProjectsFragmentDirections.actionProjectsFragmentToClientProjectDetailsFragment(project._id))
+            findNavController().navigate(
+                ProjectsFragmentDirections.actionProjectsFragmentToClientProjectDetailsFragment(project._id)
+            )
             Toast.makeText(requireContext(), "Project: ${project.title}", Toast.LENGTH_SHORT).show()
         }
-        binding.projectsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.projectsRecyclerView.adapter = adapter
+
+        binding.projectsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = this@ProjectsFragment.adapter
+        }
     }
 
     /** Setup TabLayout filter */
@@ -99,9 +104,8 @@ class ProjectsFragment : Fragment() {
     /** Setup swipe-to-refresh */
     private fun setupSwipeRefresh() {
         binding.swipeRefresh.setOnRefreshListener {
-            // Reset to first tab on refresh
-            val firstTab = binding.projectTabLayout.getTabAt(0)
-            firstTab?.select()
+            // Reset to first tab and reload
+            binding.projectTabLayout.getTabAt(0)?.select()
             loadProjects()
         }
     }
@@ -110,6 +114,7 @@ class ProjectsFragment : Fragment() {
     private fun loadProjects() {
         showLoading(true)
         binding.swipeRefresh.isRefreshing = true
+
         apiService.getClientProjects("Bearer $token").enqueue(object : Callback<ProjectsResponse> {
             override fun onResponse(call: Call<ProjectsResponse>, response: Response<ProjectsResponse>) {
                 if (!isAdded) return
@@ -127,7 +132,6 @@ class ProjectsFragment : Fragment() {
                         filterProjectsByStatus(firstTab?.text.toString())
                     }
 
-                    // Save updated projects locally
                     saveLocalProjects(allProjects)
                 } else {
                     Toast.makeText(requireContext(), "Failed to load projects!", Toast.LENGTH_SHORT).show()
@@ -137,8 +141,8 @@ class ProjectsFragment : Fragment() {
             override fun onFailure(call: Call<ProjectsResponse>, t: Throwable) {
                 if (!isAdded) return
                 showLoading(false)
-                Log.d("PROJECTS",t.message.toString())
                 binding.swipeRefresh.isRefreshing = false
+                Log.e("ProjectsFragment", "Network error: ${t.message}")
                 Toast.makeText(requireContext(), "Network error!", Toast.LENGTH_SHORT).show()
             }
         })
@@ -158,21 +162,18 @@ class ProjectsFragment : Fragment() {
 
     /** Save list of projects locally */
     private fun saveLocalProjects(projectList: List<ProjectData>) {
-        val sharedPrefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
-        val editor = sharedPrefs.edit()
-        val json = gson.toJson(projectList)
-        editor.putString("cachedProjects", json)
-        editor.apply()
+        val prefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+        prefs.edit().putString("cachedProjects", gson.toJson(projectList)).apply()
     }
 
     /** Load locally saved projects */
     @SuppressLint("NotifyDataSetChanged")
     private fun loadLocalProjects() {
         showLoading(true)
-        val sharedPrefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
-        val json = sharedPrefs.getString("cachedProjects", null)
+        val prefs = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+        val json = prefs.getString("cachedProjects", null)
+
         if (!json.isNullOrEmpty()) {
-            showLoading(false)
             val type = object : TypeToken<List<ProjectData>>() {}.type
             val savedProjects: List<ProjectData> = gson.fromJson(json, type)
             allProjects = savedProjects
@@ -187,31 +188,33 @@ class ProjectsFragment : Fragment() {
     /** Show or hide loading overlay */
     private fun showLoading(isLoading: Boolean) {
         binding.chatNow.isEnabled = !isLoading
-        // Loop through all tabs dynamically (in case more are added later)
+
+        // Loop through all tabs
         for (i in 0 until binding.projectTabLayout.tabCount) {
             val tabView = binding.projectTabLayout.getTabAt(i)?.view
             tabView?.isClickable = !isLoading
-            tabView?.alpha = if (isLoading) 0.5f else 1f   // optional fade effect
+            tabView?.alpha = if (isLoading) 0.5f else 1f
         }
     }
+
     /** Show or hide empty message */
     private fun showEmptyState(show: Boolean, message: String = "You don’t have any projects yet. Please add one.") {
-        binding.emptyText.visibility = if (show) View.VISIBLE else View.GONE
-        binding.emptyText.text = message
+        binding.emptyText.apply {
+            visibility = if (show) View.VISIBLE else View.GONE
+            text = message
+        }
     }
 
     /** Smooth fade-in animation */
     private fun View.fadeIn(duration: Long = 300) {
-        this.apply {
-            alpha = 0f
-            visibility = View.VISIBLE
-            animate().alpha(1f).setDuration(duration).start()
-        }
+        alpha = 0f
+        visibility = View.VISIBLE
+        animate().alpha(1f).setDuration(duration).start()
     }
 
     /** Smooth fade-out animation */
     private fun View.fadeOut(duration: Long = 300, endVisibility: Int = View.GONE) {
-        this.animate().alpha(0f).setDuration(duration).withEndAction {
+        animate().alpha(0f).setDuration(duration).withEndAction {
             visibility = endVisibility
         }.start()
     }
