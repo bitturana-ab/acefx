@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -5,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/app_card_dark_gray"
     tools:context=".ui.ClientAddProjectFragment">
-    <!-- Back Button -->
+
+    <!-- Fixed Top Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -22,15 +24,13 @@
             android:padding="6dp"
             android:src="@drawable/ic_arrow_back" />
 
-        <!-- Header -->
         <TextView
             android:id="@+id/tvHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:background="@color/app_card_dark_gray"
             android:text="@string/text_addProduct_view"
-            android:textColor="@color/app_button_dark"
+            android:textColor="@android:color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -39,27 +39,30 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:background="@color/app_color_gray"
         android:fillViewport="true"
-        android:paddingHorizontal="20dp">
+        android:paddingHorizontal="20dp"
+        android:overScrollMode="ifContentScrolls">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginVertical="30dp"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp">
 
-
+            <!-- 🧱 Reusable style for all text fields -->
             <!-- Project Title -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                app:boxBackgroundMode="outline">
+                app:boxBackgroundMode="outline"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etTitle"
@@ -68,17 +71,19 @@
                     android:gravity="center_vertical"
                     android:hint="@string/text_project_title_hint"
                     android:inputType="textCapWords"
-                    android:textColor="@color/white"
-                    tools:ignore="RtlCompat" />
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Description -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_marginBottom="20dp"
                 android:layout_height="wrap_content"
-                app:boxBackgroundMode="outline">
+                android:layout_marginBottom="20dp"
+                app:boxBackgroundMode="outline"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDescription"
@@ -86,17 +91,20 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:hint="@string/text_description_hint"
-                    android:inputType="textCapWords"
-                    android:textColor="@color/white"
-                    tools:ignore="RtlCompat" />
+                    android:inputType="textCapSentences"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <!-- Data Link -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_marginBottom="20dp"
                 android:layout_height="wrap_content"
-                app:boxBackgroundMode="outline">
+                android:layout_marginBottom="20dp"
+                app:boxBackgroundMode="outline"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDataLink"
@@ -104,15 +112,19 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/text_datalink_hint"
                     android:inputType="textUri"
-                    android:textColor="@color/white" />
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <!-- Attach Link -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:boxBackgroundMode="outline">
+                android:layout_marginBottom="20dp"
+                app:boxBackgroundMode="outline"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAttachLink"
@@ -120,33 +132,40 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/text_attachlink_view"
                     android:inputType="textUri"
-                    android:textColor="@color/white" />
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <!-- Deadline -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                app:boxBackgroundMode="outline">
+                app:boxBackgroundMode="outline"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDeadline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    android:focusable="false"
+                    android:focusable="true"
                     android:hint="@string/text_deadline_view"
-                    android:textColor="@color/white" />
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Expected Amount -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_marginBottom="20dp"
                 android:layout_height="wrap_content"
-                app:boxBackgroundMode="outline">
+                android:layout_marginBottom="20dp"
+                app:boxBackgroundMode="outline"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etExpectedAmount"
@@ -154,8 +173,10 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/text_expected_amount_view"
                     android:inputType="number"
-                    android:textColor="@color/white" />
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <!-- Submit Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSubmitProject"
@@ -169,7 +190,6 @@
                 android:textSize="16sp"
                 app:backgroundTint="@color/app_card_dark_gray"
                 app:cornerRadius="12dp" />
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -188,5 +208,4 @@
             android:layout_height="60dp"
             android:indeterminate="true" />
     </FrameLayout>
-
 </FrameLayout>

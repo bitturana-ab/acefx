@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- 🔝 Header -->
+            <!-- Header -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                     app:iconTint="@color/app_button_dark" />
             </LinearLayout>
 
-            <!-- ➕ Add Project & 💸 Pay Bill -->
+            <!-- Add Project & Pay Bill -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
 
-            <!-- 📦 Project Card -->
+            <!-- Project Card -->
             <LinearLayout
                 android:id="@+id/projectListContainer"
                 android:layout_width="match_parent"
