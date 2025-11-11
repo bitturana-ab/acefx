@@ -74,7 +74,7 @@
                     app:icon="@drawable/ic_add_circle_rounded"
                     android:textColor="@color/app_button_dark"
                     android:textSize="14sp"
-                    app:backgroundTint="@color/cardview_light_background"
+                    app:backgroundTint="@color/gray_400"
                     app:cornerRadius="14dp" />
             </LinearLayout>
 
