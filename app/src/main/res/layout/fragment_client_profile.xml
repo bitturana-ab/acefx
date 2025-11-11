@@ -1,120 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/app_color_gray"
-    android:fillViewport="true"
     tools:context=".ui.ClientProfileFragment">
 
-
+    <!-- Fixed Top Bar -->
     <LinearLayout
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-        <!-- Back Button -->
+        android:background="@color/app_card_dark_gray"
+        android:gravity="center_vertical"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/backBtn"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/rounded_back_bg"
+            android:contentDescription="@string/text_back"
+            android:padding="6dp"
+            android:src="@drawable/ic_arrow_back" />
+
+        <TextView
+            android:id="@+id/clientProfileTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/text_update_your_account"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Scrollable Form Section -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:overScrollMode="ifContentScrolls">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_vertical"
-            android:background="@color/app_card_dark_gray"
-            android:padding="10dp">
-
-            <ImageView
-                android:id="@+id/backBtn"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="@drawable/rounded_back_bg"
-                android:contentDescription="@string/text_back"
-                android:padding="6dp"
-                android:src="@drawable/ic_arrow_back" />
-            <TextView
-                android:id="@+id/clientProfileTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="@string/text_update_your_account"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
             android:orientation="vertical"
+            android:gravity="center_horizontal"
             android:paddingHorizontal="30dp"
             android:paddingVertical="10dp">
 
+            <!-- Name -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/text_your_name"
-                app:boxBackgroundMode="outline">
+                app:boxBackgroundMode="outline"
+                app:hintTextColor="@color/white"
+                app:boxStrokeColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/clientNameInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Company -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/text_company_individual_name">
+                android:hint="@string/text_company_individual_name"
+                app:hintTextColor="@color/white"
+                app:boxStrokeColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/companyNameInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Phone -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/text_phone_no">
+                android:hint="@string/text_phone_no"
+                app:hintTextColor="@color/white"
+                app:boxStrokeColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/phoneInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="phone"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Pin Code -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/text_pin_code">
+                android:hint="@string/text_pin_code"
+                app:hintTextColor="@color/white"
+                app:boxStrokeColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/pinCodeInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Update Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/updateProfileBtn"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginVertical="30dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="35dp"
                 android:text="@string/text_update_account"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black"
@@ -122,5 +140,5 @@
                 app:backgroundTint="@color/app_card_dark_gray"
                 app:cornerRadius="6dp" />
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>
